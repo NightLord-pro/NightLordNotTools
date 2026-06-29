@@ -1,31 +1,39 @@
 #!/bin/bash
 
+# Purple Theme
+PURPLE='\033[0;35m'
+LIGHT_PURPLE='\033[1;35m'
+RESET='\033[0m'
+
 clear
 
-echo "====================================="
-echo "          NightLord Tool"
-echo "====================================="
+echo -e "${LIGHT_PURPLE}=====================================${RESET}"
+echo -e "${PURPLE}          NightLord Tool${RESET}"
+echo -e "${LIGHT_PURPLE}=====================================${RESET}"
 echo
-echo "1) 24/7"
-echo "2) Exit"
+echo -e "${PURPLE}1) 24/7${RESET}"
+echo -e "${PURPLE}2) Exit${RESET}"
 echo
 
-read -p "Select option: " option
+read -p "$(echo -e ${LIGHT_PURPLE}Select option: ${RESET})" option
 
 if [ "$option" = "1" ]; then
-    echo "Starting 24/7..."
+    echo -e "${PURPLE}Starting 24/7...${RESET}"
+
     mkdir -p NightLord
     cd NightLord
 
     # Download files
-    python3 <(curl -s https://raw.githubusercontent.com/NightLord-pro/24-7/refs/heads/main/24-7)
-    
+    curl -O https://raw.githubusercontent.com/NightLord-pro/24-7/main/server.py
+    curl -O https://raw.githubusercontent.com/NightLord-pro/24-7/main/config.json
 
     echo
-    echo "24/7 Started Successfully!"
+    echo -e "${LIGHT_PURPLE}24/7 Started Successfully!${RESET}"
+
 elif [ "$option" = "2" ]; then
-    echo "NightLord Sir Goodbye!"
+    echo -e "${LIGHT_PURPLE}NightLord Sir Goodbye!${RESET}"
     exit
+
 else
-    echo "Invalid option."
+    echo -e "${PURPLE}Invalid option.${RESET}"
 fi
