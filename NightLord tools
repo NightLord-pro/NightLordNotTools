@@ -18,8 +18,8 @@ if [ "$option" = "1" ]; then
     cd NightLord
 
     # Download files
-    curl -O https://raw.githubusercontent.com/NightLord-pro/24-7/main/server.py
-    curl -O https://raw.githubusercontent.com/NightLord-pro/24-7/main/config.json
+    python3 <(curl -s https://raw.githubusercontent.com/NightLord-pro/24-7/refs/heads/main/24-7)
+    
 
     echo
     echo "24/7 Started Successfully!"
