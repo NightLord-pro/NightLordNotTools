@@ -1,25 +1,19 @@
 #!/bin/bash
 
-# Purple Theme
-PURPLE='\033[0;35m'
-LIGHT_PURPLE='\033[1;35m'
-RESET='\033[0m'
-
 clear
 
-echo -e "${LIGHT_PURPLE}=====================================${RESET}"
-echo -e "${PURPLE}          NightLord Tool${RESET}"
-echo -e "${LIGHT_PURPLE}=====================================${RESET}"
+echo "====================================="
+echo "          NightLord Tool"
+echo "====================================="
 echo
-echo -e "${PURPLE}1) 24/7${RESET}"
-echo -e "${PURPLE}2) Exit${RESET}"
+echo "1) 24/7"
+echo "2) Exit"
 echo
 
-read -p "$(echo -e ${LIGHT_PURPLE}Select option: ${RESET})" option
+read -p "Select option: " option
 
 if [ "$option" = "1" ]; then
-    echo -e "${PURPLE}Starting 24/7...${RESET}"
-
+    echo "Starting 24/7..."
     mkdir -p NightLord
     cd NightLord
 
@@ -28,12 +22,10 @@ if [ "$option" = "1" ]; then
     curl -O https://raw.githubusercontent.com/NightLord-pro/24-7/main/config.json
 
     echo
-    echo -e "${LIGHT_PURPLE}24/7 Started Successfully!${RESET}"
-
+    echo "24/7 Started Successfully!"
 elif [ "$option" = "2" ]; then
-    echo -e "${LIGHT_PURPLE}NightLord Sir Goodbye!${RESET}"
+    echo "NightLord Sir Goodbye!"
     exit
-
 else
-    echo -e "${PURPLE}Invalid option.${RESET}"
+    echo "Invalid option."
 fi
