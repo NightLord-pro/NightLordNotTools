@@ -25,7 +25,6 @@ loading() {
         percent=$((i*100/width))
 
         filled=$(printf "%${i}s" "" | tr ' ' '█')
-        empty=$(printf "%$((width-i))s" "")
 
         printf "\r${WHITE}Loading ${PURPLE}[${GREEN}%-40s${PURPLE}] ${WHITE}%3d%%${RESET}" "$filled" "$percent"
 
@@ -60,7 +59,8 @@ while true; do
     echo -e "${RESET}"
 
     echo -e "${PURPLE}1) 24/7${RESET}"
-    echo -e "${PURPLE}2) Exit${RESET}"
+    echo -e "${PURPLE}2) Petro Install${RESET}"
+    echo -e "${PURPLE}3) Exit${RESET}"
     echo
 
     read -p "Select option: " option
@@ -74,12 +74,23 @@ while true; do
             echo
             read -p "Press Enter to return to menu..."
             ;;
+
         2)
+            clear
+            echo -e "${PURPLE}Launching Petro Install...${RESET}"
+            sleep 1
+            bash -c "$(curl -fsSL https://raw.githubusercontent.com/NightLord-pro/NightLordNotTools/refs/heads/main/Petroldectal%20Create)"
+            echo
+            read -p "Press Enter to return to menu..."
+            ;;
+
+        3)
             clear
             echo -e "${PURPLE}Thanks for using NightLord Tools!${RESET}"
             sleep 1
             break
             ;;
+
         *)
             echo
             echo -e "\033[1;31mInvalid option! Please try again.${RESET}"
