@@ -89,6 +89,7 @@ while true; do
             clear
             echo -e "${PURPLE}Starting MC-CB...${RESET}"
             sleep 1
+            cd mc
             java -Xmx8196M -Xms8196M -jar Server.jar nogui
             echo
             read -p "Press Enter to return to menu..."
