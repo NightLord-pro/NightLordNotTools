@@ -8,6 +8,7 @@
 PURPLE="\033[1;35m"
 GREEN="\033[1;32m"
 WHITE="\033[1;37m"
+RED="\033[1;31m"
 RESET="\033[0m"
 
 # ---------- Loading Screen ----------
@@ -23,11 +24,9 @@ loading() {
 
     for ((i=0; i<=width; i++)); do
         percent=$((i*100/width))
-
         filled=$(printf "%${i}s" "" | tr ' ' '█')
 
         printf "\r${WHITE}Loading ${PURPLE}[${GREEN}%-40s${PURPLE}] ${WHITE}%3d%%${RESET}" "$filled" "$percent"
-
         sleep 0.05
     done
 
@@ -36,7 +35,7 @@ loading() {
     clear
 }
 
-# Show loading animation once
+# Show loading animation
 loading
 
 # ---------- Main Menu ----------
@@ -54,19 +53,21 @@ while true; do
     echo "          __/ |                                  "
     echo "         |___/                                   "
     echo
-    echo "               N I G H T L O R D   T O O L S"
+    echo "               𝗡𝗜𝗚𝗛𝗧𝗟𝗢𝗥𝗗   T O O L S"
     echo "=================================================="
     echo -e "${RESET}"
 
     echo -e "${PURPLE}1) 24/7${RESET}"
     echo -e "${PURPLE}2) Petro Install${RESET}"
     echo -e "${PURPLE}3) Run MC-CB${RESET}"
-    echo -e "${PURPLE}4) Exit${RESET}"
+    echo -e "${PURPLE}4) Setup MC-CB${RESET}"
+    echo -e "${PURPLE}5) Exit${RESET}"
     echo
 
     read -p "Select option: " option
 
     case "$option" in
+
         1)
             clear
             echo -e "${PURPLE}Launching 24/7...${RESET}"
@@ -91,7 +92,7 @@ while true; do
             sleep 1
 
             cd mc || {
-                echo -e "\033[1;31mFolder 'mc' not found!${RESET}"
+                echo -e "${RED}Folder 'mc' not found!${RESET}"
                 echo
                 read -p "Press Enter to return to menu..."
                 continue
@@ -105,6 +106,31 @@ while true; do
 
         4)
             clear
+            echo -e "${PURPLE}Setting up MC-CB...${RESET}"
+            sleep 1
+
+            mkdir -p mc
+            cd mc || exit
+
+            echo -e "${WHITE}Downloading Paper 1.21.8...${RESET}"
+
+            curl -L -o server.jar "https://fill-data.papermc.io/v1/objects/8de7c52c3b02403503d16fac58003f1efef7dd7a0256786843927fa92ee57f1e/paper-1.21.8-60.jar"
+
+            if [ $? -eq 0 ]; then
+                echo
+                echo -e "${GREEN}✓ MC-CB setup completed successfully!${RESET}"
+                echo -e "${GREEN}Server saved as: mc/server.jar${RESET}"
+            else
+                echo
+                echo -e "${RED}✗ Failed to download server.jar!${RESET}"
+            fi
+
+            echo
+            read -p "Press Enter to return to menu..."
+            ;;
+
+        5)
+            clear
             echo -e "${PURPLE}Thanks for using NightLord Tools!${RESET}"
             sleep 1
             break
@@ -112,7 +138,11 @@ while true; do
 
         *)
             echo
-            echo -e "\033[1;31mInvalid option! Please try again.${RESET}"
+            echo -e "${RED}Invalid option! Please try again.${RESET}"
+            sleep 2
+            ;;
+    esac
+done            echo -e "\033[1;31mInvalid option! Please try again.${RESET}"
             sleep 2
             ;;
     esac
