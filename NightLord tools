@@ -53,7 +53,7 @@ while true; do
     echo "          __/ |                                  "
     echo "         |___/                                   "
     echo
-    echo "               𝗡𝗜𝗚𝗛𝗧𝗟𝗢𝗥𝗗   T O O L S"
+    echo "               N I G H T L O R D   T O O L S"
     echo "=================================================="
     echo -e "${RESET}"
 
@@ -139,10 +139,6 @@ while true; do
         *)
             echo
             echo -e "${RED}Invalid option! Please try again.${RESET}"
-            sleep 2
-            ;;
-    esac
-done            echo -e "\033[1;31mInvalid option! Please try again.${RESET}"
             sleep 2
             ;;
     esac
