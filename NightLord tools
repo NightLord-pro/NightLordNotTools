@@ -44,16 +44,12 @@ while true; do
 
     echo -e "${PURPLE}"
     echo "=================================================="
-    echo " _   _ _       _     _   _                     _ "
-    echo "| \\ | (_)     | |   | | | |                   | |"
-    echo "|  \\| |_  __ _| |__ | |_| |    ___  _ __   ___| |"
-    echo "| . \` | |/ _\` | '_ \\| __| |   / _ \\| '_ \\ / _ \\ |"
-    echo "| |\\  | | (_| | | | | |_| |__| (_) | | | |  __/_|"
-    echo "|_| \\_|_|\\__, |_| |_|\\__|_____\\___/|_| |_|\\___(_)"
-    echo "          __/ |                                  "
-    echo "         |___/                                   "
+    echo "░█▄─░█ ▀█▀ ░█▀▀█ ░█─░█ ▀▀█▀▀ ░█─── ░█▀▀▀█ ░█▀▀█ ░█▀▀▄"
+    echo "░█░█░█ ░█─ ░█─▄▄ ░█▀▀█ ─░█── ░█─── ░█──░█ ░█▄▄▀ ░█─░█"
+    echo "░█──▀█ ▄█▄ ░█▄▄█ ░█─░█ ─░█── ░█▄▄█ ░█▄▄▄█ ░█─░█ ░█▄▄▀"
     echo
-    echo "               N I G H T L O R D   T O O L S"
+    echo "                  𝗡𝗜𝗚𝗛𝗧𝗟𝗢𝗥𝗗"
+    echo "                     TOOLS"
     echo "=================================================="
     echo -e "${RESET}"
 
@@ -61,7 +57,8 @@ while true; do
     echo -e "${PURPLE}2) Petro Install${RESET}"
     echo -e "${PURPLE}3) Run MC-CB${RESET}"
     echo -e "${PURPLE}4) Setup MC-CB${RESET}"
-    echo -e "${PURPLE}5) Exit${RESET}"
+    echo -e "${PURPLE}5) Plugins${RESET}"
+    echo -e "${PURPLE}6) Exit${RESET}"
     echo
 
     read -p "Select option: " option
@@ -129,7 +126,40 @@ while true; do
             read -p "Press Enter to return to menu..."
             ;;
 
-        5)
+         5)
+            clear
+            echo -e "${PURPLE}Installing Plugins...${RESET}"
+            sleep 1
+
+            if [ ! -d "mc/plugins" ]; then
+                echo -e "${RED}Folder 'mc/plugins' not found!${RESET}"
+                echo -e "${RED}Please start the server once to generate the plugins folder.${RESET}"
+                echo
+                read -p "Press Enter to return to menu..."
+                continue
+            fi
+
+            cd mc/plugins || continue
+
+            echo -e "${WHITE}Downloading ViaVersion...${RESET}"
+            curl -L -o ViaVersion.jar "https://github.com/ViaVersion/ViaVersion/releases/download/5.10.0/ViaVersion-5.10.0.jar"
+
+            echo -e "${WHITE}Downloading ViaBackwards...${RESET}"
+            curl -L -o ViaBackwards.jar "https://github.com/ViaVersion/ViaBackwards/releases/download/5.10.0/ViaBackwards-5.10.0.jar"
+
+            echo -e "${WHITE}Downloading SkinsRestorer...${RESET}"
+            curl -L -o SkinsRestorer.jar "https://github.com/SkinsRestorer/SkinsRestorer/releases/download/15.12.0/SkinsRestorer.jar"
+
+            echo -e "${WHITE}Downloading Connect...${RESET}"
+            curl -L -o Connect.jar "https://github.com/minekube/connect-java/releases/download/latest/connect-spigot.jar"
+
+            echo
+            echo -e "${GREEN}✓ All plugins installed successfully!${RESET}"
+            echo
+            read -p "Press Enter to return to menu..."
+            ;;
+
+        6)
             clear
             echo -e "${PURPLE}Thanks for using NightLord Tools!${RESET}"
             sleep 1
