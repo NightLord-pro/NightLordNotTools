@@ -14,14 +14,21 @@ CYAN="\033[1;36m"
 RESET="\033[0m"
 
 # Script directory
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPT_DIR="$(pwd)"
 
-# Default RAM
-RAM="8192M"
+# ==========================
+# NightLord Config
+# ==========================
 
-# Default Java Flags
+CONFIG_FILE="$HOME/.nightlord.conf"
+
+if [ -f "$CONFIG_FILE" ]; then
+    source "$CONFIG_FILE"
+else
+    RAM="8192M"
+fi
+
 JAVA_FLAGS="-Xms${RAM} -Xmx${RAM}"
-
 # Version
 VERSION="2.0"
 
