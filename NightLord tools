@@ -287,124 +287,125 @@ case "$option" in
     ;;
 
                                 3)
-                    while true
-                    do
-                        clear
-                        banner
+    while true
+    do
+        clear
+        banner
 
-                        echo -e "${CYAN}==============================================${RESET}"
-                        echo -e "${RED}        NIGHTLORD PLUGIN MANAGER${RESET}"
-                        echo -e "${CYAN}==============================================${RESET}"
-                        echo
+        echo -e "${CYAN}==============================================${RESET}"
+        echo -e "${GREEN}        NIGHTLORD PLUGIN MANAGER FIXED${RESET}"
+        echo -e "${CYAN}==============================================${RESET}"
+        echo
 
-                        echo -e "${RED}1) Install ViaVersion${RESET}"
-                        echo -e "${RED}2) Install ViaBackwards${RESET}"
-                        echo -e "${RED}3) Install SkinsRestorer${RESET}"
-                        echo -e "${RED}4) Install Connect${RESET}"
-                        echo -e "${RED}5) Install All Plugins${RESET}"
-                        echo -e "${RED}6) Back${RESET}"
-                        echo
+        MC_DIR="$SCRIPT_DIR/mc"
+        PLUGIN_DIR="$MC_DIR/plugins"
 
-                        read -p "Select option : " plugin
+        echo -e "${WHITE}Checking server folder...${RESET}"
 
-                        if [ ! -d "$SCRIPT_DIR/mc/plugins" ]; then
-                            echo
-                            echo -e "${RED}✖ plugins folder not found!${RESET}"
-                            echo -e "${YELLOW}Run Setup Server first.${RESET}"
-                            pause
-                            break
-                        fi
+        if [ ! -d "$MC_DIR" ]; then
+            echo -e "${RED}✖ MC folder not found!${RESET}"
+            echo -e "${YELLOW}Run Setup Server first.${RESET}"
+            pause
+            break
+        fi
 
-                        cd "$SCRIPT_DIR/mc/plugins" || break
+        mkdir -p "$PLUGIN_DIR"
 
-                        case "$plugin" in
+        echo -e "${GREEN}✔ Plugin folder ready${RESET}"
+        echo
 
-                            1)
-                                clear
-                                banner
-                                echo -e "${WHITE}Installing ViaVersion...${RESET}"
+        echo -e "${GREEN}1) Install ViaVersion${RESET}"
+        echo -e "${GREEN}2) Install ViaBackwards${RESET}"
+        echo -e "${GREEN}3) Install SkinsRestorer${RESET}"
+        echo -e "${GREEN}4) Install Connect${RESET}"
+        echo -e "${GREEN}5) Install ALL Plugins${RESET}"
+        echo -e "${GREEN}6) Back${RESET}"
+        echo
 
-                                curl -L -o ViaVersion.jar \
-                                "https://github.com/ViaVersion/ViaVersion/releases/download/5.10.0/ViaVersion-5.10.0.jar"
+        read -p "Select option : " plugin
 
-                                echo
-                                echo -e "${GREEN}✔ ViaVersion Installed!${RESET}"
-                                pause
-                                ;;
+        cd "$PLUGIN_DIR" || {
+            echo -e "${RED}Cannot enter plugins folder!${RESET}"
+            pause
+            break
+        }
 
-                            2)
-                                clear
-                                banner
-                                echo -e "${WHITE}Installing ViaBackwards...${RESET}"
+        case "$plugin" in
 
-                                curl -L -o ViaBackwards.jar \
-                                "https://github.com/ViaVersion/ViaBackwards/releases/download/5.10.0/ViaBackwards-5.10.0.jar"
+            1)
+                clear
+                banner
+                echo -e "${WHITE}Installing ViaVersion...${RESET}"
 
-                                echo
-                                echo -e "${GREEN}✔ ViaBackwards Installed!${RESET}"
-                                pause
-                                ;;
+                curl -L -o ViaVersion.jar \
+                "https://github.com/ViaVersion/ViaVersion/releases/download/5.10.0/ViaVersion-5.10.0.jar"
 
-                            3)
-                                clear
-                                banner
-                                echo -e "${WHITE}Installing SkinsRestorer...${RESET}"
+                echo -e "${GREEN}✔ Installed${RESET}"
+                pause
+                ;;
 
-                                curl -L -o SkinsRestorer.jar \
-                                "https://github.com/SkinsRestorer/SkinsRestorer/releases/download/15.12.0/SkinsRestorer.jar"
+            2)
+                clear
+                banner
+                echo -e "${WHITE}Installing ViaBackwards...${RESET}"
 
-                                echo
-                                echo -e "${GREEN}✔ SkinsRestorer Installed!${RESET}"
-                                pause
-                                ;;
+                curl -L -o ViaBackwards.jar \
+                "https://github.com/ViaVersion/ViaBackwards/releases/download/5.10.0/ViaBackwards-5.10.0.jar"
 
-                            4)
-                                clear
-                                banner
-                                echo -e "${WHITE}Installing Connect...${RESET}"
+                echo -e "${GREEN}✔ Installed${RESET}"
+                pause
+                ;;
 
-                                curl -L -o Connect.jar \
-                                "https://github.com/minekube/connect-java/releases/download/latest/connect-spigot.jar"
+            3)
+                clear
+                banner
+                echo -e "${WHITE}Installing SkinsRestorer...${RESET}"
 
-                                echo
-                                echo -e "${GREEN}✔ Connect Installed!${RESET}"
-                                pause
-                                ;;
+                curl -L -o SkinsRestorer.jar \
+                "https://github.com/SkinsRestorer/SkinsRestorer/releases/download/15.12.0/SkinsRestorer.jar"
 
-                            5)
-                                clear
-                                banner
-                                echo -e "${CYAN}Installing All Plugins...${RESET}"
+                echo -e "${GREEN}✔ Installed${RESET}"
+                pause
+                ;;
 
-                                curl -L -o ViaVersion.jar \
-                                "https://github.com/ViaVersion/ViaVersion/releases/download/5.10.0/ViaVersion-5.10.0.jar"
+            4)
+                clear
+                banner
+                echo -e "${WHITE}Installing Connect...${RESET}"
 
-                                curl -L -o ViaBackwards.jar \
-                                "https://github.com/ViaVersion/ViaBackwards/releases/download/5.10.0/ViaBackwards-5.10.0.jar"
+                curl -L -o Connect.jar \
+                "https://github.com/minekube/connect-java/releases/download/latest/connect-spigot.jar"
 
-                                curl -L -o SkinsRestorer.jar \
-                                "https://github.com/SkinsRestorer/SkinsRestorer/releases/download/15.12.0/SkinsRestorer.jar"
+                echo -e "${GREEN}✔ Installed${RESET}"
+                pause
+                ;;
 
-                                curl -L -o Connect.jar \
-                                "https://github.com/minekube/connect-java/releases/download/latest/connect-spigot.jar"
+            5)
+                clear
+                banner
+                echo -e "${CYAN}Installing ALL Plugins...${RESET}"
 
-                                echo
-                                echo -e "${GREEN}✔ All Plugins Installed Successfully!${RESET}"
-                                pause
-                                ;;
+                curl -L -o ViaVersion.jar "https://github.com/ViaVersion/ViaVersion/releases/download/5.10.0/ViaVersion-5.10.0.jar"
+                curl -L -o ViaBackwards.jar "https://github.com/ViaVersion/ViaBackwards/releases/download/5.10.0/ViaBackwards-5.10.0.jar"
+                curl -L -o SkinsRestorer.jar "https://github.com/SkinsRestorer/SkinsRestorer/releases/download/15.12.0/SkinsRestorer.jar"
+                curl -L -o Connect.jar "https://github.com/minekube/connect-java/releases/download/latest/connect-spigot.jar"
 
-                            6)
-                                break
-                                ;;
+                echo -e "${GREEN}✔ All Plugins Installed${RESET}"
+                pause
+                ;;
 
-                            *)
-                                echo
-                                echo -e "${RED}Invalid option!${RESET}"
-                                sleep 2
-                                ;;
+            6)
+                break
+                ;;
+
+            *)
+                echo -e "${RED}Invalid option${RESET}"
+                sleep 2
+                ;;
+        esac
+    done
+    ;;
                         esac
-                    done
-                    ;;
 
                 4)
                     break
