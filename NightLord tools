@@ -519,3 +519,25 @@ case "$option" in
 esac
 
 done
+        esac
+    done
+    ;;
+
+    4)
+        # Settings
+        ...
+
+    5)
+        ...
+
+    6)
+        ...
+
+    *)
+        echo
+        echo -e "${RED}Invalid option! Please try again.${RESET}"
+        sleep 2
+        ;;
+esac
+
+done
