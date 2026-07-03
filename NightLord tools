@@ -224,45 +224,62 @@ case "$option" in
                     pause
                     ;;
 
-                2)
+    2)
     clear
     banner
 
-    echo -e "${CYAN}Setting up MC-CB...${RESET}"
+    echo -e "${CYAN}Setting up NightLord MC-CB...${RESET}"
     sleep 1
 
-    mkdir -p "$SCRIPT_DIR/mc"
+    # Create mc folder in current directory
+    mkdir -p mc
 
-    if ! cd "$SCRIPT_DIR/mc"; then
-        echo -e "${RED}Cannot enter mc folder!${RESET}"
+    # Enter mc folder
+    cd mc || {
+        echo -e "${RED}✖ Failed to enter mc folder!${RESET}"
         pause
         continue
-    fi
+    }
 
-    echo -e "${WHITE}Downloading Paper 1.21.8...${RESET}"
+    # Remove old server.jar if it exists
+    [ -f server.jar ] && rm -f server.jar
 
-    curl -L --fail -o server.jar "https://fill-data.papermc.io/v1/objects/8de7c52c3b02403503d16fac58003f1efef7dd7a0256786843927fa92ee57f1e/paper-1.21.8-60.jar"
+    echo
+    echo -e "${WHITE}Downloading Paper 1.21.8 Build 60...${RESET}"
+
+    curl -L --fail -o server.jar \
+    "https://fill-data.papermc.io/v1/objects/8de7c52c3b02403503d16fac58003f1efef7dd7a0256786843927fa92ee57f1e/paper-1.21.8-60.jar"
 
     if [ $? -ne 0 ]; then
-        echo -e "${RED}Download failed! Check your internet.${RESET}"
+        echo
+        echo -e "${RED}✖ Download failed! Check your internet.${RESET}"
+        cd ..
         pause
         continue
     fi
 
     if [ ! -f server.jar ]; then
-        echo -e "${RED}server.jar was not created!${RESET}"
+        echo
+        echo -e "${RED}✖ server.jar not found!${RESET}"
+        cd ..
         pause
         continue
     fi
 
+    # Accept EULA
     echo "eula=true" > eula.txt
 
-    mkdir -p plugins
-
     echo
-    echo -e "${GREEN}✔ Setup Complete!${RESET}"
-    echo -e "${GREEN}Folder : $SCRIPT_DIR/mc${RESET}"
-    echo -e "${GREEN}File   : server.jar${RESET}"
+    echo -e "${GREEN}==========================================${RESET}"
+    echo -e "${GREEN}✔ NightLord MC-CB Setup Complete!${RESET}"
+    echo -e "${GREEN}✔ Folder Created : mc${RESET}"
+    echo -e "${GREEN}✔ server.jar Downloaded${RESET}"
+    echo -e "${GREEN}✔ eula.txt Created${RESET}"
+    echo -e "${GREEN}==========================================${RESET}"
+    echo
+    echo -e "${YELLOW}Now select 'Run Server' once to generate plugins and server files.${RESET}"
+
+    cd ..
 
     pause
     ;;
@@ -274,16 +291,16 @@ case "$option" in
                         banner
 
                         echo -e "${CYAN}==============================================${RESET}"
-                        echo -e "${GREEN}        NIGHTLORD PLUGIN MANAGER${RESET}"
+                        echo -e "${RED}        NIGHTLORD PLUGIN MANAGER${RESET}"
                         echo -e "${CYAN}==============================================${RESET}"
                         echo
 
-                        echo -e "${GREEN}1) Install ViaVersion${RESET}"
-                        echo -e "${GREEN}2) Install ViaBackwards${RESET}"
-                        echo -e "${GREEN}3) Install SkinsRestorer${RESET}"
-                        echo -e "${GREEN}4) Install Connect${RESET}"
-                        echo -e "${GREEN}5) Install All Plugins${RESET}"
-                        echo -e "${GREEN}6) Back${RESET}"
+                        echo -e "${RED}1) Install ViaVersion${RESET}"
+                        echo -e "${RED}2) Install ViaBackwards${RESET}"
+                        echo -e "${RED}3) Install SkinsRestorer${RESET}"
+                        echo -e "${RED}4) Install Connect${RESET}"
+                        echo -e "${RED}5) Install All Plugins${RESET}"
+                        echo -e "${RED}6) Back${RESET}"
                         echo
 
                         read -p "Select option : " plugin
