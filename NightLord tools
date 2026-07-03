@@ -1,175 +1,512 @@
 #!/bin/bash
 
-# ==========================
-# NightLord Tools
-# ==========================
+# ==========================================
+#          NightLord Tools v2.0
+# ==========================================
 
 # Colors
 PURPLE="\033[1;35m"
 GREEN="\033[1;32m"
 WHITE="\033[1;37m"
 RED="\033[1;31m"
+YELLOW="\033[1;33m"
+CYAN="\033[1;36m"
 RESET="\033[0m"
 
-# ---------- Loading Screen ----------
-loading() {
-    clear
-    echo -e "${PURPLE}"
-    echo "=============================================="
-    echo "            NightLord Tools Loader"
-    echo "=============================================="
-    echo -e "${RESET}"
+# Script directory
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-    width=40
+# Default RAM
+RAM="8192M"
 
-    for ((i=0; i<=width; i++)); do
-        percent=$((i*100/width))
-        filled=$(printf "%${i}s" "" | tr ' ' '█')
+# Default Java Flags
+JAVA_FLAGS="-Xms${RAM} -Xmx${RAM}"
 
-        printf "\r${WHITE}Loading ${PURPLE}[${GREEN}%-40s${PURPLE}] ${WHITE}%3d%%${RESET}" "$filled" "$percent"
-        sleep 0.05
-    done
+# Version
+VERSION="2.0"
 
-    echo
-    sleep 0.5
-    clear
+# --------------------------
+# NightLord Banner
+# --------------------------
+banner() {
+echo -e "${PURPLE}"
+echo "=============================================================="
+echo "░█▄─░█ ▀█▀ ░█▀▀█ ░█─░█ ▀▀█▀▀ ░█─── ░█▀▀▀█ ░█▀▀█ ░█▀▀▄"
+echo "░█░█░█ ░█─ ░█─▄▄ ░█▀▀█ ─░█── ░█─── ░█──░█ ░█▄▄▀ ░█─░█"
+echo "░█──▀█ ▄█▄ ░█▄▄█ ░█─░█ ─░█── ░█▄▄█ ░█▄▄▄█ ░█─░█ ░█▄▄▀"
+echo
+echo "                     𝗡 𝗜 𝗚 𝗛 𝗧 𝗟 𝗢 𝗥 𝗗"
+echo "                        T O O L S"
+echo "=============================================================="
+echo -e "${RESET}"
 }
 
-# Show loading animation
+# --------------------------
+# Improved Loading
+# --------------------------
+loading() {
+
+clear
+banner
+
+steps=(
+"Loading NightLord Engine..."
+"Checking Files..."
+"Checking Java..."
+"Loading Menu..."
+"Preparing MC-CB..."
+"Almost Ready..."
+)
+
+for step in "${steps[@]}"
+do
+echo -e "${CYAN}$step${RESET}"
+sleep 0.4
+done
+
+echo
+echo -e "${GREEN}✔ Welcome NightLord!${RESET}"
+sleep 1
+clear
+
+}
+
 loading
 
-# ---------- Main Menu ----------
-while true; do
-    clear
+# --------------------------
+# Java Check
+# --------------------------
+check_java() {
 
-    echo -e "${PURPLE}"
-    echo "=================================================="
-    echo "░█▄─░█ ▀█▀ ░█▀▀█ ░█─░█ ▀▀█▀▀ ░█─── ░█▀▀▀█ ░█▀▀█ ░█▀▀▄"
-    echo "░█░█░█ ░█─ ░█─▄▄ ░█▀▀█ ─░█── ░█─── ░█──░█ ░█▄▄▀ ░█─░█"
-    echo "░█──▀█ ▄█▄ ░█▄▄█ ░█─░█ ─░█── ░█▄▄█ ░█▄▄▄█ ░█─░█ ░█▄▄▀"
-    echo
-    echo "                  𝗡𝗜𝗚𝗛𝗧𝗟𝗢𝗥𝗗"
-    echo "                     TOOLS"
-    echo "=================================================="
-    echo -e "${RESET}"
+if ! command -v java >/dev/null 2>&1
+then
+clear
+banner
+echo -e "${RED}✖ Java is not installed!${RESET}"
+echo
+read -p "Press Enter..."
+return 1
+fi
 
-    echo -e "${PURPLE}1) 24/7${RESET}"
-    echo -e "${PURPLE}2) Petro Install${RESET}"
-    echo -e "${PURPLE}3) Run MC-CB${RESET}"
-    echo -e "${PURPLE}4) Setup MC-CB${RESET}"
-    echo -e "${PURPLE}5) Plugins${RESET}"
-    echo -e "${PURPLE}6) Exit${RESET}"
-    echo
+return 0
 
-    read -p "Select option: " option
+}
 
-    case "$option" in
+# --------------------------
+# Pause
+# --------------------------
+pause(){
 
-        1)
+echo
+read -p "Press Enter to continue..."
+
+}
+
+# --------------------------
+# Main Menu
+# --------------------------
+
+while true
+do
+
+clear
+banner
+
+echo -e "${WHITE}Version : ${GREEN}$VERSION${RESET}"
+echo -e "${WHITE}Author  : ${GREEN}NightLord${RESET}"
+echo
+echo -e "${PURPLE}1) 24/7${RESET}"
+echo -e "${PURPLE}2) Petro Install${RESET}"
+echo -e "${PURPLE}3) MC-CB${RESET}"
+echo -e "${PURPLE}4) Settings${RESET}"
+echo -e "${PURPLE}5) Check Update${RESET}"
+echo -e "${PURPLE}6) Exit${RESET}"
+echo
+
+read -p "Select option : " option
+
+case "$option" in
+    1)
+        clear
+        banner
+        echo -e "${PURPLE}Launching NightLord 24/7...${RESET}"
+        sleep 1
+
+        curl -fsSL "https://raw.githubusercontent.com/NightLord-pro/NightLordNotTools/refs/heads/main/24-7" | python3
+
+        pause
+        ;;
+
+    2)
+        clear
+        banner
+        echo -e "${PURPLE}Launching Petro Install...${RESET}"
+        sleep 1
+
+        bash -c "$(curl -fsSL https://raw.githubusercontent.com/NightLord-pro/NightLordNotTools/refs/heads/main/Petroldectal%20Create)"
+
+        pause
+        ;;
+
+    3)
+        while true
+        do
             clear
-            echo -e "${PURPLE}Launching 24/7...${RESET}"
-            sleep 1
-            curl -fsSL "https://raw.githubusercontent.com/NightLord-pro/NightLordNotTools/refs/heads/main/24-7" | python3
-            echo
-            read -p "Press Enter to return to menu..."
-            ;;
+            echo -e "${GREEN}"
+            echo "=============================================================="
+            echo "                    NIGHTLORD MC-CB"
+            echo "=============================================================="
+            echo -e "${RESET}"
 
-        2)
+            echo -e "${WHITE}RAM        : ${GREEN}$RAM${RESET}"
+            echo -e "${WHITE}Java Flags : ${GREEN}$JAVA_FLAGS${RESET}"
+            echo
+            echo -e "${GREEN}1) Run Server${RESET}"
+            echo -e "${GREEN}2) Setup Server${RESET}"
+            echo -e "${GREEN}3) Plugin Manager${RESET}"
+            echo -e "${GREEN}4) Back${RESET}"
+            echo
+
+            read -p "Select option : " mcoption
+
+            case "$mcoption" in
+                1)
+                    clear
+                    banner
+
+                    check_java || {
+                        pause
+                        continue
+                    }
+
+                    echo -e "${CYAN}==============================================${RESET}"
+                    echo -e "${GREEN}        NightLord MC-CB Starting...${RESET}"
+                    echo -e "${CYAN}==============================================${RESET}"
+
+                    for step in \
+                        "Checking server files..." \
+                        "Checking Java..." \
+                        "Loading server..." \
+                        "Preparing world..." \
+                        "Launching Minecraft..."
+                    do
+                        echo -e "${WHITE}$step${RESET}"
+                        sleep 0.5
+                    done
+
+                    cd "$SCRIPT_DIR/mc" || {
+                        echo
+                        echo -e "${RED}✖ Folder 'mc' not found!${RESET}"
+                        pause
+                        continue
+                    }
+
+                    if [ ! -f "server.jar" ]; then
+                        echo
+                        echo -e "${RED}✖ server.jar not found!${RESET}"
+                        echo -e "${YELLOW}Run 'Setup Server' first.${RESET}"
+                        pause
+                        continue
+                    fi
+
+                    echo "eula=true" > eula.txt
+
+                    echo
+                    echo -e "${GREEN}✔ EULA Accepted${RESET}"
+                    echo -e "${GREEN}✔ RAM : $RAM${RESET}"
+                    echo -e "${GREEN}✔ Starting Server...${RESET}"
+                    echo
+
+                    java $JAVA_FLAGS -jar server.jar nogui
+
+                    echo
+                    echo -e "${YELLOW}Server stopped.${RESET}"
+                    pause
+                    ;;
+
+                2)
+                    clear
+                    banner
+
+                    echo -e "${CYAN}Setting up MC-CB...${RESET}"
+                    sleep 1
+
+                    mkdir -p "$SCRIPT_DIR/mc"
+                    cd "$SCRIPT_DIR/mc" || continue
+
+                    echo
+                    echo -e "${WHITE}Downloading Paper 1.21.8...${RESET}"
+
+                    curl -L -o server.jar "https://fill-data.papermc.io/v1/objects/8de7c52c3b02403503d16fac58003f1efef7dd7a0256786843927fa92ee57f1e/paper-1.21.8-60.jar"
+
+                    if [ $? -ne 0 ]; then
+                        echo
+                        echo -e "${RED}✖ Download failed!${RESET}"
+                        pause
+                        continue
+                    fi
+
+                    echo "eula=true" > eula.txt
+
+                    echo
+                    echo -e "${GREEN}✔ server.jar Downloaded${RESET}"
+                    echo -e "${GREEN}✔ EULA Accepted${RESET}"
+
+                    echo
+                    echo -e "${CYAN}Starting server once to generate files...${RESET}"
+                    sleep 2
+
+                    java -jar server.jar nogui
+
+                    echo
+                    echo -e "${GREEN}✔ Setup Complete!${RESET}"
+                    echo -e "${GREEN}✔ plugins folder generated.${RESET}"
+
+                    pause
+                    ;;
+
+                                3)
+                    while true
+                    do
+                        clear
+                        banner
+
+                        echo -e "${CYAN}==============================================${RESET}"
+                        echo -e "${GREEN}        NIGHTLORD PLUGIN MANAGER${RESET}"
+                        echo -e "${CYAN}==============================================${RESET}"
+                        echo
+
+                        echo -e "${GREEN}1) Install ViaVersion${RESET}"
+                        echo -e "${GREEN}2) Install ViaBackwards${RESET}"
+                        echo -e "${GREEN}3) Install SkinsRestorer${RESET}"
+                        echo -e "${GREEN}4) Install Connect${RESET}"
+                        echo -e "${GREEN}5) Install All Plugins${RESET}"
+                        echo -e "${GREEN}6) Back${RESET}"
+                        echo
+
+                        read -p "Select option : " plugin
+
+                        if [ ! -d "$SCRIPT_DIR/mc/plugins" ]; then
+                            echo
+                            echo -e "${RED}✖ plugins folder not found!${RESET}"
+                            echo -e "${YELLOW}Run Setup Server first.${RESET}"
+                            pause
+                            break
+                        fi
+
+                        cd "$SCRIPT_DIR/mc/plugins" || break
+
+                        case "$plugin" in
+
+                            1)
+                                clear
+                                banner
+                                echo -e "${WHITE}Installing ViaVersion...${RESET}"
+
+                                curl -L -o ViaVersion.jar \
+                                "https://github.com/ViaVersion/ViaVersion/releases/download/5.10.0/ViaVersion-5.10.0.jar"
+
+                                echo
+                                echo -e "${GREEN}✔ ViaVersion Installed!${RESET}"
+                                pause
+                                ;;
+
+                            2)
+                                clear
+                                banner
+                                echo -e "${WHITE}Installing ViaBackwards...${RESET}"
+
+                                curl -L -o ViaBackwards.jar \
+                                "https://github.com/ViaVersion/ViaBackwards/releases/download/5.10.0/ViaBackwards-5.10.0.jar"
+
+                                echo
+                                echo -e "${GREEN}✔ ViaBackwards Installed!${RESET}"
+                                pause
+                                ;;
+
+                            3)
+                                clear
+                                banner
+                                echo -e "${WHITE}Installing SkinsRestorer...${RESET}"
+
+                                curl -L -o SkinsRestorer.jar \
+                                "https://github.com/SkinsRestorer/SkinsRestorer/releases/download/15.12.0/SkinsRestorer.jar"
+
+                                echo
+                                echo -e "${GREEN}✔ SkinsRestorer Installed!${RESET}"
+                                pause
+                                ;;
+
+                            4)
+                                clear
+                                banner
+                                echo -e "${WHITE}Installing Connect...${RESET}"
+
+                                curl -L -o Connect.jar \
+                                "https://github.com/minekube/connect-java/releases/download/latest/connect-spigot.jar"
+
+                                echo
+                                echo -e "${GREEN}✔ Connect Installed!${RESET}"
+                                pause
+                                ;;
+
+                            5)
+                                clear
+                                banner
+                                echo -e "${CYAN}Installing All Plugins...${RESET}"
+
+                                curl -L -o ViaVersion.jar \
+                                "https://github.com/ViaVersion/ViaVersion/releases/download/5.10.0/ViaVersion-5.10.0.jar"
+
+                                curl -L -o ViaBackwards.jar \
+                                "https://github.com/ViaVersion/ViaBackwards/releases/download/5.10.0/ViaBackwards-5.10.0.jar"
+
+                                curl -L -o SkinsRestorer.jar \
+                                "https://github.com/SkinsRestorer/SkinsRestorer/releases/download/15.12.0/SkinsRestorer.jar"
+
+                                curl -L -o Connect.jar \
+                                "https://github.com/minekube/connect-java/releases/download/latest/connect-spigot.jar"
+
+                                echo
+                                echo -e "${GREEN}✔ All Plugins Installed Successfully!${RESET}"
+                                pause
+                                ;;
+
+                            6)
+                                break
+                                ;;
+
+                            *)
+                                echo
+                                echo -e "${RED}Invalid option!${RESET}"
+                                sleep 2
+                                ;;
+                        esac
+                    done
+                    ;;
+
+                4)
+                    break
+                    ;;
+
+                *)
+                    echo
+                    echo -e "${RED}Invalid option!${RESET}"
+                    sleep 2
+                    ;;
+            esac
+        done
+        ;;
+    4)
+        while true
+        do
             clear
-            echo -e "${PURPLE}Launching Petro Install...${RESET}"
-            sleep 1
-            bash -c "$(curl -fsSL https://raw.githubusercontent.com/NightLord-pro/NightLordNotTools/refs/heads/main/Petroldectal%20Create)"
+            banner
+
+            echo -e "${CYAN}==============================================${RESET}"
+            echo -e "${GREEN}        NIGHTLORD SETTINGS${RESET}"
+            echo -e "${CYAN}==============================================${RESET}"
             echo
-            read -p "Press Enter to return to menu..."
-            ;;
-
-        3)
-            clear
-            echo -e "${PURPLE}Starting MC-CB...${RESET}"
-            sleep 1
-
-            cd mc || {
-                echo -e "${RED}Folder 'mc' not found!${RESET}"
-                echo
-                read -p "Press Enter to return to menu..."
-                continue
-            }
-
-            java -Xmx8196M -Xms8196M -jar server.jar nogui
-
+            echo -e "${WHITE}Current RAM        : ${GREEN}$RAM${RESET}"
+            echo -e "${WHITE}Current Java Flags : ${GREEN}$JAVA_FLAGS${RESET}"
             echo
-            read -p "Press Enter to return to menu..."
-            ;;
-
-        4)
-            clear
-            echo -e "${PURPLE}Setting up MC-CB...${RESET}"
-            sleep 1
-
-            mkdir -p mc
-            cd mc || exit
-
-            echo -e "${WHITE}Downloading Paper 1.21.8...${RESET}"
-
-            curl -L -o server.jar "https://fill-data.papermc.io/v1/objects/8de7c52c3b02403503d16fac58003f1efef7dd7a0256786843927fa92ee57f1e/paper-1.21.8-60.jar"
-
-            if [ $? -eq 0 ]; then
-                echo
-                echo -e "${GREEN}✓ MC-CB setup completed successfully!${RESET}"
-                echo -e "${GREEN}Server saved as: mc/server.jar${RESET}"
-            else
-                echo
-                echo -e "${RED}✗ Failed to download server.jar!${RESET}"
-            fi
-
+            echo -e "${GREEN}1) Change RAM${RESET}"
+            echo -e "${GREEN}2) Change Java Flags${RESET}"
+            echo -e "${GREEN}3) Reset Default${RESET}"
+            echo -e "${GREEN}4) Back${RESET}"
             echo
-            read -p "Press Enter to return to menu..."
-            ;;
 
-         5)
-            clear
-            echo -e "${PURPLE}Installing Plugins...${RESET}"
-            sleep 1
+            read -p "Select option : " setoption
 
-            if [ ! -d "mc/plugins" ]; then
-                echo -e "${RED}Folder 'mc/plugins' not found!${RESET}"
-                echo -e "${RED}Please start the server once to generate the plugins folder.${RESET}"
-                echo
-                read -p "Press Enter to return to menu..."
-                continue
-            fi
+            case "$setoption" in
 
-            cd mc/plugins || continue
+                1)
+                    clear
+                    banner
 
-            echo -e "${WHITE}Downloading ViaVersion...${RESET}"
-            curl -L -o ViaVersion.jar "https://github.com/ViaVersion/ViaVersion/releases/download/5.10.0/ViaVersion-5.10.0.jar"
+                    echo -e "${WHITE}Examples:${RESET}"
+                    echo "4096M"
+                    echo "6144M"
+                    echo "8192M"
+                    echo "12288M"
+                    echo
 
-            echo -e "${WHITE}Downloading ViaBackwards...${RESET}"
-            curl -L -o ViaBackwards.jar "https://github.com/ViaVersion/ViaBackwards/releases/download/5.10.0/ViaBackwards-5.10.0.jar"
+                    read -p "Enter RAM : " RAM
 
-            echo -e "${WHITE}Downloading SkinsRestorer...${RESET}"
-            curl -L -o SkinsRestorer.jar "https://github.com/SkinsRestorer/SkinsRestorer/releases/download/15.12.0/SkinsRestorer.jar"
+                    JAVA_FLAGS="-Xms${RAM} -Xmx${RAM}"
 
-            echo -e "${WHITE}Downloading Connect...${RESET}"
-            curl -L -o Connect.jar "https://github.com/minekube/connect-java/releases/download/latest/connect-spigot.jar"
+                    echo
+                    echo -e "${GREEN}✔ RAM Updated Successfully!${RESET}"
+                    pause
+                    ;;
 
-            echo
-            echo -e "${GREEN}✓ All plugins installed successfully!${RESET}"
-            echo
-            read -p "Press Enter to return to menu..."
-            ;;
+                2)
+                    clear
+                    banner
 
-        6)
-            clear
-            echo -e "${PURPLE}Thanks for using NightLord Tools!${RESET}"
-            sleep 1
-            break
-            ;;
+                    echo
+                    read -p "Enter Java Flags : " JAVA_FLAGS
 
-        *)
-            echo
-            echo -e "${RED}Invalid option! Please try again.${RESET}"
-            sleep 2
-            ;;
-    esac
+                    echo
+                    echo -e "${GREEN}✔ Java Flags Updated!${RESET}"
+                    pause
+                    ;;
+
+                3)
+                    RAM="8192M"
+                    JAVA_FLAGS="-Xms8192M -Xmx8192M"
+
+                    echo
+                    echo -e "${GREEN}✔ Settings Reset Successfully!${RESET}"
+                    pause
+                    ;;
+
+                4)
+                    break
+                    ;;
+
+                *)
+                    echo
+                    echo -e "${RED}Invalid option!${RESET}"
+                    sleep 2
+                    ;;
+            esac
+        done
+        ;;
+
+    5)
+        clear
+        banner
+
+        echo -e "${CYAN}==============================================${RESET}"
+        echo -e "${GREEN}Checking NightLord Tools Version...${RESET}"
+        echo -e "${CYAN}==============================================${RESET}"
+        echo
+
+        echo -e "${WHITE}Current Version : ${GREEN}$VERSION${RESET}"
+        echo
+        echo -e "${YELLOW}GitHub update checker will be added in a future version.${RESET}"
+
+        pause
+        ;;
+
+    6)
+        clear
+        banner
+
+        echo
+        echo -e "${GREEN}Thanks for using NightLord Tools!${RESET}"
+        echo -e "${WHITE}Made with ❤️ by NightLord${RESET}"
+        echo
+        sleep 2
+        break
+        ;;
+
+    *)
+        echo
+        echo -e "${RED}Invalid option! Please try again.${RESET}"
+        sleep 2
+        ;;
+esac
+
 done
