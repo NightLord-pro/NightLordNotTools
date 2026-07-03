@@ -164,7 +164,7 @@ done
 }
 
 # ==========================
-MAIN MENU
+# MAIN MENU
 # ==========================
 while true; do
 banner
