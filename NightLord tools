@@ -405,20 +405,7 @@ case "$option" in
         esac
     done
     ;;
-                        esac
 
-                4)
-                    break
-                    ;;
-
-                *)
-                    echo
-                    echo -e "${RED}Invalid option!${RESET}"
-                    sleep 2
-                    ;;
-            esac
-        done
-        ;;
     4)
         while true
         do
