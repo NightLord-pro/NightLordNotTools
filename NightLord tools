@@ -171,59 +171,54 @@ case "$option" in
 
             case "$mcoption" in
                 1)
-                    clear
-                    banner
+    clear
+    banner
 
-                    check_java || {
-                        pause
-                        continue
-                    }
+    check_java || {
+        pause
+        continue
+    }
 
-                    echo -e "${CYAN}==============================================${RESET}"
-                    echo -e "${GREEN}        NightLord MC-CB Starting...${RESET}"
-                    echo -e "${CYAN}==============================================${RESET}"
+    echo -e "${CYAN}==============================================${RESET}"
+    echo -e "${GREEN}NightLord MC-CB Starting...${RESET}"
+    echo -e "${CYAN}==============================================${RESET}"
+    echo
 
-                    for step in \
-                        "Checking server files..." \
-                        "Checking Java..." \
-                        "Loading server..." \
-                        "Preparing world..." \
-                        "Launching Minecraft..."
-                    do
-                        echo -e "${WHITE}$step${RESET}"
-                        sleep 0.5
-                    done
+    MC_DIR="$(pwd)/mc"
 
-                    cd "$SCRIPT_DIR/mc" || {
-                        echo
-                        echo -e "${RED}✖ Folder 'mc' not found!${RESET}"
-                        pause
-                        continue
-                    }
+    if [ ! -d "$MC_DIR" ]; then
+        echo -e "${RED}✖ Folder 'mc' not found!${RESET}"
+        echo -e "${YELLOW}Run 'Setup Server' first.${RESET}"
+        pause
+        continue
+    fi
 
-                    if [ ! -f "server.jar" ]; then
-                        echo
-                        echo -e "${RED}✖ server.jar not found!${RESET}"
-                        echo -e "${YELLOW}Run 'Setup Server' first.${RESET}"
-                        pause
-                        continue
-                    fi
+    cd "$MC_DIR" || {
+        echo -e "${RED}Cannot enter mc folder!${RESET}"
+        pause
+        continue
+    }
 
-                    echo "eula=true" > eula.txt
+    if [ ! -f "server.jar" ]; then
+        echo -e "${RED}✖ server.jar not found!${RESET}"
+        pause
+        continue
+    fi
 
-                    echo
-                    echo -e "${GREEN}✔ EULA Accepted${RESET}"
-                    echo -e "${GREEN}✔ RAM : $RAM${RESET}"
-                    echo -e "${GREEN}✔ Starting Server...${RESET}"
-                    echo
+    echo "eula=true" > eula.txt
 
-                    java $JAVA_FLAGS -jar server.jar nogui
+    echo
+    echo -e "${GREEN}✔ Server Folder Found${RESET}"
+    echo -e "${GREEN}✔ server.jar Found${RESET}"
+    echo -e "${GREEN}✔ Starting Minecraft Server...${RESET}"
+    echo
 
-                    echo
-                    echo -e "${YELLOW}Server stopped.${RESET}"
-                    pause
-                    ;;
+    java $JAVA_FLAGS -jar server.jar nogui
 
+    echo
+    echo -e "${YELLOW}Server stopped.${RESET}"
+    pause
+    ;;
     2)
     clear
     banner
