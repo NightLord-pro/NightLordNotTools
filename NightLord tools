@@ -225,35 +225,47 @@ case "$option" in
                     ;;
 
                 2)
-                    clear
-                    banner
+    clear
+    banner
 
-                    echo -e "${CYAN}Setting up MC-CB...${RESET}"
-                    sleep 1
-mkdir -p "$SCRIPT_DIR/mc"
-cd "$SCRIPT_DIR/mc" || continue
+    echo -e "${CYAN}Setting up MC-CB...${RESET}"
+    sleep 1
 
-echo -e "${WHITE}Downloading Paper 1.21.8...${RESET}"
+    mkdir -p "$SCRIPT_DIR/mc"
 
-curl -L -o server.jar "https://fill-data.papermc.io/v1/objects/8de7c52c3b02403503d16fac58003f1efef7dd7a0256786843927fa92ee57f1e/paper-1.21.8-60.jar"
+    if ! cd "$SCRIPT_DIR/mc"; then
+        echo -e "${RED}Cannot enter mc folder!${RESET}"
+        pause
+        continue
+    fi
 
-if [ ! -f server.jar ]; then
-    echo -e "${RED}Download failed!${RESET}"
+    echo -e "${WHITE}Downloading Paper 1.21.8...${RESET}"
+
+    curl -L --fail -o server.jar "https://fill-data.papermc.io/v1/objects/8de7c52c3b02403503d16fac58003f1efef7dd7a0256786843927fa92ee57f1e/paper-1.21.8-60.jar"
+
+    if [ $? -ne 0 ]; then
+        echo -e "${RED}Download failed! Check your internet.${RESET}"
+        pause
+        continue
+    fi
+
+    if [ ! -f server.jar ]; then
+        echo -e "${RED}server.jar was not created!${RESET}"
+        pause
+        continue
+    fi
+
+    echo "eula=true" > eula.txt
+
+    mkdir -p plugins
+
+    echo
+    echo -e "${GREEN}✔ Setup Complete!${RESET}"
+    echo -e "${GREEN}Folder : $SCRIPT_DIR/mc${RESET}"
+    echo -e "${GREEN}File   : server.jar${RESET}"
+
     pause
-    continue
-fi
-
-echo "eula=true" > eula.txt
-
-echo
-echo -e "${GREEN}Starting server...${RESET}"
-
-java -Xms8192M -Xmx8192M -jar server.jar nogui
-
-echo
-echo -e "${GREEN}Setup completed!${RESET}"
-pause
-                    ;;
+    ;;
 
                                 3)
                     while true
