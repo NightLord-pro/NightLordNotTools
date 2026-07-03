@@ -1,215 +1,253 @@
 #!/bin/bash
 
 # ==========================
-# NightLord Tools v2.1
-# FIXED STABLE EDITION
+# NIGHTLORD TOOLS v5.0 ULTIMATE
 # ==========================
 
 # Colors
 PURPLE="\033[1;35m"
 GREEN="\033[1;32m"
-WHITE="\033[1;37m"
 RED="\033[1;31m"
 YELLOW="\033[1;33m"
 CYAN="\033[1;36m"
+WHITE="\033[1;37m"
 RESET="\033[0m"
 
-SCRIPT_DIR="$(pwd)"
+# Paths
+WORK_DIR="$(pwd)"
+MC_DIR="$WORK_DIR/mc"
+PLUGIN_DIR="$MC_DIR/plugins"
 CONFIG_FILE="$HOME/.nightlord.conf"
+VERSION="5.0 ULTIMATE"
 
-# Default RAM
-RAM="8192M"
+# Load config
 [ -f "$CONFIG_FILE" ] && source "$CONFIG_FILE"
-
-JAVA_FLAGS="-Xms${RAM} -Xmx${RAM}"
-VERSION="2.1"
+RAM=${RAM:-"8192M"}
+JAVA_FLAGS=${JAVA_FLAGS:-"-Xms${RAM} -Xmx${RAM}"}
 
 # ==========================
-banner() {
+# HEADER (GUI PANEL)
+# ==========================
+header() {
 clear
 echo -e "${PURPLE}"
-echo "=============================================="
-echo "        NIGHTLORD TOOLS v$VERSION"
-echo "=============================================="
+echo "╔══════════════════════════════════════════════╗"
+echo "║        🌙 NIGHTLORD CONTROL PANEL v5.0       ║"
+echo "║        Minecraft Hosting & Manager          ║"
+echo "╚══════════════════════════════════════════════╝"
 echo -e "${RESET}"
-}
 
-pause(){ read -p "Press Enter..." }
-
-check_java(){
-command -v java >/dev/null 2>&1 || {
-echo -e "${RED}Java not installed!${RESET}"
-return 1
-}
+echo -e "${CYAN}RAM: ${GREEN}$RAM${RESET} | ${CYAN}MC_DIR: ${GREEN}$MC_DIR${RESET}"
+echo -e "${CYAN}Version: ${GREEN}$VERSION${RESET}"
+echo
 }
 
 # ==========================
-# LOADING
+# LOADING ANIMATION
 # ==========================
-loading(){
-banner
-echo -e "${CYAN}Starting NightLord...${RESET}"
-sleep 1
-clear
+loading() {
+echo -ne "${YELLOW}Loading System"
+for i in {1..12}; do
+echo -ne "."
+sleep 0.15
+done
+echo -e " ${GREEN}Ready!${RESET}"
+sleep 0.5
 }
 
+# ==========================
+# PAUSE
+# ==========================
+pause() {
+echo
+read -p "Press Enter..."
+}
+
+# ==========================
+# RAM DETECT
+# ==========================
+detect_ram() {
+TOTAL=$(awk '/MemTotal/ {print int($2/1024)}' /proc/meminfo)
+USE=$((TOTAL-512))
+[ "$USE" -lt 512 ] && USE=512
+RAM="${USE}M"
+JAVA_FLAGS="-Xms${RAM} -Xmx${RAM}"
+echo "RAM=\"$RAM\"" > "$CONFIG_FILE"
+}
+
+# ==========================
+# SERVER SETUP
+# ==========================
+setup_server() {
+header
 loading
 
-# ==========================
-# MC START
-# ==========================
-start_server(){
-check_java || { pause; return; }
+mkdir -p "$MC_DIR"
+cd "$MC_DIR" || return
 
-MC_DIR="$SCRIPT_DIR/mc"
+echo -e "${CYAN}Downloading Paper Server...${RESET}"
+curl -L -o server.jar \
+"https://fill-data.papermc.io/v1/objects/8de7c52c3b02403503d16fac58003f1efef7dd7a0256786843927fa92ee57f1e/paper-1.21.8-60.jar"
 
-if [ ! -d "$MC_DIR" ]; then
-echo -e "${RED}MC folder missing!${RESET}"
+echo "eula=true" > eula.txt
+mkdir -p plugins
+
+echo -e "${GREEN}✔ Server Setup Completed!${RESET}"
+pause
+}
+
+# ==========================
+# RUN SERVER
+# ==========================
+run_server() {
+header
+loading
+
+cd "$MC_DIR" || return
+
+if [ ! -f server.jar ]; then
+echo -e "${RED}Server not found! Run Setup first.${RESET}"
 pause
 return
 fi
 
-cd "$MC_DIR" || return
-
-[ ! -f server.jar ] && {
-echo -e "${RED}server.jar missing!${RESET}"
-pause
-return
-}
-
-echo "eula=true" > eula.txt
-
+echo -e "${GREEN}Starting Server...${RESET}"
 java $JAVA_FLAGS -jar server.jar nogui
 pause
 }
 
 # ==========================
-setup_server(){
-mkdir -p mc
-cd mc || return
-
-echo -e "${CYAN}Downloading Paper...${RESET}"
-
-curl -L -o server.jar \
-"https://fill-data.papermc.io/v1/objects/8de7c52c3b02403503d16fac58003f1efef7dd7a0256786843927fa92ee57f1e/paper-1.21.8-60.jar"
-
-echo "eula=true" > eula.txt
-
-cd ..
-echo -e "${GREEN}Setup Done!${RESET}"
-pause
-}
-
+# PLUGIN MANAGER
 # ==========================
-plugin_menu(){
+plugins() {
 while true; do
-banner
-echo "PLUGIN MANAGER"
-echo "1 ViaVersion"
-echo "2 ViaBackwards"
-echo "3 SkinsRestorer"
-echo "4 Connect"
-echo "5 All"
-echo "6 Back"
+header
 
-read -p ">> " p
-
-PLUGIN_DIR="$SCRIPT_DIR/mc/plugins"
 mkdir -p "$PLUGIN_DIR"
-cd "$PLUGIN_DIR" || return
+cd "$PLUGIN_DIR"
+
+echo -e "${CYAN}══ Plugin Manager ══${RESET}"
+echo "1) ViaVersion"
+echo "2) ViaBackwards"
+echo "3) SkinsRestorer"
+echo "4) Connect"
+echo "5) Install All"
+echo "6) Back"
+
+read -p "Select: " p
 
 case $p in
-1) curl -L -o ViaVersion.jar https://github.com/ViaVersion/ViaVersion/releases/download/5.10.0/ViaVersion-5.10.0.jar ;;
-2) curl -L -o ViaBackwards.jar https://github.com/ViaVersion/ViaBackwards/releases/download/5.10.0/ViaBackwards-5.10.0.jar ;;
-3) curl -L -o SkinsRestorer.jar https://github.com/SkinsRestorer/SkinsRestorer/releases/download/15.12.0/SkinsRestorer.jar ;;
-4) curl -L -o Connect.jar https://github.com/minekube/connect-java/releases/download/latest/connect-spigot.jar ;;
+1)
+curl -L -o ViaVersion.jar https://github.com/ViaVersion/ViaVersion/releases/download/5.10.0/ViaVersion-5.10.0.jar
+;;
+2)
+curl -L -o ViaBackwards.jar https://github.com/ViaVersion/ViaBackwards/releases/download/5.10.0/ViaBackwards-5.10.0.jar
+;;
+3)
+curl -L -o SkinsRestorer.jar https://github.com/SkinsRestorer/SkinsRestorer/releases/download/15.12.0/SkinsRestorer.jar
+;;
+4)
+curl -L -o Connect.jar https://github.com/minekube/connect-java/releases/latest/download/connect-spigot.jar
+;;
 5)
+plugins_all
+;;
+6)
+break
+;;
+esac
+done
+}
+
+plugins_all() {
 curl -L -o ViaVersion.jar https://github.com/ViaVersion/ViaVersion/releases/download/5.10.0/ViaVersion-5.10.0.jar
 curl -L -o ViaBackwards.jar https://github.com/ViaVersion/ViaBackwards/releases/download/5.10.0/ViaBackwards-5.10.0.jar
 curl -L -o SkinsRestorer.jar https://github.com/SkinsRestorer/SkinsRestorer/releases/download/15.12.0/SkinsRestorer.jar
-curl -L -o Connect.jar https://github.com/minekube/connect-java/releases/download/latest/connect-spigot.jar
-;;
-6) break ;;
-*) echo "Invalid"; sleep 1 ;;
-esac
+curl -L -o Connect.jar https://github.com/minekube/connect-java/releases/latest/download/connect-spigot.jar
 
-done
+echo -e "${GREEN}All Plugins Installed!${RESET}"
+pause
 }
 
 # ==========================
-settings_menu(){
+# SETTINGS
+# ==========================
+settings() {
 while true; do
-banner
-echo "SETTINGS"
-echo "RAM: $RAM"
-echo "1 Change RAM"
-echo "2 Reset"
-echo "3 Back"
+header
 
-read -p ">> " s
+echo "1) Auto RAM Detect"
+echo "2) Change RAM"
+echo "3) Show Config"
+echo "4) Back"
+
+read -p "Select: " s
 
 case $s in
 1)
-read -p "Enter RAM (e.g. 4096M): " RAM
-JAVA_FLAGS="-Xms${RAM} -Xmx${RAM}"
+detect_ram
+echo -e "${GREEN}Auto RAM Enabled${RESET}"
+pause
 ;;
 2)
-RAM="8192M"
-JAVA_FLAGS="-Xms8192M -Xmx8192M"
+read -p "Enter RAM: " RAM
+echo "RAM=\"$RAM\"" > "$CONFIG_FILE"
+JAVA_FLAGS="-Xms${RAM} -Xmx${RAM}"
+pause
 ;;
-3) break ;;
+3)
+echo "RAM: $RAM"
+echo "JAVA: $JAVA_FLAGS"
+pause
+;;
+4)
+break
+;;
 esac
-
 done
 }
 
 # ==========================
-# MAIN MENU
+# 24/7 HOST (GITHUB SCRIPT)
+# ==========================
+host_24_7() {
+header
+loading
+
+echo -e "${GREEN}Starting 24/7 GitHub Host...${RESET}"
+sleep 1
+
+while true; do
+curl -fsSL "https://raw.githubusercontent.com/NightLord-pro/NightLordNotTools/refs/heads/main/24-7" | python3
+echo -e "${YELLOW}Restarting 24/7 Script...${RESET}"
+sleep 3
+done
+}
+
+# ==========================
+# MAIN MENU UI
 # ==========================
 while true; do
-banner
+header
+loading
 
-echo "1 24/7"
-echo "2 Petro Install"
-echo "3 MC-CB"
-echo "4 Settings"
-echo "5 Update"
-echo "6 Exit"
+echo -e "${PURPLE}══ MAIN MENU ══${RESET}"
+echo "1) 🚀 Setup Server"
+echo "2) 🎮 Run Server"
+echo "3) 🔌 Plugin Manager"
+echo "4) ⚙️ Settings"
+echo "5) 🔄 24/7 Host"
+echo "6) ❌ Exit"
 
-read -p "Select: " opt
+read -p "Choose: " c
 
-case $opt in
-1)
-curl -fsSL https://raw.githubusercontent.com/NightLord-pro/NightLordNotTools/refs/heads/main/24-7 | python3
-pause
-;;
-2)
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/NightLord-pro/NightLordNotTools/refs/heads/main/Petroldectal%20Create)"
-pause
-;;
-3)
-while true; do
-banner
-echo "MC-CB MENU"
-echo "1 Run Server"
-echo "2 Setup Server"
-echo "3 Plugin Manager"
-echo "4 Back"
-
-read -p ">> " m
-
-case $m in
-1) start_server ;;
-2) setup_server ;;
-3) plugin_menu ;;
-4) break ;;
-esac
-done
-;;
-4) settings_menu ;;
-5) echo "Update coming soon"; pause ;;
+case $c in
+1) setup_server ;;
+2) run_server ;;
+3) plugins ;;
+4) settings ;;
+5) host_24_7 ;;
 6) exit 0 ;;
 *) echo "Invalid"; sleep 1 ;;
 esac
-
 done
