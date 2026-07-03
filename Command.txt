@@ -1,0 +1,2358 @@
+==========================================================
+
+PART 3.1 - NIGHTLORD MC MANAGER
+
+==========================================================
+
+mc_manager() {
+
+while true
+do
+
+header
+
+mkdir -p "$MC_DIR"
+
+echo -e "${PURPLE}═══════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}           NIGHTLORD MC MANAGER${RESET}"
+echo -e "${PURPLE}═══════════════════════════════════════════════${RESET}"
+echo
+
+echo -e "${WHITE}Server Folder : ${GREEN}$MC_DIR${RESET}"
+echo -e "${WHITE}RAM           : ${GREEN}$RAM${RESET}"
+echo -e "${WHITE}Java Flags    : ${GREEN}$JAVA_FLAGS${RESET}"
+echo
+
+if [ -f "$MC_DIR/server.jar" ]; then
+echo -e "${GREEN}✔ Server Installed${RESET}"
+else
+echo -e "${RED}✖ Server Not Installed${RESET}"
+fi
+
+echo
+echo "1) ▶ Run Server"
+echo "2) 📥 Setup Server"
+echo "3) 📦 Paper Version Installer"
+echo "4) 🔌 Plugin Manager"
+echo "5) 📊 Server Status"
+echo "6) 📂 Open Server Folder"
+echo "7) ⬅ Back"
+echo
+
+read -p "Select : " mc
+
+case "$mc" in
+
+1. 
+
+header
+
+if ! command -v java >/dev/null 2>&1
+then
+echo -e "${RED}Java Not Installed!${RESET}"
+pause
+continue
+fi
+
+cd "$MC_DIR" || continue
+
+if [ ! -f server.jar ]
+then
+echo
+echo -e "${RED}server.jar not found!${RESET}"
+pause
+continue
+fi
+
+echo "eula=true" > eula.txt
+
+echo
+echo -e "${CYAN}Starting Minecraft Server...${RESET}"
+
+steps=(
+"Checking Java"
+"Checking RAM"
+"Loading Server"
+"Loading Plugins"
+"Loading Worlds"
+"Starting Console"
+)
+
+for step in "${steps[@]}"
+do
+printf "%-28s" "$step"
+sleep 0.4
+echo -e "${GREEN}✔${RESET}"
+done
+
+echo
+echo -e "${GREEN}Using RAM : $RAM${RESET}"
+echo
+
+java $JAVA_FLAGS -jar server.jar nogui
+
+echo
+echo -e "${YELLOW}Server Closed.${RESET}"
+pause
+;;
+
+2. 
+
+setup_server
+;;
+
+3. 
+
+paper_installer
+;;
+
+4. 
+
+plugin_manager
+;;
+
+5. 
+
+header
+
+echo -e "${CYAN}========== SERVER STATUS ==========${RESET}"
+echo
+
+if [ -f "$MC_DIR/server.jar" ]; then
+echo -e "Jar File      : ${GREEN}Found${RESET}"
+else
+echo -e "Jar File      : ${RED}Missing${RESET}"
+fi
+
+if pgrep -f server.jar >/dev/null
+then
+echo -e "Server        : ${GREEN}Running${RESET}"
+PID=$(pgrep -f server.jar)
+echo "PID           : $PID"
+else
+echo -e "Server        : ${RED}Offline${RESET}"
+fi
+
+echo
+
+TOTAL=$(awk '/MemTotal/ {print int($2/1024)}' /proc/meminfo)
+FREE=$(awk '/MemAvailable/ {print int($2/1024)}' /proc/meminfo)
+
+echo "System RAM    : ${TOTAL} MB"
+echo "Available RAM : ${FREE} MB"
+
+echo
+pause
+;;
+
+6. 
+
+header
+
+echo
+echo "$MC_DIR"
+echo
+ls -la "$MC_DIR"
+
+pause
+;;
+
+7. 
+
+break
+;;
+
+*)
+
+echo
+echo -e "${RED}Invalid Option!${RESET}"
+sleep 2
+;;
+
+esac
+
+done
+
+}
+
+==========================
+
+PAPER VERSION INSTALLER
+
+==========================
+
+paper_installer() {
+
+while true
+do
+
+header
+
+echo -e "${PURPLE}══════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}        PAPER VERSION INSTALLER${RESET}"
+echo -e "${PURPLE}══════════════════════════════════════════════${RESET}"
+echo
+
+echo "Latest Releases"
+echo "----------------"
+echo "1) Paper 1.21.8"
+echo "2) Paper 1.21.7"
+echo "3) Paper 1.21.6"
+echo "4) Paper 1.21.5"
+echo "5) Paper 1.21.4"
+echo "6) Paper 1.21.3"
+echo "7) Paper 1.21.1"
+
+echo
+echo "Older Releases"
+echo "--------------"
+echo "8) Paper 1.20.6"
+echo "9) Paper 1.20.5"
+echo "10) Paper 1.20.4"
+echo "11) Paper 1.20.2"
+echo "12) Paper 1.20.1"
+
+echo
+echo "Legacy"
+echo "------"
+echo "13) Paper 1.19.4"
+echo "14) Paper 1.18.2"
+echo "15) Paper 1.17.1"
+
+echo
+echo "0) Back"
+echo
+
+read -p "Select Version : " VER
+
+case "$VER" in
+
+1. VERSION="1.21.8" ;;
+
+
+2. VERSION="1.21.7" ;;
+
+
+3. VERSION="1.21.6" ;;
+
+
+4. VERSION="1.21.5" ;;
+
+
+5. VERSION="1.21.4" ;;
+
+
+6. VERSION="1.21.3" ;;
+
+
+7. VERSION="1.21.1" ;;
+
+
+8. VERSION="1.20.6" ;;
+
+
+9. VERSION="1.20.5" ;;
+
+
+10. VERSION="1.20.4" ;;
+
+
+11. VERSION="1.20.2" ;;
+
+
+12. VERSION="1.20.1" ;;
+
+
+13. VERSION="1.19.4" ;;
+
+
+14. VERSION="1.18.2" ;;
+
+
+15. VERSION="1.17.1" ;;
+
+
+16. 
+
+break
+;;
+
+*)
+echo
+echo -e "${RED}Invalid Option${RESET}"
+sleep 2
+continue
+;;
+
+esac
+
+mkdir -p "$MC_DIR"
+cd "$MC_DIR" || continue
+
+rm -f server.jar
+
+echo
+echo -e "${CYAN}Downloading Paper ${VERSION}...${RESET}"
+echo
+
+curl -L \
+"https://api.papermc.io/v2/projects/paper/versions/${VERSION}/builds/last/downloads/paper-${VERSION}-last.jar" \
+-o server.jar
+
+if [ -f server.jar ] && [ -s server.jar ]; then
+
+echo "eula=true" > eula.txt
+
+echo
+echo -e "${GREEN}✔ Paper ${VERSION} Installed Successfully${RESET}"
+
+else
+
+echo
+echo -e "${RED}Download Failed!${RESET}"
+
+fi
+
+pause
+
+done
+
+}
+
+============================================
+
+PART 3.3 - PAPER VERSION MANAGER
+
+============================================
+
+paper_menu() {
+
+while true
+do
+
+header
+
+echo -e "${CYAN}═══════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}          PAPER VERSION MANAGER${RESET}"
+echo -e "${CYAN}═══════════════════════════════════════════════${RESET}"
+echo
+
+echo "========== Latest =========="
+echo " 1) Paper 1.21.8"
+echo " 2) Paper 1.21.7"
+echo " 3) Paper 1.21.6"
+echo " 4) Paper 1.21.5"
+echo " 5) Paper 1.21.4"
+echo " 6) Paper 1.21.3"
+echo " 7) Paper 1.21.2"
+echo " 8) Paper 1.21.1"
+echo " 9) Paper 1.21"
+
+echo
+echo "========== 1.20 =========="
+echo "10) Paper 1.20.6"
+echo "11) Paper 1.20.5"
+echo "12) Paper 1.20.4"
+echo "13) Paper 1.20.3"
+echo "14) Paper 1.20.2"
+echo "15) Paper 1.20.1"
+
+echo
+echo "========== 1.19 =========="
+echo "16) Paper 1.19.4"
+echo "17) Paper 1.19.3"
+echo "18) Paper 1.19.2"
+echo "19) Paper 1.19.1"
+echo "20) Paper 1.19"
+
+echo
+echo "========== 1.18 =========="
+echo "21) Paper 1.18.2"
+echo "22) Paper 1.18.1"
+echo "23) Paper 1.18"
+
+echo
+echo "========== 1.17 =========="
+echo "24) Paper 1.17.1"
+echo "25) Paper 1.17"
+
+echo
+echo "========== 1.16 =========="
+echo "26) Paper 1.16.5"
+echo "27) Paper 1.16.4"
+echo "28) Paper 1.16.3"
+echo "29) Paper 1.16.2"
+echo "30) Paper 1.16.1"
+
+echo
+echo "31) Back"
+echo
+
+read -p "Select Version : " pver
+
+case "$pver" in
+
+1. VERSION="1.21.8" ;;
+
+
+2. VERSION="1.21.7" ;;
+
+
+3. VERSION="1.21.6" ;;
+
+
+4. VERSION="1.21.5" ;;
+
+
+5. VERSION="1.21.4" ;;
+
+
+6. VERSION="1.21.3" ;;
+
+
+7. VERSION="1.21.2" ;;
+
+
+8. VERSION="1.21.1" ;;
+
+
+9. VERSION="1.21" ;;
+
+
+10. VERSION="1.20.6" ;;
+
+
+11. VERSION="1.20.5" ;;
+
+
+12. VERSION="1.20.4" ;;
+
+
+13. VERSION="1.20.3" ;;
+
+
+14. VERSION="1.20.2" ;;
+
+
+15. VERSION="1.20.1" ;;
+
+
+16. VERSION="1.19.4" ;;
+
+
+17. VERSION="1.19.3" ;;
+
+
+18. VERSION="1.19.2" ;;
+
+
+19. VERSION="1.19.1" ;;
+
+
+20. VERSION="1.19" ;;
+
+
+21. VERSION="1.18.2" ;;
+
+
+22. VERSION="1.18.1" ;;
+
+
+23. VERSION="1.18" ;;
+
+
+24. VERSION="1.17.1" ;;
+
+
+25. VERSION="1.17" ;;
+
+
+26. VERSION="1.16.5" ;;
+
+
+27. VERSION="1.16.4" ;;
+
+
+28. VERSION="1.16.3" ;;
+
+
+29. VERSION="1.16.2" ;;
+
+
+30. VERSION="1.16.1" ;;
+
+
+31. break ;;
+
+
+
+*)
+echo -e "${RED}Invalid Option${RESET}"
+sleep 2
+continue
+;;
+
+esac
+
+echo
+echo -e "${GREEN}Downloading Paper ${VERSION}...${RESET}"
+
+mkdir -p "$MC_DIR"
+cd "$MC_DIR" || continue
+
+rm -f server.jar
+
+curl -fsSL https://api.papermc.io/v2/projects/paper/versions/$VERSION \
+| grep -o '"build":[0-9]*' \
+| tail -1 \
+| cut -d: -f2 > build.tmp
+
+BUILD=$(cat build.tmp)
+
+rm -f build.tmp
+
+if [ -z "$BUILD" ]; then
+
+echo
+echo -e "${RED}Version Not Found!${RESET}"
+pause
+continue
+
+fi
+
+curl -L \
+-o server.jar \
+"https://api.papermc.io/v2/projects/paper/versions/$VERSION/builds/$BUILD/downloads/paper-$VERSION-$BUILD.jar"
+
+if [ -f server.jar ]; then
+
+echo
+echo -e "${GREEN}Installed Paper $VERSION Build $BUILD${RESET}"
+
+else
+
+echo
+echo -e "${RED}Download Failed!${RESET}"
+
+fi
+
+pause
+
+done
+
+}
+
+============================================
+
+PART 4 - SETTINGS & UTILITIES
+
+============================================
+
+settings_menu() {
+
+while true
+do
+
+header
+
+TOTAL_RAM=$(awk '/MemTotal/ {print int($2/1024)}' /proc/meminfo)
+
+echo -e "${CYAN}═══════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}        SETTINGS & UTILITIES${RESET}"
+echo -e "${CYAN}═══════════════════════════════════════════════${RESET}"
+echo
+
+echo "Current RAM        : $RAM"
+echo "Java Flags         : $JAVA_FLAGS"
+echo "System RAM         : ${TOTAL_RAM} MB"
+echo
+
+echo "1) Auto Detect RAM"
+echo "2) Change RAM"
+echo "3) Custom Java Flags"
+echo "4) Backup Server"
+echo "5) Restore Backup"
+echo "6) Delete Server"
+echo "7) Show Server Info"
+echo "8) Save Config"
+echo "9) Reload Config"
+echo "10) Check Java"
+echo "11) Check Internet"
+echo "12) Check Updates"
+echo "13) Back"
+echo
+
+read -p "Select : " opt
+
+case "$opt" in
+
+1. 
+
+detect_ram
+
+echo
+echo -e "${GREEN}Auto RAM Enabled${RESET}"
+
+pause
+;;
+
+2. 
+
+echo
+read -p "Enter RAM (Example 8192M): " RAM
+
+JAVA_FLAGS="-Xms${RAM} -Xmx${RAM}"
+
+echo
+echo -e "${GREEN}RAM Updated${RESET}"
+
+pause
+;;
+
+3. 
+
+echo
+read -p "Java Flags : " JAVA_FLAGS
+
+echo
+echo -e "${GREEN}Java Flags Saved${RESET}"
+
+pause
+;;
+
+4. 
+
+mkdir -p "$WORK_DIR/backups"
+
+FILE="backup-$(date +%Y%m%d-%H%M%S).tar.gz"
+
+tar -czf "$WORK_DIR/backups/$FILE" "$MC_DIR"
+
+echo
+echo -e "${GREEN}Backup Created:${RESET}"
+echo "$WORK_DIR/backups/$FILE"
+
+pause
+;;
+
+5. 
+
+echo
+ls "$WORK_DIR/backups"
+
+echo
+read -p "Backup File : " FILE
+
+if [ -f "$WORK_DIR/backups/$FILE" ]; then
+
+rm -rf "$MC_DIR"
+
+tar -xzf "$WORK_DIR/backups/$FILE"
+
+echo
+echo -e "${GREEN}Backup Restored${RESET}"
+
+else
+
+echo
+echo -e "${RED}Backup Not Found${RESET}"
+
+fi
+
+pause
+;;
+
+6. 
+
+echo
+read -p "Delete MC Server? (yes/no): " ans
+
+if [ "$ans" = "yes" ]; then
+
+rm -rf "$MC_DIR"
+
+echo
+echo -e "${GREEN}Server Deleted${RESET}"
+
+fi
+
+pause
+;;
+
+7. 
+
+echo
+
+echo "========== SERVER INFO =========="
+
+echo "Folder : $MC_DIR"
+
+echo "RAM : $RAM"
+
+echo "Java : $(java -version 2>&1 | head -1)"
+
+echo "OS : $(uname -a)"
+
+echo "CPU : $(nproc) Cores"
+
+echo "Disk :"
+
+df -h .
+
+echo
+
+pause
+;;
+
+8. 
+
+cat > "$CONFIG_FILE" <<EOF
+RAM="$RAM"
+JAVA_FLAGS="$JAVA_FLAGS"
+EOF
+
+echo
+echo -e "${GREEN}Configuration Saved${RESET}"
+
+pause
+;;
+
+9. 
+
+[ -f "$CONFIG_FILE" ] && source "$CONFIG_FILE"
+
+echo
+echo -e "${GREEN}Configuration Reloaded${RESET}"
+
+pause
+;;
+
+10. 
+
+check_java
+
+pause
+;;
+
+11. 
+
+check_net
+
+pause
+;;
+
+12. 
+
+echo
+
+echo -e "${CYAN}Checking GitHub Version...${RESET}"
+
+sleep 2
+
+echo
+echo -e "${GREEN}You are using NightLord Tools v$VERSION${RESET}"
+echo "Online updater will be added in v6."
+
+pause
+;;
+
+13. 
+
+break
+;;
+
+*)
+
+echo
+echo -e "${RED}Invalid Option${RESET}"
+
+sleep 2
+;;
+
+esac
+
+done
+
+}
+
+============================================
+
+PART 5 - ADVANCED TOOLS
+
+============================================
+
+advanced_tools() {
+
+while true
+do
+
+header
+
+echo -e "${CYAN}═══════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}          ADVANCED TOOLS${RESET}"
+echo -e "${CYAN}═══════════════════════════════════════════════${RESET}"
+echo
+
+echo "1) 🚀 NightLord 24/7 Host"
+echo "2) 🐳 Petro Install"
+echo "3) ☁ Cloudflared Tunnel"
+echo "4) 🌍 Playit.gg Tunnel"
+echo "5) 🔄 Restart Server"
+echo "6) 🧹 Clean Logs"
+echo "7) 🗑 Delete Cache"
+echo "8) 📊 Server Status"
+echo "9) 🔍 Java Information"
+echo "10) 💾 Disk Usage"
+echo "11) 🧠 RAM Usage"
+echo "12) 🌐 Network Test"
+echo "13) ⬅ Back"
+echo
+
+read -p "Select : " adv
+
+case "$adv" in
+
+1. 
+
+header
+
+echo -e "${GREEN}Launching NightLord 24/7...${RESET}"
+
+python3 <(curl -fsSL https://raw.githubusercontent.com/NightLord-pro/NightLordNotTools/refs/heads/main/24-7)
+
+pause
+;;
+
+2. 
+
+header
+
+echo -e "${GREEN}Launching Petro Installer...${RESET}"
+
+bash <(curl -fsSL https://raw.githubusercontent.com/NightLord-pro/NightLordNotTools/refs/heads/main/Petroldectal%20Create)
+
+pause
+;;
+
+3. 
+
+header
+
+echo
+
+read -p "Local Port (25565): " PORT
+
+PORT=${PORT:-25565}
+
+cloudflared tunnel --url http://localhost:$PORT
+
+pause
+;;
+
+4. 
+
+header
+
+echo
+
+echo "Run Playit Agent"
+
+playit
+
+pause
+;;
+
+5. 
+
+header
+
+pkill -f server.jar
+
+sleep 2
+
+cd "$MC_DIR" || exit
+
+java $JAVA_FLAGS -jar server.jar nogui
+
+pause
+;;
+
+6. 
+
+header
+
+find "$MC_DIR" -name "*.log" -delete
+
+echo
+
+echo -e "${GREEN}Logs Deleted${RESET}"
+
+pause
+;;
+
+7. 
+
+header
+
+rm -rf "$MC_DIR/cache"
+
+rm -rf "$MC_DIR/libraries"
+
+echo
+
+echo -e "${GREEN}Cache Cleaned${RESET}"
+
+pause
+;;
+
+8. 
+
+header
+
+echo
+
+ps aux | grep java | grep -v grep
+
+echo
+
+pause
+;;
+
+9. 
+
+header
+
+java -version
+
+pause
+;;
+
+10. 
+
+header
+
+df -h
+
+pause
+;;
+
+11. 
+
+header
+
+free -h
+
+pause
+;;
+
+12. 
+
+header
+
+ping -c 4 github.com
+
+pause
+;;
+
+13. 
+
+break
+;;
+
+*)
+
+echo
+
+echo -e "${RED}Invalid Option${RESET}"
+
+sleep 2
+;;
+
+esac
+
+done
+
+}
+
+============================================
+
+PART 6 - SERVER UTILITIES
+
+============================================
+
+server_utilities() {
+
+while true
+do
+
+header
+
+echo -e "${CYAN}═══════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}         SERVER UTILITIES${RESET}"
+echo -e "${CYAN}═══════════════════════════════════════════════${RESET}"
+echo
+
+echo "1) Paper Version Manager (API)"
+echo "2) Server Properties Editor"
+echo "3) Enable Whitelist"
+echo "4) Disable Whitelist"
+echo "5) Backup World"
+echo "6) Restore World"
+echo "7) Delete World"
+echo "8) View Latest Log"
+echo "9) Clear Logs"
+echo "10) World Size"
+echo "11) Back"
+echo
+
+read -p "Select : " util
+
+case "$util" in
+
+1. 
+
+paper_manager
+
+;;
+
+2. 
+
+nano "$MC_DIR/server.properties"
+
+;;
+
+3. 
+
+sed -i 's/^white-list=.*/white-list=true/' "$MC_DIR/server.properties"
+
+echo
+echo -e "${GREEN}Whitelist Enabled${RESET}"
+
+pause
+;;
+
+4. 
+
+sed -i 's/^white-list=.*/white-list=false/' "$MC_DIR/server.properties"
+
+echo
+echo -e "${GREEN}Whitelist Disabled${RESET}"
+
+pause
+;;
+
+5. 
+
+mkdir -p "$WORK_DIR/backups"
+
+tar -czf "$WORK_DIR/backups/world-$(date +%F-%H%M).tar.gz" "$MC_DIR/world"
+
+echo
+echo -e "${GREEN}World Backup Completed${RESET}"
+
+pause
+;;
+
+6. 
+
+echo
+ls "$WORK_DIR/backups"
+
+echo
+read -p "Backup File : " FILE
+
+rm -rf "$MC_DIR/world"
+
+tar -xzf "$WORK_DIR/backups/$FILE" -C "$MC_DIR"
+
+echo
+echo -e "${GREEN}World Restored${RESET}"
+
+pause
+;;
+
+7. 
+
+echo
+read -p "Delete World? (yes/no): " ans
+
+if [ "$ans" = "yes" ]; then
+rm -rf "$MC_DIR/world"
+echo -e "${GREEN}World Deleted${RESET}"
+fi
+
+pause
+;;
+
+8. 
+
+less "$MC_DIR/logs/latest.log"
+
+;;
+
+9. 
+
+rm -rf "$MC_DIR/logs/"*
+
+echo
+echo -e "${GREEN}Logs Cleared${RESET}"
+
+pause
+;;
+
+10. 
+
+du -sh "$MC_DIR/world"
+
+pause
+;;
+
+11. 
+
+break
+;;
+
+*)
+
+echo
+echo -e "${RED}Invalid Option${RESET}"
+
+sleep 2
+;;
+
+esac
+
+done
+
+}
+
+============================================
+
+PART 7 - NIGHTLORD PLUGIN STORE
+
+============================================
+
+plugin_store() {
+
+while true
+do
+
+header
+
+mkdir -p "$PLUGIN_DIR"
+cd "$PLUGIN_DIR" || return
+
+echo -e "${CYAN}═══════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}         NIGHTLORD PLUGIN STORE${RESET}"
+echo -e "${CYAN}═══════════════════════════════════════════════${RESET}"
+echo
+
+echo " 1) ViaVersion"
+echo " 2) ViaBackwards"
+echo " 3) SkinsRestorer"
+echo " 4) Minekube Connect"
+echo " 5) Geyser"
+echo " 6) Floodgate"
+echo " 7) LuckPerms"
+echo " 8) EssentialsX"
+echo " 9) Vault"
+echo "10) PlaceholderAPI"
+echo "11) ProtocolLib"
+echo "12) WorldEdit"
+echo "13) WorldGuard"
+echo "14) Install All Essentials"
+echo "15) List Installed Plugins"
+echo "16) Remove Plugin"
+echo "17) Back"
+echo
+
+read -p "Select : " plugin
+
+case "$plugin" in
+
+1. 
+
+curl -L -o ViaVersion.jar \
+https://github.com/ViaVersion/ViaVersion/releases/latest/download/ViaVersion.jar
+;;
+
+2. 
+
+curl -L -o ViaBackwards.jar \
+https://github.com/ViaVersion/ViaBackwards/releases/latest/download/ViaBackwards.jar
+;;
+
+3. 
+
+curl -L -o SkinsRestorer.jar \
+https://github.com/SkinsRestorer/SkinsRestorer/releases/latest/download/SkinsRestorer.jar
+;;
+
+4. 
+
+curl -L -o Connect.jar \
+https://github.com/minekube/connect-java/releases/latest/download/connect-spigot.jar
+;;
+
+5. 
+
+echo
+echo "Install Geyser manually or add latest release URL."
+pause
+;;
+
+6. 
+
+echo
+echo "Install Floodgate manually or add latest release URL."
+pause
+;;
+
+7. 
+
+echo
+echo "Install LuckPerms manually or add latest release URL."
+pause
+;;
+
+8. 
+
+echo
+echo "Install EssentialsX manually or add latest release URL."
+pause
+;;
+
+9. 
+
+echo
+echo "Install Vault manually or add latest release URL."
+pause
+;;
+
+10. 
+
+echo
+echo "Install PlaceholderAPI manually or add latest release URL."
+pause
+;;
+
+11. 
+
+echo
+echo "Install ProtocolLib manually or add latest release URL."
+pause
+;;
+
+12. 
+
+echo
+echo "Install WorldEdit manually or add latest release URL."
+pause
+;;
+
+13. 
+
+echo
+echo "Install WorldGuard manually or add latest release URL."
+pause
+;;
+
+14. 
+
+curl -L -o ViaVersion.jar https://github.com/ViaVersion/ViaVersion/releases/latest/download/ViaVersion.jar
+
+curl -L -o ViaBackwards.jar https://github.com/ViaVersion/ViaBackwards/releases/latest/download/ViaBackwards.jar
+
+curl -L -o SkinsRestorer.jar https://github.com/SkinsRestorer/SkinsRestorer/releases/latest/download/SkinsRestorer.jar
+
+curl -L -o Connect.jar https://github.com/minekube/connect-java/releases/latest/download/connect-spigot.jar
+
+echo
+echo -e "${GREEN}Core Plugins Installed Successfully!${RESET}"
+
+pause
+;;
+
+15. 
+
+echo
+
+ls *.jar 2>/dev/null || echo "No Plugins Installed"
+
+pause
+;;
+
+16. 
+
+echo
+
+ls *.jar
+
+echo
+
+read -p "Plugin File : " REMOVE
+
+rm -f "$REMOVE"
+
+echo
+
+echo -e "${GREEN}Plugin Removed${RESET}"
+
+pause
+;;
+
+17. 
+
+break
+;;
+
+*)
+
+echo
+
+echo -e "${RED}Invalid Option${RESET}"
+
+sleep 2
+;;
+
+esac
+
+done
+
+}
+
+============================================
+
+PART 8 - PAPER API MANAGER
+
+============================================
+
+paper_manager() {
+
+while true
+do
+
+header
+
+echo -e "${CYAN}═══════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}         NIGHTLORD PAPER MANAGER${RESET}"
+echo -e "${CYAN}═══════════════════════════════════════════════${RESET}"
+echo
+
+echo "1) Latest Stable"
+echo "2) Choose Version"
+echo "3) Refresh Version List"
+echo "4) Back"
+echo
+
+read -p "Select : " paper
+
+case "$paper" in
+
+1. 
+
+mkdir -p "$MC_DIR"
+cd "$MC_DIR" || return
+
+echo
+echo "Getting latest Paper version..."
+
+LATEST=$(curl -s https://fill.papermc.io/v3/projects/paper | \
+grep -o '"latest":"[^"]*"' | cut -d'"' -f4)
+
+echo
+echo "Latest Version : $LATEST"
+
+curl -fsSL \
+https://fill.papermc.io/v3/projects/paper/versions/$LATEST/builds/latest/downloads/paper-$LATEST.jar \
+-o server.jar
+
+echo "eula=true" > eula.txt
+
+echo
+echo -e "${GREEN}Installed Paper $LATEST${RESET}"
+
+pause
+;;
+
+2. 
+
+mkdir -p "$MC_DIR"
+cd "$MC_DIR" || return
+
+echo
+echo "Available Versions"
+echo
+
+VERSIONS=$(curl -s https://fill.papermc.io/v3/projects/paper | \
+grep -o '"[0-9]+.[0-9.]*"' | tr -d '"' | sort -Vr)
+
+select VERSION in $VERSIONS Back
+do
+
+if [ "$VERSION" = "Back" ]; then
+break
+fi
+
+[ -z "$VERSION" ] && continue
+
+echo
+echo "Downloading Paper $VERSION..."
+
+curl -fsSL \
+https://fill.papermc.io/v3/projects/paper/versions/$VERSION/builds/latest/downloads/paper-$VERSION.jar \
+-o server.jar
+
+echo "eula=true" > eula.txt
+
+echo
+echo -e "${GREEN}Paper $VERSION Installed Successfully${RESET}"
+
+pause
+
+break
+
+done
+;;
+
+3. 
+
+echo
+echo "Refreshing Version Cache..."
+
+sleep 2
+
+echo -e "${GREEN}Done${RESET}"
+
+pause
+;;
+
+4. 
+
+break
+;;
+
+*)
+
+echo -e "${RED}Invalid Option${RESET}"
+sleep 2
+;;
+
+esac
+
+done
+
+}
+
+============================================
+
+PART 9 - WORLD MANAGER
+
+============================================
+
+world_manager() {
+
+mkdir -p "$MC_DIR/world_backups"
+
+while true
+do
+
+header
+
+echo -e "${CYAN}═══════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}          NIGHTLORD WORLD MANAGER${RESET}"
+echo -e "${CYAN}═══════════════════════════════════════════════${RESET}"
+echo
+
+echo "1) List Worlds"
+echo "2) Create World"
+echo "3) Delete World"
+echo "4) Backup World"
+echo "5) Restore Backup"
+echo "6) Export World (.zip)"
+echo "7) Import World (.zip)"
+echo "8) List Backups"
+echo "9) Back"
+echo
+
+read -p "Select : " world
+
+case "$world" in
+
+1. 
+
+echo
+echo "Available Worlds:"
+echo
+
+find "$MC_DIR" -maxdepth 1 -type d | while read dir
+do
+name=$(basename "$dir")
+
+case "$name" in
+world|world_nether|world_the_end)
+echo "✔ $name"
+;;
+esac
+
+done
+
+pause
+;;
+
+2. 
+
+echo
+read -p "World Name : " NEWWORLD
+
+mkdir -p "$MC_DIR/$NEWWORLD"
+
+echo
+echo -e "${GREEN}World Created.${RESET}"
+
+pause
+;;
+
+3. 
+
+echo
+read -p "World Folder : " DELWORLD
+
+rm -rf "$MC_DIR/$DELWORLD"
+
+echo
+echo -e "${GREEN}World Deleted.${RESET}"
+
+pause
+;;
+
+4. 
+
+echo
+read -p "World Folder : " BACKWORLD
+
+DATE=$(date +"%Y%m%d-%H%M%S")
+
+cd "$MC_DIR" || continue
+
+zip -qr \
+"world_backups/${BACKWORLD}-${DATE}.zip" \
+"$BACKWORLD"
+
+echo
+echo -e "${GREEN}Backup Created.${RESET}"
+
+pause
+;;
+
+5. 
+
+echo
+
+ls "$MC_DIR/world_backups"
+
+echo
+
+read -p "Backup File : " RESTORE
+
+cd "$MC_DIR" || continue
+
+unzip -o "world_backups/$RESTORE"
+
+echo
+echo -e "${GREEN}Backup Restored.${RESET}"
+
+pause
+;;
+
+6. 
+
+echo
+
+read -p "World Folder : " EXPORT
+
+cd "$MC_DIR" || continue
+
+zip -qr "${EXPORT}.zip" "$EXPORT"
+
+echo
+echo -e "${GREEN}Export Complete.${RESET}"
+
+pause
+;;
+
+7. 
+
+echo
+
+read -p "Zip File : " IMPORT
+
+cd "$MC_DIR" || continue
+
+unzip "$IMPORT"
+
+echo
+echo -e "${GREEN}Import Complete.${RESET}"
+
+pause
+;;
+
+8. 
+
+echo
+
+ls "$MC_DIR/world_backups"
+
+pause
+;;
+
+9. 
+
+break
+;;
+
+*)
+
+echo -e "${RED}Invalid Option${RESET}"
+
+sleep 2
+;;
+
+esac
+
+done
+
+}
+
+============================================
+
+PART 10 - TUNNEL & PUBLIC IP MANAGER
+
+============================================
+
+tunnel_manager() {
+
+while true
+do
+
+header
+
+echo -e "${CYAN}═══════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}      NIGHTLORD TUNNEL MANAGER${RESET}"
+echo -e "${CYAN}═══════════════════════════════════════════════${RESET}"
+echo
+
+echo "1) Cloudflared Tunnel"
+echo "2) Playit Tunnel"
+echo "3) Ngrok Tunnel"
+echo "4) Localhost.run Tunnel"
+echo "5) Install Cloudflared"
+echo "6) Install Playit"
+echo "7) Tunnel Status"
+echo "8) Stop All Tunnels"
+echo "9) Show Public IP"
+echo "10) Back"
+echo
+
+read -p "Select : " tunnel
+
+case "$tunnel" in
+
+1. 
+
+header
+
+read -p "Minecraft Port [25565] : " PORT
+
+PORT=${PORT:-25565}
+
+cloudflared tunnel --url tcp://localhost:$PORT
+
+pause
+;;
+
+2. 
+
+header
+
+playit
+
+pause
+;;
+
+3. 
+
+header
+
+read -p "Port [25565] : " PORT
+
+PORT=${PORT:-25565}
+
+ngrok tcp $PORT
+
+pause
+;;
+
+4. 
+
+header
+
+read -p "Port [25565] : " PORT
+
+PORT=${PORT:-25565}
+
+ssh -R 0:localhost:$PORT tcp@localhost.run
+
+pause
+;;
+
+5. 
+
+header
+
+echo
+echo "Installing Cloudflared..."
+
+curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 \
+-o cloudflared
+
+chmod +x cloudflared
+
+sudo mv cloudflared /usr/local/bin/
+
+echo
+echo -e "${GREEN}Cloudflared Installed${RESET}"
+
+pause
+;;
+
+6. 
+
+header
+
+echo
+echo "Installing Playit..."
+
+curl -fsSL https://playit-cloud.github.io/ppa/key.gpg | \
+sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/playit.gpg
+
+echo "deb [signed-by=/etc/apt/trusted.gpg.d/playit.gpg] https://playit-cloud.github.io/ppa/data ./"
+
+sudo tee /etc/apt/sources.list.d/playit.list
+
+sudo apt update
+
+sudo apt install playit -y
+
+echo
+echo -e "${GREEN}Playit Installed${RESET}"
+
+pause
+;;
+
+7. 
+
+header
+
+echo
+echo "Running Tunnel Processes"
+echo
+
+ps aux | grep -E "cloudflared|playit|ngrok" | grep -v grep
+
+pause
+;;
+
+8. 
+
+header
+
+pkill cloudflared
+pkill playit
+pkill ngrok
+
+echo
+echo -e "${GREEN}All Tunnels Stopped${RESET}"
+
+pause
+;;
+
+9. 
+
+header
+
+echo
+echo "Public IP"
+
+curl -s ifconfig.me
+
+echo
+pause
+;;
+
+10. 
+
+break
+;;
+
+*)
+
+echo
+echo -e "${RED}Invalid Option${RESET}"
+
+sleep 2
+;;
+
+esac
+
+done
+
+}
+
+============================================
+
+PART 11 - SERVER UTILITIES
+
+============================================
+
+server_utilities() {
+
+while true
+do
+
+header
+
+echo -e "${CYAN}═══════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}        NIGHTLORD SERVER UTILITIES${RESET}"
+echo -e "${CYAN}═══════════════════════════════════════════════${RESET}"
+echo
+
+echo "1) Start Server"
+echo "2) Stop Server"
+echo "3) Restart Server"
+echo "4) Backup Server"
+echo "5) View Latest Log"
+echo "6) Server Information"
+echo "7) Back"
+echo
+
+read -p "Select : " util
+
+case "$util" in
+
+1. 
+
+run_server
+;;
+
+2. 
+
+pkill -f server.jar
+
+echo
+echo -e "${GREEN}Server Stopped.${RESET}"
+
+pause
+;;
+
+3. 
+
+pkill -f server.jar
+
+sleep 2
+
+run_server
+;;
+
+4. 
+
+mkdir -p "$WORK_DIR/backups"
+
+DATE=$(date +"%Y%m%d-%H%M%S")
+
+tar -czf \
+"$WORK_DIR/backups/server-$DATE.tar.gz" \
+"$MC_DIR"
+
+echo
+echo -e "${GREEN}Backup Created:${RESET}"
+echo "$WORK_DIR/backups/server-$DATE.tar.gz"
+
+pause
+;;
+
+5. 
+
+header
+
+if [ -f "$MC_DIR/logs/latest.log" ]; then
+
+tail -50 "$MC_DIR/logs/latest.log"
+
+else
+
+echo "No log found."
+
+fi
+
+pause
+;;
+
+6. 
+
+header
+
+echo "Minecraft Folder : $MC_DIR"
+echo "RAM             : $RAM"
+echo "Java Flags      : $JAVA_FLAGS"
+
+echo
+
+java -version
+
+echo
+
+df -h .
+
+pause
+;;
+
+7. 
+
+break
+;;
+
+*)
+
+echo
+echo -e "${RED}Invalid Option!${RESET}"
+
+sleep 2
+;;
+
+esac
+
+done
+
+}
+
+============================================
+
+PART 12 - AUTO UPDATE & RECOVERY
+
+============================================
+
+auto_update() {
+
+header
+
+echo -e "${CYAN}Checking for updates...${RESET}"
+echo
+
+REMOTE_VERSION=$(curl -fsSL \
+https://raw.githubusercontent.com/NightLord-pro/NightLordNotTools/main/version.txt 2>/dev/null)
+
+if [ -z "$REMOTE_VERSION" ]; then
+
+echo -e "${RED}Unable to contact update server.${RESET}"
+pause
+return
+
+fi
+
+echo "Current Version : $VERSION"
+echo "Latest Version  : $REMOTE_VERSION"
+echo
+
+if [ "$VERSION" = "$REMOTE_VERSION" ]; then
+
+echo -e "${GREEN}You are already using the latest version.${RESET}"
+pause
+return
+
+fi
+
+echo -e "${YELLOW}New version available!${RESET}"
+echo
+
+read -p "Update Now? (y/n): " ans
+
+case "$ans" in
+
+y|Y)
+
+TMP="$WORK_DIR/nightlord-update.sh"
+
+curl -fsSL \
+https://raw.githubusercontent.com/NightLord-pro/NightLordNotTools/main/nightlord.sh \
+-o "$TMP"
+
+if [ -s "$TMP" ]; then
+
+chmod +x "$TMP"
+
+mv "$TMP" "$0"
+
+echo
+echo -e "${GREEN}Update Completed Successfully!${RESET}"
+echo -e "${GREEN}Restart NightLord Tools.${RESET}"
+
+else
+
+echo
+echo -e "${RED}Update Failed.${RESET}"
+
+fi
+
+pause
+;;
+
+*)
+
+echo
+echo "Update Cancelled."
+
+pause
+;;
+
+esac
+
+}
+
+============================================
+
+AUTO RESTART WATCHDOG
+
+============================================
+
+watchdog() {
+
+while true
+do
+
+if ! pgrep -f "server.jar" >/dev/null
+then
+
+echo
+echo "[Watchdog] Server crashed!"
+echo "[Watchdog] Restarting..."
+
+cd "$MC_DIR" || exit
+
+java $JAVA_FLAGS -jar server.jar nogui
+
+fi
+
+sleep 15
+
+done
+
+}
+
+============================================
+
+AUTO BACKUP
+
+============================================
+
+auto_backup() {
+
+mkdir -p "$WORK_DIR/backups"
+
+FILE="backup-$(date +%Y%m%d-%H%M).tar.gz"
+
+tar -czf \
+"$WORK_DIR/backups/$FILE" \
+"$MC_DIR"
+
+echo
+
+echo -e "${GREEN}Automatic Backup Created${RESET}"
+
+}
+
+============================================
+
+SYSTEM CLEANER
+
+============================================
+
+system_clean() {
+
+header
+
+echo "Cleaning..."
+
+find "$MC_DIR" -name "*.log" -delete
+
+rm -rf "$MC_DIR/cache"
+
+rm -rf "$MC_DIR/libraries"
+
+echo
+
+echo -e "${GREEN}Cleanup Completed${RESET}"
+
+pause
+
+}
+
+============================================
+
+QUICK REPAIR
+
+============================================
+
+repair_server() {
+
+header
+
+echo "Checking Installation..."
+
+mkdir -p "$MC_DIR"
+
+mkdir -p "$PLUGIN_DIR"
+
+touch "$MC_DIR/eula.txt"
+
+echo "eula=true" > "$MC_DIR/eula.txt"
+
+echo
+
+echo -e "${GREEN}Repair Finished${RESET}"
+
+pause
+
+}
+
+============================================
+
+PART 13 - EXTRA TOOLS
+
+============================================
+
+extra_tools() {
+
+while true
+do
+
+header
+
+echo "============== EXTRA TOOLS =============="
+echo "1) Check Java Version"
+echo "2) Check Server Status"
+echo "3) Open Server Folder"
+echo "4) Reload Config"
+echo "5) About"
+echo "6) Back"
+echo
+
+read -p "Select : " extra
+
+case "$extra" in
+
+1. 
+
+header
+
+java -version
+
+pause
+;;
+
+2. 
+
+header
+
+if pgrep -f server.jar >/dev/null
+then
+echo -e "${GREEN}Server Running${RESET}"
+else
+echo -e "${RED}Server Offline${RESET}"
+fi
+
+pause
+;;
+
+3. 
+
+header
+
+echo
+echo "Server Folder:"
+echo "$MC_DIR"
+
+pause
+;;
+
+4. 
+
+header
+
+[ -f "$CONFIG_FILE" ] && source "$CONFIG_FILE"
+
+echo
+echo -e "${GREEN}Configuration Reloaded${RESET}"
+
+pause
+;;
+
+5. 
+
+header
+
+echo "NightLord Tools"
+echo "Version : $VERSION"
+echo "Developer : NightLord"
+
+pause
+;;
+
+6. 
+
+break
+;;
+
+*)
+
+echo -e "${RED}Invalid Option${RESET}"
+sleep 1
+;;
+
+esac
+
+done
+
+}
+
+============================================
+
+FINAL PART - NIGHTLORD MAIN MENU
+
+============================================
+
+main_menu() {
+
+while true
+do
+
+header
+
+echo -e "${PURPLE}═══════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}         NIGHTLORD TOOLS $VERSION${RESET}"
+echo -e "${PURPLE}═══════════════════════════════════════════════${RESET}"
+echo
+
+echo " 1) 🚀 Setup Server"
+echo " 2) ▶ Run Server"
+echo " 3) 🔌 Plugin Manager"
+echo " 4) 📦 Paper Version Manager"
+echo " 5) 🌍 World Manager"
+echo " 6) 🌐 Tunnel Manager"
+echo " 7) 🛠 Server Utilities"
+echo " 8) ⚙ Settings"
+echo " 9) 🔄 24/7 Host"
+echo "10) 📥 Petro Installer"
+echo "11) ✨ Extra Tools"
+echo "12) 🔄 Check Updates"
+echo "13) ℹ About"
+echo "14) ❌ Exit"
+echo
+
+read -p "Select : " option
+
+case "$option" in
+
+1. setup_server ;;
+
+
+2. run_server ;;
+
+
+3. plugins ;;
+
+
+4. paper_manager ;;
+
+
+5. world_manager ;;
+
+
+6. tunnel_manager ;;
+
+
+7. server_utilities ;;
+
+
+8. settings ;;
+
+
+9. host_24_7 ;;
+
+
+10. 
+
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/NightLord-pro/NightLordNotTools/refs/heads/main/Petroldectal%20Create)"
+pause
+;;
+
+11. extra_tools ;;
+
+
+12. auto_update ;;
+
+
+13. 
+
+header
+
+echo
+echo "Developer : NightLord"
+echo "Version   : $VERSION"
+echo
+echo "Features:"
+echo "✔ Minecraft Server Manager"
+echo "✔ Paper Version Manager"
+echo "✔ Plugin Manager"
+echo "✔ World Manager"
+echo "✔ Tunnel Manager"
+echo "✔ Server Utilities"
+echo "✔ Auto RAM Detect"
+echo "✔ Auto Update"
+echo "✔ 24/7 GitHub Host"
+
+pause
+;;
+
+14. 
+
+header
+
+echo
+echo -e "${GREEN}Thank you for using NightLord Tools!${RESET}"
+sleep 2
+exit 0
+;;
+
+*)
+
+echo
+echo -e "${RED}Invalid Option!${RESET}"
+sleep 1
+;;
+
+esac
+
+done
+
+}
+
+============================================
+
+START PROGRAM
+
+============================================
+
+loading
+main_menu
+
