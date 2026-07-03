@@ -230,39 +230,29 @@ case "$option" in
 
                     echo -e "${CYAN}Setting up MC-CB...${RESET}"
                     sleep 1
+mkdir -p "$SCRIPT_DIR/mc"
+cd "$SCRIPT_DIR/mc" || continue
 
-                    mkdir -p "$SCRIPT_DIR/mc"
-                    cd "$SCRIPT_DIR/mc" || continue
+echo -e "${WHITE}Downloading Paper 1.21.8...${RESET}"
 
-                    echo
-                    echo -e "${WHITE}Downloading Paper 1.21.8...${RESET}"
+curl -L -o server.jar "https://fill-data.papermc.io/v1/objects/8de7c52c3b02403503d16fac58003f1efef7dd7a0256786843927fa92ee57f1e/paper-1.21.8-60.jar"
 
-                    curl -L -o server.jar "https://fill-data.papermc.io/v1/objects/8de7c52c3b02403503d16fac58003f1efef7dd7a0256786843927fa92ee57f1e/paper-1.21.8-60.jar"
+if [ ! -f server.jar ]; then
+    echo -e "${RED}Download failed!${RESET}"
+    pause
+    continue
+fi
 
-                    if [ $? -ne 0 ]; then
-                        echo
-                        echo -e "${RED}✖ Download failed!${RESET}"
-                        pause
-                        continue
-                    fi
+echo "eula=true" > eula.txt
 
-                    echo "eula=true" > eula.txt
+echo
+echo -e "${GREEN}Starting server...${RESET}"
 
-                    echo
-                    echo -e "${GREEN}✔ server.jar Downloaded${RESET}"
-                    echo -e "${GREEN}✔ EULA Accepted${RESET}"
+java -Xms8192M -Xmx8192M -jar server.jar nogui
 
-                    echo
-                    echo -e "${CYAN}Starting server once to generate files...${RESET}"
-                    sleep 2
-
-                    java -jar server.jar nogui
-
-                    echo
-                    echo -e "${GREEN}✔ Setup Complete!${RESET}"
-                    echo -e "${GREEN}✔ plugins folder generated.${RESET}"
-
-                    pause
+echo
+echo -e "${GREEN}Setup completed!${RESET}"
+pause
                     ;;
 
                                 3)
