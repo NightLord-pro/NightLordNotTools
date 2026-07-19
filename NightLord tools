@@ -310,6 +310,138 @@ done
 }
 
 # ==========================
+# PLAYIT MENU
+# ==========================
+playit_menu() {
+
+while true; do
+header
+
+echo -e "${CYAN}═══════════════════════════════${RESET}"
+echo -e "${PURPLE}         PLAYIT MENU${RESET}"
+echo -e "${CYAN}═══════════════════════════════${RESET}"
+
+if pgrep -f "$HOME/playit/playit" >/dev/null; then
+STATUS="${GREEN}🟢 Running${RESET}"
+else
+STATUS="${RED}🔴 Stopped${RESET}"
+fi
+
+echo -e "Status : $STATUS"
+echo
+
+echo "1) 📥 Install Playit"
+echo "2) ▶️ Start Playit"
+echo "3) ⏹ Stop Playit"
+echo "4) 🔄 Reinstall Playit"
+echo "5) 🗑 Remove Playit"
+echo "6) 🌐 Playit Website"
+echo "0) ⬅ Back"
+
+echo
+read -p "Choose: " p
+
+case $p in
+
+1)
+echo -e "${GREEN}Installing Playit...${RESET}"
+
+mkdir -p "$HOME/playit"
+
+curl -L \
+https://github.com/playit-cloud/playit-agent/releases/latest/download/playit-linux-amd64 \
+-o "$HOME/playit/playit"
+
+chmod +x "$HOME/playit/playit"
+
+echo -e "${GREEN}✔ Installation Complete!${RESET}"
+pause
+;;
+
+2)
+if [ ! -f "$HOME/playit/playit" ]; then
+echo -e "${RED}Playit is not installed!${RESET}"
+pause
+continue
+fi
+
+if pgrep -f "$HOME/playit/playit" >/dev/null; then
+echo -e "${YELLOW}Playit is already running.${RESET}"
+pause
+continue
+fi
+
+echo -e "${GREEN}Starting Playit...${RESET}"
+
+nohup "$HOME/playit/playit" >/dev/null 2>&1 &
+
+sleep 2
+
+echo -e "${GREEN}✔ Playit Started Successfully!${RESET}"
+pause
+;;
+
+3)
+
+if pgrep -f "$HOME/playit/playit" >/dev/null; then
+pkill -f "$HOME/playit/playit"
+echo -e "${GREEN}✔ Playit Stopped.${RESET}"
+else
+echo -e "${YELLOW}Playit is not running.${RESET}"
+fi
+
+pause
+;;
+
+4)
+
+rm -rf "$HOME/playit"
+
+mkdir -p "$HOME/playit"
+
+curl -L \
+https://github.com/playit-cloud/playit-agent/releases/latest/download/playit-linux-amd64 \
+-o "$HOME/playit/playit"
+
+chmod +x "$HOME/playit/playit"
+
+echo -e "${GREEN}✔ Playit Reinstalled Successfully!${RESET}"
+pause
+;;
+
+5)
+
+pkill -f "$HOME/playit/playit" 2>/dev/null
+rm -rf "$HOME/playit"
+
+echo -e "${GREEN}✔ Playit Removed Successfully!${RESET}"
+pause
+;;
+
+6)
+
+echo
+echo -e "${CYAN}Website:${RESET}"
+echo "https://playit.gg"
+echo
+echo "Run Playit and login from your browser."
+pause
+;;
+
+0)
+break
+;;
+
+*)
+echo -e "${RED}Invalid Option!${RESET}"
+sleep 1
+;;
+
+esac
+done
+}
+
+# ==========================
 # MAIN MENU UI
 # ==========================
 while true; do
@@ -322,7 +454,8 @@ echo "2) 🎮 Run Server"
 echo "3) 🔌 Plugin Manager"
 echo "4) ⚙️ Settings"
 echo "5) 🔄 24/7 Host"
-echo "6) ❌ Exit"
+echo "6) 🌐 Playit"
+echo "0) ❌ Exit"
 
 read -p "Choose: " c
 
@@ -332,8 +465,7 @@ case $c in
 3) plugins ;;
 4) settings ;;
 5) host_24_7 ;;
-6) exit 0 ;;
+6) playit_menu ;;
+0) exit 0 ;;
 *) echo "Invalid"; sleep 1 ;;
 esac
-done
-
