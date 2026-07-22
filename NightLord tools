@@ -1,16 +1,18 @@
 #!/bin/bash
 
-# ==========================
-# NIGHTLORD TOOLS v5.7 ULTIMATE
-# ==========================
+# ==========================================
+# 🌙 NIGHTLORD CONTROL PANEL v6.0 ULTIMATE
+# ==========================================
 
-# Colors
+# Colors & Styles
 PURPLE="\033[1;35m"
 GREEN="\033[1;32m"
 RED="\033[1;31m"
 YELLOW="\033[1;33m"
 CYAN="\033[1;36m"
+BLUE="\033[1;34m"
 WHITE="\033[1;37m"
+GRAY="\033[0;90m"
 RESET="\033[0m"
 
 # Paths
@@ -18,7 +20,7 @@ WORK_DIR="$(pwd)"
 MC_DIR="$WORK_DIR/mc"
 PLUGIN_DIR="$MC_DIR/plugins"
 CONFIG_FILE="$HOME/.nightlord.conf"
-VERSION="5.7 ULTIMATE"
+VERSION="6.0 ULTIMATE ELITE"
 
 # Load config
 [ -f "$CONFIG_FILE" ] && source "$CONFIG_FILE"
@@ -26,448 +28,452 @@ RAM=${RAM:-"8192M"}
 JAVA_FLAGS=${JAVA_FLAGS:-"-Xms${RAM} -Xmx${RAM}"}
 
 # ==========================
-# HEADER (GUI PANEL)
+# ELEGANT LOADING SCREEN
 # ==========================
-header() {
-clear
-echo -e "${PURPLE}"
-echo "╔══════════════════════════════════════════════╗"
-echo "║        🌙 NIGHTLORD CONTROL PANEL v5.7       ║"
-echo "║        Minecraft Hosting & Manager          ║"
-echo "╚══════════════════════════════════════════════╝"
-echo -e "${RESET}"
-
-echo -e "${CYAN}RAM: ${GREEN}$RAM${RESET} | ${CYAN}MC_DIR: ${GREEN}$MC_DIR${RESET}"
-echo -e "${CYAN}Version: ${GREEN}$VERSION${RESET}"
-echo
+loading_effect() {
+    clear
+    echo -e "${PURPLE}"
+    echo "╔════════════════════════════════════════════════════════╗"
+    echo "║           🚀 INITIALIZING NIGHTLORD OS v6.0            ║"
+    echo "╚════════════════════════════════════════════════════════╝"
+    echo -e "${RESET}"
+    echo -ne "${CYAN}Loading core modules [${RESET}"
+    for i in {1..20}; do
+        echo -ne "${GREEN}█${RESET}"
+        sleep 0.04
+    done
+    echo -e "${CYAN}] ${GREEN}100% OK!${RESET}"
+    sleep 0.3
 }
 
 # ==========================
-# LOADING ANIMATION
+# HEADER (GUI PANEL)
 # ==========================
-loading() {
-echo -ne "${YELLOW}Loading System"
-for i in {1..12}; do
-echo -ne "."
-sleep 0.15
-done
-echo -e " ${GREEN}Ready!${RESET}"
-sleep 0.5
+header() {
+    clear
+    echo -e "${PURPLE}"
+    echo "╭────────────────────────────────────────────────────────╮"
+    echo "│         🌙 NIGHTLORD CONTROL PANEL v6.0 ELITE          │"
+    echo "│         Next-Gen Minecraft & Server Manager            │"
+    echo "╰────────────────────────────────────────────────────────╯"
+    echo -e "${RESET}"
+    echo -e " ${CYAN}⚡ RAM Allocation:${RESET} ${GREEN}$RAM${RESET}  │  ${CYAN}📂 Core Dir:${RESET} ${GREEN}$MC_DIR${RESET}"
+    echo -e " ${CYAN}💎 Build Ver:${RESET}     ${GREEN}$VERSION${RESET}    │  ${CYAN}🛡️ Status:${RESET}   ${GREEN}Online${RESET}"
+    echo -e "${GRAY}──────────────────────────────────────────────────────────${RESET}"
+    echo
 }
 
 # ==========================
 # PAUSE
 # ==========================
 pause() {
-echo
-read -p "Press Enter..."
+    echo
+    echo -e "${GRAY}Press [Enter] to return to dashboard...${RESET}"
+    read -r
 }
 
 # ==========================
 # RAM DETECT
 # ==========================
 detect_ram() {
-TOTAL=$(awk '/MemTotal/ {print int($2/1024)}' /proc/meminfo)
-USE=$((TOTAL-512))
-[ "$USE" -lt 512 ] && USE=512
-RAM="${USE}M"
-JAVA_FLAGS="-Xms${RAM} -Xmx${RAM}"
-echo "RAM=\"$RAM\"" > "$CONFIG_FILE"
+    TOTAL=$(awk '/MemTotal/ {print int($2/1024)}' /proc/meminfo)
+    USE=$((TOTAL-512))
+    [ "$USE" -lt 512 ] && USE=512
+    RAM="${USE}M"
+    JAVA_FLAGS="-Xms${RAM} -Xmx${RAM}"
+    echo "RAM=\"$RAM\"" > "$CONFIG_FILE"
 }
 
 # ==========================
 # PAPER VERSION SELECTOR
 # ==========================
 version_selector() {
-while true; do
-header
-echo -e "${PURPLE}══ SELECT PAPER MC VERSION ══${RESET}"
-echo "1) Paper 1.21.11 (Latest Stable) 🔥"
-echo "2) Paper 1.21.4"
-echo "3) Paper 1.21.1"
-echo "4) Paper 1.20.4"
-echo "5) Paper 1.19.4"
-echo "6) Paper 1.18.2"
-echo "7) Paper 1.16.5"
-echo "8) Paper 1.12.2 (Legacy)"
-echo "9) Custom URL"
-echo "10) Back"
-echo
-read -p "Select Version: " v_choice
+    while true; do
+        header
+        echo -e "${PURPLE}══ 🌐 SELECT PAPER MINECRAFT VERSION ══${RESET}"
+        echo -e " ${CYAN}[1]${RESET} Paper 1.21.11 (Latest Stable) 🔥"
+        echo -e " ${CYAN}[2]${RESET} Paper 1.21.10"
+        echo -e " ${CYAN}[3]${RESET} Paper 1.21.9"
+        echo -e " ${CYAN}[4]${RESET} Paper 1.21.8"
+        echo -e " ${CYAN}[5]${RESET} Paper 1.21.4"
+        echo -e " ${CYAN}[6]${RESET} Paper 1.21.1"
+        echo -e " ${CYAN}[7]${RESET} Paper 1.20.4"
+        echo -e " ${CYAN}[8]${RESET} Paper 1.19.4"
+        echo -e " ${CYAN}[9]${RESET} Paper 1.18.2"
+        echo -e " ${CYAN}[10]${RESET} Paper 1.16.5"
+        echo -e " ${CYAN}[11]${RESET} Paper 1.12.2 (Legacy)"
+        echo -e " ${CYAN}[12]${RESET} Custom Direct URL"
+        echo -e " ${RED}[13] Back to MC-CB Menu${RESET}"
+        echo
+        read -p "Select choice [1-13]: " v_choice
 
-case $v_choice in
-1)
-    DOWNLOAD_URL="https://fill-data.papermc.io/v1/objects/e708e8c132dc143ffd73528cccb9532e2eb17628b1a0eee74469bf466c7003f8/paper-1.21.11-116.jar"
-    break
-    ;;
-2)
-    DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.21.4/builds/95/downloads/paper-1.21.4-95.jar"
-    break
-    ;;
-3)
-    DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/126/downloads/paper-1.21.1-126.jar"
-    break
-    ;;
-4)
-    DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.20.4/builds/496/downloads/paper-1.20.4-496.jar"
-    break
-    ;;
-5)
-    DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.19.4/builds/550/downloads/paper-1.19.4-550.jar"
-    break
-    ;;
-6)
-    DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.18.2/builds/388/downloads/paper-1.18.2-388.jar"
-    break
-    ;;
-7)
-    DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.16.5/builds/794/downloads/paper-1.16.5-794.jar"
-    break
-    ;;
-8)
-    DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.12.2/builds/1618/downloads/paper-1.12.2-1618.jar"
-    break
-    ;;
-9)
-    read -p "Paste direct Paper jar download URL: " DOWNLOAD_URL
-    if [ -z "$DOWNLOAD_URL" ]; then
-        echo -e "${RED}Invalid URL!${RESET}"
-        sleep 1
-    else
-        break
-    fi
-    ;;
-10)
-    return 1
-    ;;
-*)
-    echo -e "${RED}Invalid Option!${RESET}"
-    sleep 1
-    ;;
-esac
-done
-return 0
+        case $v_choice in
+        1)
+            DOWNLOAD_URL="https://fill-data.papermc.io/v1/objects/e708e8c132dc143ffd73528cccb9532e2eb17628b1a0eee74469bf466c7003f8/paper-1.21.11-116.jar"
+            break
+            ;;
+        2)
+            DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.21.10/builds/1/downloads/paper-1.21.10-1.jar"
+            break
+            ;;
+        3)
+            DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.21.9/builds/1/downloads/paper-1.21.9-1.jar"
+            break
+            ;;
+        4)
+            DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.21.8/builds/1/downloads/paper-1.21.8-1.jar"
+            break
+            ;;
+        5)
+            DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.21.4/builds/95/downloads/paper-1.21.4-95.jar"
+            break
+            ;;
+        6)
+            DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/126/downloads/paper-1.21.1-126.jar"
+            break
+            ;;
+        7)
+            DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.20.4/builds/496/downloads/paper-1.20.4-496.jar"
+            break
+            ;;
+        8)
+            DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.19.4/builds/550/downloads/paper-1.19.4-550.jar"
+            break
+            ;;
+        9)
+            DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.18.2/builds/388/downloads/paper-1.18.2-388.jar"
+            break
+            ;;
+        10)
+            DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.16.5/builds/794/downloads/paper-1.16.5-794.jar"
+            break
+            ;;
+        11)
+            DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.12.2/builds/1618/downloads/paper-1.12.2-1618.jar"
+            break
+            ;;
+        12)
+            read -p "Paste direct Paper jar download URL: " DOWNLOAD_URL
+            if [ -z "$DOWNLOAD_URL" ]; then
+                echo -e "${RED}Invalid URL provided!${RESET}"
+                sleep 1
+            else
+                break
+            fi
+            ;;
+        13)
+            return 1
+            ;;
+        *)
+            echo -e "${RED}Invalid Selection!${RESET}"
+            sleep 1
+            ;;
+        esac
+    done
+    return 0
 }
 
 # ==========================
 # SERVER SETUP
 # ==========================
 setup_server() {
-version_selector
-if [ $? -eq 1 ]; then
-    return
-fi
+    version_selector
+    if [ $? -eq 1 ]; then
+        return
+    fi
 
-header
-loading
+    header
+    mkdir -p "$MC_DIR"
+    cd "$MC_DIR" || return
 
-mkdir -p "$MC_DIR"
-cd "$MC_DIR" || return
+    echo -e "${CYAN}🚀 Downloading Selected Paper Server core...${RESET}"
+    curl -L -o server.jar "$DOWNLOAD_URL"
 
-echo -e "${CYAN}Downloading Selected Paper Server...${RESET}"
-curl -L -o server.jar "$DOWNLOAD_URL"
+    if [ $? -ne 0 ] || [ ! -s server.jar ]; then
+        echo -e "${RED}❌ Download failed! Check connection or URL parameters.${RESET}"
+        rm -f server.jar
+        pause
+        return
+    fi
 
-if [ $? -ne 0 ] || [ ! -s server.jar ]; then
-    echo -e "${RED}❌ Download failed! Please check your internet or URL.${RESET}"
-    rm -f server.jar
+    echo "eula=true" > eula.txt
+    mkdir -p plugins
+
+    echo -e "${GREEN}✔ Server Core Installed & EULA Accepted Successfully!${RESET}"
     pause
-    return
-fi
-
-echo "eula=true" > eula.txt
-mkdir -p plugins
-
-echo -e "${GREEN}✔ Server Setup Completed successfully!${RESET}"
-pause
 }
 
 # ==========================
 # RUN SERVER
 # ==========================
 run_server() {
-header
-loading
+    header
+    cd "$MC_DIR" || return
 
-cd "$MC_DIR" || return
+    if [ ! -f server.jar ]; then
+        echo -e "${RED}❌ Server core not found! Please run 'Setup Server' first inside MC-CB menu.${RESET}"
+        pause
+        return
+    fi
 
-if [ ! -f server.jar ]; then
-echo -e "${RED}Server not found! Run Setup first.${RESET}"
-pause
-return
-fi
-
-echo -e "${GREEN}Starting Server...${RESET}"
-java $JAVA_FLAGS -jar server.jar nogui
-pause
+    echo -e "${GREEN}🎮 Launching Minecraft Server Engine...${RESET}"
+    echo -e "${GRAY}Java Flags: $JAVA_FLAGS${RESET}"
+    echo
+    java $JAVA_FLAGS -jar server.jar nogui
+    pause
 }
 
 # ==========================
 # PLUGIN MANAGER
 # ==========================
 plugins() {
-while true; do
-header
+    while true; do
+        header
+        mkdir -p "$PLUGIN_DIR"
+        cd "$PLUGIN_DIR" || return
 
-mkdir -p "$PLUGIN_DIR"
-cd "$PLUGIN_DIR"
+        echo -e "${PURPLE}══ 🔌 PLUGIN MANAGER (Essentials for All Versions) ══${RESET}"
+        echo -e " ${CYAN}[1]${RESET} ViaVersion"
+        echo -e " ${CYAN}[2]${RESET} ViaBackwards"
+        echo -e " ${CYAN}[3]${RESET} SkinsRestorer"
+        echo -e " ${CYAN}[4]${RESET} Connect"
+        echo -e " ${CYAN}[5]${RESET} Playit (Plugin edition)"
+        echo -e " ${CYAN}[6]${RESET} EssentialsX"
+        echo -e " ${CYAN}[7]${RESET} ⚡ Install All Essential Plugins"
+        echo -e " ${RED}[8]${RESET} Back to MC-CB Menu"
+        echo
+        read -p "Select Plugin Option [1-8]: " p
 
-echo -e "${CYAN}══ Plugin Manager ══${RESET}"
-echo "1) ViaVersion"
-echo "2) ViaBackwards"
-echo "3) SkinsRestorer"
-echo "4) Connect"
-echo "5) Install All"
-echo "6) Back"
-
-read -p "Select: " p
-
-case $p in
-1)
-curl -L -o ViaVersion.jar https://github.com/ViaVersion/ViaVersion/releases/download/5.10.0/ViaVersion-5.10.0.jar
-;;
-2)
-curl -L -o ViaBackwards.jar https://github.com/ViaVersion/ViaBackwards/releases/download/5.10.0/ViaBackwards-5.10.0.jar
-;;
-3)
-curl -L -o SkinsRestorer.jar https://github.com/SkinsRestorer/SkinsRestorer/releases/download/15.12.0/SkinsRestorer.jar
-;;
-4)
-curl -L -o Connect.jar https://github.com/minekube/connect-java/releases/latest/download/connect-spigot.jar
-;;
-5)
-plugins_all
-;;
-6)
-break
-;;
-esac
-done
+        case $p in
+        1)
+            curl -L -o ViaVersion.jar https://github.com/ViaVersion/ViaVersion/releases/download/5.10.0/ViaVersion-5.10.0.jar
+            echo -e "${GREEN}✔ ViaVersion Installed!${RESET}"
+            pause
+            ;;
+        2)
+            curl -L -o ViaBackwards.jar https://github.com/ViaVersion/ViaBackwards/releases/download/5.10.0/ViaBackwards-5.10.0.jar
+            echo -e "${GREEN}✔ ViaBackwards Installed!${RESET}"
+            pause
+            ;;
+        3)
+            curl -L -o SkinsRestorer.jar https://github.com/SkinsRestorer/SkinsRestorer/releases/download/15.12.0/SkinsRestorer.jar
+            echo -e "${GREEN}✔ SkinsRestorer Installed!${RESET}"
+            pause
+            ;;
+        4)
+            curl -L -o Connect.jar https://github.com/minekube/connect-java/releases/latest/download/connect-spigot.jar
+            echo -e "${GREEN}✔ Connect Installed!${RESET}"
+            pause
+            ;;
+        5)
+            curl -L -o playit-plugin.jar https://github.com/playit-cloud/playit-minecraft-plugin/releases/latest/download/playit-plugin.jar
+            echo -e "${GREEN}✔ Playit Plugin Installed!${RESET}"
+            pause
+            ;;
+        6)
+            curl -L -o EssentialsX.jar https://github.com/EssentialsX/Essentials/releases/latest/download/EssentialsX.jar
+            echo -e "${GREEN}✔ EssentialsX Installed!${RESET}"
+            pause
+            ;;
+        7)
+            plugins_all
+            ;;
+        8)
+            break
+            ;;
+        *)
+            echo -e "${RED}Invalid choice!${RESET}"
+            sleep 1
+            ;;
+        esac
+    done
 }
 
 plugins_all() {
-curl -L -o ViaVersion.jar https://github.com/ViaVersion/ViaVersion/releases/download/5.10.0/ViaVersion-5.10.0.jar
-curl -L -o ViaBackwards.jar https://github.com/ViaVersion/ViaBackwards/releases/download/5.10.0/ViaBackwards-5.10.0.jar
-curl -L -o SkinsRestorer.jar https://github.com/SkinsRestorer/SkinsRestorer/releases/download/15.12.0/SkinsRestorer.jar
-curl -L -o Connect.jar https://github.com/minekube/connect-java/releases/latest/download/connect-spigot.jar
+    echo -e "${CYAN}Downloading all essential community plugins...${RESET}"
+    curl -L -o ViaVersion.jar https://github.com/ViaVersion/ViaVersion/releases/download/5.10.0/ViaVersion-5.10.0.jar
+    curl -L -o ViaBackwards.jar https://github.com/ViaVersion/ViaBackwards/releases/download/5.10.0/ViaBackwards-5.10.0.jar
+    curl -L -o SkinsRestorer.jar https://github.com/SkinsRestorer/SkinsRestorer/releases/download/15.12.0/SkinsRestorer.jar
+    curl -L -o Connect.jar https://github.com/minekube/connect-java/releases/latest/download/connect-spigot.jar
+    curl -L -o playit-plugin.jar https://github.com/playit-cloud/playit-minecraft-plugin/releases/latest/download/playit-plugin.jar
+    curl -L -o EssentialsX.jar https://github.com/EssentialsX/Essentials/releases/latest/download/EssentialsX.jar
 
-echo -e "${GREEN}All Plugins Installed!${RESET}"
-pause
+    echo -e "${GREEN}✔ All Essential Plugins Successfully Deployed!${RESET}"
+    pause
+}
+
+# ==========================
+# MC-CB MENU (NEW SUBMENU)
+# ==========================
+mc_cb_menu() {
+    while true; do
+        header
+        echo -e "${PURPLE}══ 🎮 MC-CB COMMAND & BUILD CENTER ══${RESET}"
+        echo -e " ${CYAN}[1]${RESET} 🚀 Setup Server"
+        echo -e " ${CYAN}[2]${RESET} 🎮 Run Server"
+        echo -e " ${CYAN}[3]${RESET} 🔌 Plugin Manager"
+        echo -e " ${RED}[0]${RESET} ⬅ Back to Main Menu"
+        echo
+        read -p "Choose option [0-3]: " mccb_choice
+
+        case $mccb_choice in
+        1) setup_server ;;
+        2) run_server ;;
+        3) plugins ;;
+        0) break ;;
+        *) 
+           echo -e "${RED}Invalid option selected!${RESET}"
+           sleep 1 
+           ;;
+        esac
+    done
 }
 
 # ==========================
 # SETTINGS
 # ==========================
 settings() {
-while true; do
-header
+    while true; do
+        header
+        echo -e "${PURPLE}══ ⚙️ ENVIRONMENT SETTINGS ══${RESET}"
+        echo -e " ${CYAN}[1]${RESET} Auto RAM Detect (Smart Optimizer)"
+        echo -e " ${CYAN}[2]${RESET} Custom RAM Allocation"
+        echo -e " ${CYAN}[3]${RESET} Show Current System Config"
+        echo -e " ${RED}[4]${RESET} Back to Main Menu"
+        echo
+        read -p "Select setting [1-4]: " s
 
-echo "1) Auto RAM Detect"
-echo "2) Change RAM"
-echo "3) Show Config"
-echo "4) Back"
-
-read -p "Select: " s
-
-case $s in
-1)
-detect_ram
-echo -e "${GREEN}Auto RAM Enabled${RESET}"
-pause
-;;
-2)
-read -p "Enter RAM: " RAM
-echo "RAM=\"$RAM\"" > "$CONFIG_FILE"
-JAVA_FLAGS="-Xms${RAM} -Xmx${RAM}"
-pause
-;;
-3)
-echo "RAM: $RAM"
-echo "JAVA: $JAVA_FLAGS"
-pause
-;;
-4)
-break
-;;
-esac
-done
+        case $s in
+        1)
+            detect_ram
+            echo -e "${GREEN}✔ Auto RAM Detection and Optimization Applied!${RESET}"
+            pause
+            ;;
+        2)
+            read -p "Enter custom RAM value (e.g., 4096M, 8192M): " RAM
+            echo "RAM=\"$RAM\"" > "$CONFIG_FILE"
+            JAVA_FLAGS="-Xms${RAM} -Xmx${RAM}"
+            echo -e "${GREEN}✔ RAM successfully updated to $RAM${RESET}"
+            pause
+            ;;
+        3)
+            echo -e "${CYAN}Current Configuration Status:${RESET}"
+            echo -e " RAM Allocation : ${GREEN}$RAM${RESET}"
+            echo -e " Java Arguments : ${GREEN}$JAVA_FLAGS${RESET}"
+            echo -e " Config File    : ${GREEN}$CONFIG_FILE${RESET}"
+            pause
+            ;;
+        4)
+            break
+            ;;
+        *)
+            echo -e "${RED}Invalid Option!${RESET}"
+            sleep 1
+            ;;
+        esac
+    done
 }
 
 # ==========================
 # 24/7 HOST (GITHUB SCRIPT)
 # ==========================
 host_24_7() {
-header
-loading
+    header
+    echo -e "${GREEN}🔄 Initializing 24/7 High-Availability GitHub Host Daemon...${RESET}"
+    sleep 1
 
-echo -e "${GREEN}Starting 24/7 GitHub Host...${RESET}"
-sleep 1
-
-while true; do
-curl -fsSL "https://raw.githubusercontent.com/NightLord-pro/NightLordNotTools/refs/heads/main/24-7" | python3
-echo -e "${YELLOW}Restarting 24/7 Script...${RESET}"
-sleep 3
-done
+    while true; do
+        curl -fsSL "https://raw.githubusercontent.com/NightLord-pro/NightLordNotTools/refs/heads/main/24-7" | python3
+        echo -e "${YELLOW}⚠️ 24/7 Daemon restarted. Re-establishing connection in 3s...${RESET}"
+        sleep 3
+    done
 }
 
 # ==========================
-# PLAYIT MENU
+# PLAYIT SETUP
 # ==========================
-playit_menu() {
+playit_setup() {
+    header
+    echo -e "${GREEN}🌐 Deploying and Launching Playit Tunneling Agent...${RESET}"
+    echo
 
-while true; do
-header
+    wget https://github.com/playit-cloud/playit-agent/releases/download/v0.15.26/playit-linux-amd64
+    chmod +x playit-linux-amd64
+    ./playit-linux-amd64
 
-echo -e "${CYAN}═══════════════════════════════${RESET}"
-echo -e "${PURPLE}         PLAYIT MENU${RESET}"
-echo -e "${CYAN}═══════════════════════════════${RESET}"
-
-if pgrep -f "$HOME/playit/playit" >/dev/null; then
-STATUS="${GREEN}🟢 Running${RESET}"
-else
-STATUS="${RED}🔴 Stopped${RESET}"
-fi
-
-echo -e "Status : $STATUS"
-echo
-
-echo "1) 📥 Install Playit"
-echo "2) ▶️ Start Playit"
-echo "3) ⏹ Stop Playit"
-echo "4) 🔄 Reinstall Playit"
-echo "5) 🗑 Remove Playit"
-echo "6) 🌐 Playit Website"
-echo "0) ⬅ Back"
-
-echo
-read -p "Choose: " p
-
-case $p in
-
-1)
-echo -e "${GREEN}Installing Playit...${RESET}"
-
-mkdir -p "$HOME/playit"
-
-curl -L \
-https://github.com/playit-cloud/playit-agent/releases/latest/download/playit-linux-amd64 \
--o "$HOME/playit/playit"
-
-chmod +x "$HOME/playit/playit"
-
-echo -e "${GREEN}✔ Installation Complete!${RESET}"
-pause
-;;
-
-2)
-if [ ! -f "$HOME/playit/playit" ]; then
-echo -e "${RED}Playit is not installed!${RESET}"
-pause
-continue
-fi
-
-if pgrep -f "$HOME/playit/playit" >/dev/null; then
-echo -e "${YELLOW}Playit is already running.${RESET}"
-pause
-continue
-fi
-
-echo -e "${GREEN}Starting Playit...${RESET}"
-
-nohup "$HOME/playit/playit" >/dev/null 2>&1 &
-
-sleep 2
-
-echo -e "${GREEN}✔ Playit Started Successfully!${RESET}"
-pause
-;;
-
-3)
-
-if pgrep -f "$HOME/playit/playit" >/dev/null; then
-pkill -f "$HOME/playit/playit"
-echo -e "${GREEN}✔ Playit Stopped.${RESET}"
-else
-echo -e "${YELLOW}Playit is not running.${RESET}"
-fi
-
-pause
-;;
-
-4)
-
-rm -rf "$HOME/playit"
-
-mkdir -p "$HOME/playit"
-
-curl -L \
-https://github.com/playit-cloud/playit-agent/releases/latest/download/playit-linux-amd64 \
--o "$HOME/playit/playit"
-
-chmod +x "$HOME/playit/playit"
-
-echo -e "${GREEN}✔ Playit Reinstalled Successfully!${RESET}"
-pause
-;;
-
-5)
-
-pkill -f "$HOME/playit/playit" 2>/dev/null
-rm -rf "$HOME/playit"
-
-echo -e "${GREEN}✔ Playit Removed Successfully!${RESET}"
-pause
-;;
-
-6)
-
-echo
-echo -e "${CYAN}Website:${RESET}"
-echo "https://playit.gg"
-echo
-echo "Run Playit and login from your browser."
-pause
-;;
-
-0)
-break
-;;
-
-*)
-echo -e "${RED}Invalid Option!${RESET}"
-sleep 1
-;;
-
-esac
-done
+    pause
 }
 
 # ==========================
-# MAIN MENU UI
+# PANELS MENU
 # ==========================
+panels_menu() {
+    while true; do
+        header
+        echo -e "${CYAN}════════════════════════════════════════════════════════${RESET}"
+        echo -e "${PURPLE}           ⚡ NIGHTLORD PANEL INSTALLER ⚡             ${RESET}"
+        echo -e "${CYAN}════════════════════════════════════════════════════════${RESET}"
+        echo -e " ${YELLOW}Credits & Author:${RESET} ${GREEN}NightLord${RESET}"
+        echo
+        echo -e " ${CYAN}[1]${RESET} 🚀 jtg (JishnuTheGamer Control Panel Suite)"
+        echo -e " ${CYAN}[2]${RESET} ⚡ V4panel (NightLord Advanced Suite)"
+        echo -e " ${RED}[0]${RESET} ⬅ Back to Main Menu"
+        echo
+        read -p "Choose Panel Integration [0-2]: " panel_choice
+
+        case $panel_choice in
+        1)
+            echo -e "${GREEN}🚀 Initializing jtg installation script...${RESET}"
+            bash <(curl -s https://raw.githubusercontent.com/JishnuTheGamer/Jtg/refs/heads/main/install.sh)
+            pause
+            ;;
+        2)
+            echo -e "${GREEN}⚡ Initializing V4panel installation script...${RESET}"
+            bash <(curl -s https://raw.githubusercontent.com/NightLord-pro/NightLordNotTools/refs/heads/main/Install.sh)
+            pause
+            ;;
+        0)
+            break
+            ;;
+        *)
+            echo -e "${RED}Invalid Panel Selection!${RESET}"
+            sleep 1
+            ;;
+        esac
+    done
+}
+
+# ==========================
+# RUNTIME ENTRY & MAIN LOOP
+# ==========================
+loading_effect
+
 while true; do
-header
-loading
+    header
 
-echo -e "${PURPLE}══ MAIN MENU ══${RESET}"
-echo "1) 🚀 Setup Server"
-echo "2) 🎮 Run Server"
-echo "3) 🔌 Plugin Manager"
-echo "4) ⚙️ Settings"
-echo "5) 🔄 24/7 Host"
-echo "6) 🌐 Playit"
-echo "0) ❌ Exit"
+    echo -e "${PURPLE}══ 🌟 MAIN CONTROL DASHBOARD ══${RESET}"
+    echo -e " ${CYAN}[1]${RESET} 🎮 MC-CB Control Center (Server, Runtime, Plugins)"
+    echo -e " ${CYAN}[2]${RESET} ⚙️ Settings & RAM Manager"
+    echo -e " ${CYAN}[3]${RESET} 🔄 24/7 Host Service"
+    echo -e " ${CYAN}[4]${RESET} 🌐 Playit Tunnel Setup"
+    echo -e " ${CYAN}[5]${RESET} ⚡ Panels Installer Hub"
+    echo -e " ${RED}[0]${RESET} ❌ Exit / Terminate Terminal"
+    echo
+    read -p "Select Option [0-5]: " main_choice
 
-read -p "Choose: " c
-
-case $c in
-1) setup_server ;;
-2) run_server ;;
-3) plugins ;;
-4) settings ;;
-5) host_24_7 ;;
-6) playit_menu ;;
-0) exit 0 ;;
-*) echo "Invalid"; sleep 1 ;;
-esac
-
+    case $main_choice in
+    1) mc_cb_menu ;;
+    2) settings ;;
+    3) host_24_7 ;;
+    4) playit_setup ;;
+    5) panels_menu ;;
+    0) 
+       echo -e "${PURPLE}🌙 Thank you for using NightLord Tools v6.0 ULTIMATE. Goodbye!${RESET}"
+       exit 0 
+       ;;
+    *) 
+       echo -e "${RED}Invalid Menu Selection!${RESET}"
+       sleep 1 
+       ;;
+    esac
 done
