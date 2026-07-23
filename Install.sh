@@ -1,123 +1,447 @@
 #!/bin/bash
 
-# Set colors for a better-looking menu
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-CYAN='\033[0;36m'
-NC='\033[0m' # No Color
+# ==========================================================
+#   ⚔️ SOLO LEVELING: SHADOW MONARCH SYSTEM v8.0 ⚔️
+#   [Created by: NightLord | The Only Player Who Can Level Up]
+# ==========================================================
 
-# Function to install the panel
-install_panel() {
-    echo -e "\n${CYAN}[+] Installing dependencies... Please wait...${NC}"
+# Aesthetic Styles & Color Palette (Monarch Theme)
+PURPLE="\033[1;35m"
+DARK_PURPLE="\033[0;35m"
+BLUE="\033[1;34m"
+CYAN="\033[1;36m"
+GREEN="\033[1;32m"
+RED="\033[1;31m"
+YELLOW="\033[1;33m"
+WHITE="\033[1;37m"
+GRAY="\033[0;90m"
+BOLD="\033[1m"
+RESET="\033[0m"
 
-    # Update system package index
-    sudo apt update
+# Paths & Settings
+WORK_DIR="$(pwd)"
+MC_DIR="$WORK_DIR/server"
+PLUGIN_DIR="$MC_DIR/plugins"
+BACKUP_DIR="$WORK_DIR/shadow_backups"
+CONFIG_FILE="$HOME/.shadow_monarch.conf"
+VERSION="8.0 SHADOW MONARCH ELITE (NightLord Edition)"
 
-    # Install required packages
-    sudo apt install -y curl git build-essential
+# Load Config
+[ -f "$CONFIG_FILE" ] && source "$CONFIG_FILE"
+RAM=${RAM:-"8192M"}
+JAVA_FLAGS=${JAVA_FLAGS:-"-Xms${RAM} -Xmx${RAM}"}
 
-    # Setup and install Node.js 20.x
-    curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-    sudo apt install -y nodejs
+# ==========================
+# 💠 SOLO LEVELING EPIC SYSTEM AWAKENING
+# ==========================
+system_awakening() {
+    clear
+    echo -e "${PURPLE}"
+    echo "    ╔══════════════════════════════════════════════════════════╗"
+    echo "    ║     [SYSTEM: Welcome Back, Monarch NightLord]           ║"
+    echo "    ║     ⚔️ INITIALIZING SHADOW MONARCH SYSTEM v8.0 ⚔️         ║"
+    echo "    ╚══════════════════════════════════════════════════════════╝"
+    echo -e "${RESET}"
+    echo -e " ${GRAY}Creator Profile:${RESET} ${PURPLE}NightLord${RESET}"
+    echo -ne "${CYAN} [System] Synchronizing Gate Matrix [${RESET}"
+    for i in {1..30}; do
+        echo -e -n "${PURPLE}█${RESET}"
+        sleep 0.02
+    done
+    echo -e "${CYAN}] ${GREEN}100% AWAKENED${RESET}"
+    echo -e "${YELLOW}💬 [System]: 'Arise, NightLord.' Your absolute power commands this domain.${RESET}"
+    sleep 1
+}
 
-    # Install PM2 globally
-    sudo npm install -g pm2
+# ==========================
+# 👁️ MONARCH HUD HEADER
+# ==========================
+header() {
+    clear
+    echo -e "${PURPLE}"
+    echo "╭──────────────────────────────────────────────────────────╮"
+    echo "│      ⚔️ SHADOW MONARCH CONTROL INTERFACE v8.0 ⚔️          │"
+    echo "╰──────────────────────────────────────────────────────────┘"
+    echo -e "${RESET}"
+    echo -e " ${CYAN}⚡ Mana/RAM:${RESET}  ${GREEN}$RAM${RESET}    │  ${CYAN}👑 Monarch:${RESET} ${PURPLE}NightLord${RESET}"
+    echo -e " ${CYAN}📂 Directory:${RESET} ${GREEN}$MC_DIR${RESET} │  ${CYAN}🛡️ Status:${RESET}  ${GREEN}Secure [ONLINE]${RESET}"
+    echo -e "${GRAY}────────────────────────────────────────────────────────────${RESET}"
+    echo
+}
 
-    echo -e "\n${CYAN}[+] Downloading and setting up the v4 Panel...${NC}"
+# ==========================
+# 🛑 PAUSE SCREEN
+# ==========================
+pause() {
+    echo
+    echo -e "${GRAY}Press [Enter] to return to Monarch NightLord's Throne...${RESET}"
+    read -r
+}
 
-    # Check if the v4panel folder already exists
-    if [ -d "v4panel" ]; then
-        echo -e "${YELLOW}[!] The 'v4panel' folder already exists. Please delete it first or use the update option (Option 2).${NC}"
+# ==========================
+# 📊 AUTO RAM DETECT (STAT BOOST)
+# ==========================
+detect_ram() {
+    TOTAL=$(awk '/MemTotal/ {print int($2/1024)}' /proc/meminfo)
+    USE=$((TOTAL-512))
+    [ "$USE" -lt 512 ] && USE=512
+    RAM="${USE}M"
+    JAVA_FLAGS="-Xms${RAM} -Xmx${RAM}"
+    echo "RAM=\"$RAM\"" > "$CONFIG_FILE"
+}
+
+# ==========================
+# 🌐 GATE VERSION SELECTOR (ALL 1.21.x FOCUS)
+# ==========================
+version_selector() {
+    while true; do
+        header
+        echo -e "${PURPLE}══ 🌐 SELECT GATE DIFFICULTY (PAPER VERSION) ══${RESET}"
+        echo -e " ${CYAN}[1]${RESET} Paper 1.21.11 (Latest S-Rank Monarch) 🔥"
+        echo -e " ${CYAN}[2]${RESET} Paper 1.21.10"
+        echo -e " ${CYAN}[3]${RESET} Paper 1.21.9"
+        echo -e " ${CYAN}[4]${RESET} Paper 1.21.8"
+        echo -e " ${CYAN}[5]${RESET} Paper 1.21.4"
+        echo -e " ${CYAN}[6]${RESET} Paper 1.21.1"
+        echo -e " ${CYAN}[7]${RESET} Custom Direct URL"
+        echo -e " ${RED}[8] Return to Command Hub${RESET}"
+        echo
+        read -p "Select Gate Level [1-8]: " v_choice
+
+        case $v_choice in
+        1) DOWNLOAD_URL="https://fill-data.papermc.io/v1/objects/e708e8c132dc143ffd73528cccb9532e2eb17628b1a0eee74469bf466c7003f8/paper-1.21.11-116.jar"; break ;;
+        2) DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.21.10/builds/1/downloads/paper-1.21.10-1.jar"; break ;;
+        3) DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.21.9/builds/1/downloads/paper-1.21.9-1.jar"; break ;;
+        4) DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.21.8/builds/1/downloads/paper-1.21.8-1.jar"; break ;;
+        5) DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.21.4/builds/95/downloads/paper-1.21.4-95.jar"; break ;;
+        6) DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/126/downloads/paper-1.21.1-126.jar"; break ;;
+        7)
+            read -p "Paste Custom Direct Jar URL: " DOWNLOAD_URL
+            [ -z "$DOWNLOAD_URL" ] && echo -e "${RED}Invalid URL!${RESET}" && sleep 1 || break
+            ;;
+        8) return 1 ;;
+        *) echo -e "${RED}Invalid Gate Choice!${RESET}"; sleep 1 ;;
+        esac
+    done
+    return 0
+}
+
+# ==========================
+# 🏰 GATE SETUP (CREATE SERVER)
+# ==========================
+setup_server() {
+    version_selector
+    if [ $? -eq 1 ]; then
         return
     fi
 
-    # Clone from GitHub
-    git clone https://github.com/teryxlabs/v4panel
+    header
+    mkdir -p "$MC_DIR"
+    cd "$MC_DIR" || return
 
-    # Navigate into the directory
-    cd v4panel || {
-        echo -e "${RED}[!] Failed to enter the directory!${NC}"
+    echo -e "${CYAN}⚔️ Opening Gate... Extracting Core Server Data for NightLord...${RESET}"
+    curl -L -o server.jar "$DOWNLOAD_URL"
+
+    if [ $? -ne 0 ] || [ ! -s server.jar ]; then
+        echo -e "${RED}❌ Gate Collapse! Download failed. Check your network link.${RESET}"
+        rm -f server.jar
+        pause
         return
-    }
+    fi
 
-    # Install node modules
-    npm install
+    echo "eula=true" > eula.txt
+    mkdir -p plugins
 
-    # Create user and build
-    npm run createuser
-    npm run build
-
-    # Start with PM2
-    pm2 start ecosystem.config.cjs
-    pm2 save
-
-    echo -e "\n${GREEN}==========================================${NC}"
-    echo -e "${GREEN} [✓] Panel successfully installed and started!${NC}"
-    echo -e "${GREEN} Panel Status: [Online]${NC}"
-    echo -e "${GREEN}==========================================${NC}"
-
-    # Return to the main directory
-    cd ..
+    echo -e "${GREEN}✔ Gate Conquered by NightLord! Server core established & EULA signed.${RESET}"
+    pause
 }
 
-# Function to update the panel
-update_panel() {
-    echo -e "\n${CYAN}[+] Updating the panel...${NC}"
+# ==========================
+# 🎮 AWAKEN SERVER (RUN)
+# ==========================
+run_server() {
+    header
+    cd "$MC_DIR" || return
 
-    # Check if the v4panel folder exists
-    if [ -d "v4panel" ]; then
-        cd v4panel || {
-            echo -e "${RED}[!] Failed to enter the directory!${NC}"
+    if [ ! -f server.jar ]; then
+        echo -e "${RED}❌ No core found in NightLord's domain! Setup a server first.${RESET}"
+        pause
+        return
+    fi
+
+    echo -e "${PURPLE}💬 [System]: Invoking server runtime initialization for Monarch NightLord...${RESET}"
+    echo -e "${GRAY}Assigned Power Flags: $JAVA_FLAGS${RESET}"
+    echo
+    java $JAVA_FLAGS -jar server.jar nogui
+    pause
+}
+
+# ==========================
+# 📦 SHADOW BACKUP VAULT
+# ==========================
+shadow_backup() {
+    header
+    echo -e "${PURPLE}══ 📦 NIGHTLORD'S SHADOW BACKUP VAULT ══${RESET}"
+    echo -e " ${CYAN}[1]${RESET} Create Backup (Store in Shadows)"
+    echo -e " ${CYAN}[2]${RESET} Restore Backup (Resurrect from Shadows)"
+    echo -e " ${RED}[3]${RESET} Back to Menu"
+    echo
+    read -p "Choose Shadow Action [1-3]: " b_choice
+
+    case $b_choice in
+    1)
+        if [ ! -d "$MC_DIR" ]; then
+            echo -e "${RED}❌ No server folder found to backup!${RESET}"
+            pause
             return
-        }
-
-        # Fetch new updates from GitHub
-        git stash
-        git pull
-
-        # Update packages and rebuild
-        npm install
-        npm run build
-
-        # Restart PM2
-        pm2 restart all
-
-        echo -e "\n${GREEN}[✓] Panel successfully updated and restarted!${NC}"
-
-        # Return to the main directory
-        cd ..
-    else
-        echo -e "${RED}[!] 'v4panel' directory not found! Please install the panel first (Option 1).${NC}"
-    fi
+        fi
+        mkdir -p "$BACKUP_DIR"
+        TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+        BACKUP_FILE="$BACKUP_DIR/nightlord_backup_$TIMESTAMP.tar.gz"
+        echo -e "${CYAN}📦 Compressing domain data into NightLord's Shadow Realm...${RESET}"
+        tar -czf "$BACKUP_FILE" -C "$WORK_DIR" server
+        echo -e "${GREEN}✔ Backup Secured successfully at: $BACKUP_FILE${RESET}"
+        pause
+        ;;
+    2)
+        if [ ! -d "$BACKUP_DIR" ]; then
+            echo -e "${RED}❌ No backups found in the vault!${RESET}"
+            pause
+            return
+        fi
+        echo -e "${CYAN}Available Shadows (Backups):${RESET}"
+        select b_file in "$BACKUP_DIR"/*.tar.gz; do
+            if [ -n "$b_file" ]; then
+                echo -e "${YELLOW}Extracting shadows back to NightLord's domain...${RESET}"
+                rm -rf "$MC_DIR"
+                tar -xzf "$b_file" -C "$WORK_DIR"
+                echo -e "${GREEN}✔ Resurrected Successfully, My Monarch!${RESET}"
+                break
+            else
+                echo -e "${RED}Invalid selection.${RESET}"
+                break
+            fi
+        done
+        pause
+        ;;
+    3)
+        return
+        ;;
+    *)
+        echo -e "${RED}Invalid choice!${RESET}"
+        sleep 1
+        ;;
+    esac
 }
 
-# Main menu loop
-while true; do
-    echo -e "\n${YELLOW}========================================${NC}"
-    echo -e "${GREEN}          V4 PANEL MANAGER              ${NC}"
-    echo -e "${YELLOW}========================================${NC}"
-    echo -e "${CYAN}1.${NC} Install Panel (Auto Setup)"
-    echo -e "${CYAN}2.${NC} Update Panel"
-    echo -e "${RED}3.${NC} Exit"
-    echo -e "${YELLOW}========================================${NC}"
+# ==========================
+# 🔌 SHADOW SOLDIER PLUGINS
+# ==========================
+plugins() {
+    while true; do
+        header
+        mkdir -p "$PLUGIN_DIR"
+        cd "$PLUGIN_DIR" || return
 
-    read -p "Choose an option (1/2/3): " choice
+        echo -e "${PURPLE}══ 🔌 NIGHTLORD'S SHADOW SOLDIERS (PLUGINS) ══${RESET}"
+        echo -e " ${CYAN}[1]${RESET} ViaVersion (Cross-Gate Support)"
+        echo -e " ${CYAN}[2]${RESET} ViaBackwards"
+        echo -e " ${CYAN}[3]${RESET} SkinsRestorer"
+        echo -e " ${CYAN}[4]${RESET} Connect (Minekube Tunnel)"
+        echo -e " ${CYAN}[5]${RESET} Playit Plugin"
+        echo -e " ${CYAN}[6]${RESET} EssentialsX"
+        echo -e " ${CYAN}[7]${RESET} ⚡ Summon All Shadow Soldiers (Install All)"
+        echo -e " ${RED}[8]${RESET} Return to Hub"
+        echo
+        read -p "Select Soldier Option [1-8]: " p
 
-    case $choice in
+        case $p in
+        1) curl -L -o ViaVersion.jar https://github.com/ViaVersion/ViaVersion/releases/download/5.10.0/ViaVersion-5.10.0.jar; echo -e "${GREEN}✔ ViaVersion Summoned for NightLord!${RESET}"; pause ;;
+        2) curl -L -o ViaBackwards.jar https://github.com/ViaVersion/ViaBackwards/releases/download/5.10.0/ViaBackwards-5.10.0.jar; echo -e "${GREEN}✔ ViaBackwards Summoned for NightLord!${RESET}"; pause ;;
+        3) curl -L -o SkinsRestorer.jar https://github.com/SkinsRestorer/SkinsRestorer/releases/download/15.12.0/SkinsRestorer.jar; echo -e "${GREEN}✔ SkinsRestorer Summoned for NightLord!${RESET}"; pause ;;
+        4) curl -L -o Connect.jar https://github.com/minekube/connect-java/releases/latest/download/connect-spigot.jar; echo -e "${GREEN}✔ Connect Summoned for NightLord!${RESET}"; pause ;;
+        5) curl -L -o playit-plugin.jar https://github.com/playit-cloud/playit-minecraft-plugin/releases/latest/download/playit-plugin.jar; echo -e "${GREEN}✔ Playit Summoned for NightLord!${RESET}"; pause ;;
+        6) curl -L -o EssentialsX.jar https://github.com/EssentialsX/Essentials/releases/latest/download/EssentialsX.jar; echo -e "${GREEN}✔ EssentialsX Summoned for NightLord!${RESET}"; pause ;;
+        7)
+            echo -e "${CYAN}💬 [System]: Extracting all shadow soldiers simultaneously for NightLord...${RESET}"
+            curl -L -o ViaVersion.jar https://github.com/ViaVersion/ViaVersion/releases/download/5.10.0/ViaVersion-5.10.0.jar
+            curl -L -o ViaBackwards.jar https://github.com/ViaVersion/ViaBackwards/releases/download/5.10.0/ViaBackwards-5.10.0.jar
+            curl -L -o SkinsRestorer.jar https://github.com/SkinsRestorer/SkinsRestorer/releases/download/15.12.0/SkinsRestorer.jar
+            curl -L -o Connect.jar https://github.com/minekube/connect-java/releases/latest/download/connect-spigot.jar
+            curl -L -o playit-plugin.jar https://github.com/playit-cloud/playit-minecraft-plugin/releases/latest/download/playit-plugin.jar
+            curl -L -o EssentialsX.jar https://github.com/EssentialsX/Essentials/releases/latest/download/EssentialsX.jar
+            echo -e "${GREEN}✔ NightLord's Full Army Deployed Successfully!${RESET}"
+            pause
+            ;;
+        8) break ;;
+        *) echo -e "${RED}Invalid Command!${RESET}"; sleep 1 ;;
+        esac
+    done
+}
+
+# ==========================
+# 🎮 COMMAND & BUILD CENTER
+# ==========================
+mc_cb_menu() {
+    while true; do
+        header
+        echo -e "${PURPLE}══ ⚔️ NIGHTLORD'S COMMAND & BUILD CENTER ══${RESET}"
+        echo -e " ${CYAN}[1]${RESET} 🚀 Setup Server Gate"
+        echo -e " ${CYAN}[2]${RESET} 🎮 Awaken/Run Server Engine"
+        echo -e " ${CYAN}[3]${RESET} 🔌 Shadow Soldier Plugins"
+        echo -e " ${CYAN}[4]${RESET} 📦 Shadow Backup Vault"
+        echo -e " ${RED}[0]${RESET} ⬅ Back to Main System"
+        echo
+        read -p "Choose Command [0-4]: " mccb_choice
+
+        case $mccb_choice in
+        1) setup_server ;;
+        2) run_server ;;
+        3) plugins ;;
+        4) shadow_backup ;;
+        0) break ;;
+        *) echo -e "${RED}Invalid Selection!${RESET}"; sleep 1 ;;
+        esac
+    done
+}
+
+# ==========================
+# ⚙️ STATUS STATS / SETTINGS
+# ==========================
+settings() {
+    while true; do
+        header
+        echo -e "${PURPLE}══ ⚙️ NIGHTLORD'S STATUS & RAM STATS ══${RESET}"
+        echo -e " ${CYAN}[1]${RESET} Auto-Detect Stat Cap (Smart RAM Optimize)"
+        echo -e " ${CYAN}[2]${RESET} Allocate Custom Stat Power (Custom RAM)"
+        echo -e " ${CYAN}[3]${RESET} View Current Monarch Profile"
+        echo -e " ${RED}[4]${RESET} Back to Main System"
+        echo
+        read -p "Select Status Option [1-4]: " s
+
+        case $s in
         1)
-            install_panel
+            detect_ram
+            echo -e "${GREEN}✔ Status synchronized for NightLord! Maximum RAM assigned.${RESET}"
+            pause
             ;;
         2)
-            update_panel
+            read -p "Enter custom power capacity for NightLord (e.g., 4096M, 8192M): " RAM
+            echo "RAM=\"$RAM\"" > "$CONFIG_FILE"
+            JAVA_FLAGS="-Xms${RAM} -Xmx${RAM}"
+            echo -e "${GREEN}✔ Power successfully recalibrated to $RAM${RESET}"
+            pause
             ;;
         3)
-            echo -e "${YELLOW}Exiting script... Goodbye!${NC}"
-            exit 0
+            echo -e "${CYAN}Monarch Profile Details:${RESET}"
+            echo -e " Monarch Name        : ${PURPLE}NightLord${RESET}"
+            echo -e " Assigned RAM Power : ${GREEN}$RAM${RESET}"
+            echo -e " Java Execution Flag: ${GREEN}$JAVA_FLAGS${RESET}"
+            echo -e " System Config Path : ${GREEN}$CONFIG_FILE${RESET}"
+            pause
             ;;
-        *)
-            echo -e "${RED}[!] Invalid option! Please enter 1, 2, or 3.${NC}"
+        4) break ;;
+        *) echo -e "${RED}Invalid Stat Choice!${RESET}"; sleep 1 ;;
+        esac
+    done
+}
+
+# ==========================
+# 🔄 24/7 ETERNAL DUNGEON HOST
+# ==========================
+host_24_7() {
+    header
+    echo -e "${GREEN}🔄 Opening NightLord's Infinite Dungeon Daemon (24/7 Host)...${RESET}"
+    sleep 1
+
+    while true; do
+        curl -fsSL "https://raw.githubusercontent.com/NightLord-pro/NightLordNotTools/refs/heads/main/24-7" | python3
+        echo -e "${YELLOW}⚠️ NightLord's dungeon gate flickered. Reopening connection in 3s...${RESET}"
+        sleep 3
+    done
+}
+
+# ==========================
+# 🌐 PLAYIT TUNNEL AGENT
+# ==========================
+playit_setup() {
+    header
+    echo -e "${GREEN}🌐 Deploying Playit Tunneling Gate for NightLord...${RESET}"
+    echo
+    wget -q --show-progress https://github.com/playit-cloud/playit-agent/releases/download/v0.15.26/playit-linux-amd64
+    chmod +x playit-linux-amd64
+    ./playit-linux-amd64
+    pause
+}
+
+# ==========================
+# ⚡ PANELS INSTALLER HUB
+# ==========================
+panels_menu() {
+    while true; do
+        header
+        echo -e "${CYAN}════════════════════════════════════════════════════════${RESET}"
+        echo -e "${PURPLE}      ⚡ NIGHTLORD'S SHADOW MONARCH PANELS HUB ⚡      ${RESET}"
+        echo -e "${CYAN}════════════════════════════════════════════════════════${RESET}"
+        echo -e " ${YELLOW}Monarch Creator & Master:${RESET} ${GREEN}NightLord${RESET}"
+        echo
+        echo -e " ${CYAN}[1]${RESET} 🚀 jtg (JishnuTheGamer Panel Suite)"
+        echo -e " ${CYAN}[2]${RESET} ⚡ Pterodactyl Panel Suite"
+        echo -e " ${RED}[0]${RESET} ⬅ Back to Main System"
+        echo
+        read -p "Select Panel Hub [0-2]: " panel_choice
+
+        case $panel_choice in
+        1)
+            echo -e "${GREEN}🚀 Initializing jtg installation suite for NightLord...${RESET}"
+            cd "$WORK_DIR"
+            bash <(curl -s https://raw.githubusercontent.com/JishnuTheGamer/Jtg/refs/heads/main/install.sh)
+            pause
             ;;
+        2)
+            echo -e "${GREEN}⚡ Initializing Pterodactyl installation suite for NightLord...${RESET}"
+            cd "$WORK_DIR"
+            bash <(curl -s https://raw.githubusercontent.com/NightLord-pro/NightLordNotTools/refs/heads/main/Petroldectal%20Create)
+            pause
+            ;;
+        0) break ;;
+        *) echo -e "${RED}Invalid Panel Choice!${RESET}"; sleep 1 ;;
+        esac
+    done
+}
+
+# ==========================
+# 🎬 SYSTEM MAIN ENTRY POINT
+# ==========================
+system_awakening
+
+while true; do
+    header
+
+    echo -e "${PURPLE}══ 🌟 NIGHTLORD'S SHADOW MONARCH DASHBOARD ══${RESET}"
+    echo -e " ${CYAN}[1]${RESET} ⚔️ Command & Build Center (Server, Runtime, Backups)"
+    echo -e " ${CYAN}[2]${RESET} ⚙️ Status & RAM Manager"
+    echo -e " ${CYAN}[3]${RESET} 🔄 Infinite Dungeon Host (24/7)"
+    echo -e " ${CYAN}[4]${RESET} 🌐 Playit Tunnel Setup"
+    echo -e " ${CYAN}[5]${RESET} ⚡ Panels Installer Hub"
+    echo -e " ${RED}[0]${RESET} ❌ Close System / Log Out"
+    echo
+    read -p "Enter System Command [0-5]: " main_choice
+
+    case $main_choice in
+    1) mc_cb_menu ;;
+    2) settings ;;
+    3) host_24_7 ;;
+    4) playit_setup ;;
+    5) panels_menu ;;
+    0)
+       clear
+       echo -e "${PURPLE}💬 [System]: Logging out, Monarch NightLord. Rise again when you are ready. 🌙${RESET}"
+       exit 0
+       ;;
+    *)
+       echo -e "${RED}Invalid System Command!${RESET}"
+       sleep 1
+       ;;
     esac
 done
