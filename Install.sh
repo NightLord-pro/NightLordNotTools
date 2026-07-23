@@ -468,8 +468,8 @@ cloudflared_menu() {
         echo "║                                             ║"
         echo -e "║ ${RED}2) Uninstall Completely${NC}                 ║"
         echo "║                                             ║"
-        echo "║ ${RED}3) Return to Main System${NC}                 ║"
-        echo "╚═════════════════════════════════════════════╝"
+        echo -e "║ ${RED}3) Return to Main System${NC}                ║"
+        echo "╚═════════════════════════════════════════════╝${NC}"
         echo -ne "${BLUE}Select an option [1-3]: ${NC}"
         read choice
 
