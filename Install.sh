@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ==========================================================
-#   ⚔️ SOLO LEVELING: SHADOW MONARCH SYSTEM v8.0 ⚔️
+#   ⚔️ SOLO LEVELING: SHADOW MONARCH SYSTEM v8.5 ⚔️
 #   [Created by: NightLord | The Only Player Who Can Level Up]
 # ==========================================================
 
@@ -15,6 +15,7 @@ RED="\033[1;31m"
 YELLOW="\033[1;33m"
 WHITE="\033[1;37m"
 GRAY="\033[0;90m"
+DIM="\033[2m"
 BOLD="\033[1m"
 RESET="\033[0m"
 
@@ -24,7 +25,7 @@ MC_DIR="$WORK_DIR/server"
 PLUGIN_DIR="$MC_DIR/plugins"
 BACKUP_DIR="$WORK_DIR/shadow_backups"
 CONFIG_FILE="$HOME/.shadow_monarch.conf"
-VERSION="8.0 SHADOW MONARCH ELITE (NightLord Edition)"
+VERSION="8.5 SHADOW MONARCH ELITE (NightLord Edition)"
 
 # Load Config
 [ -f "$CONFIG_FILE" ] && source "$CONFIG_FILE"
@@ -39,7 +40,7 @@ system_awakening() {
     echo -e "${PURPLE}"
     echo "    ╔══════════════════════════════════════════════════════════╗"
     echo "    ║     [SYSTEM: Welcome Back, Monarch NightLord]           ║"
-    echo "    ║     ⚔️ INITIALIZING SHADOW MONARCH SYSTEM v8.0 ⚔️         ║"
+    echo "    ║     ⚔️ INITIALIZING SHADOW MONARCH SYSTEM v8.5 ⚔️         ║"
     echo "    ╚══════════════════════════════════════════════════════════╝"
     echo -e "${RESET}"
     echo -e " ${GRAY}Creator Profile:${RESET} ${PURPLE}NightLord${RESET}"
@@ -60,7 +61,7 @@ header() {
     clear
     echo -e "${PURPLE}"
     echo "╭──────────────────────────────────────────────────────────╮"
-    echo "│      ⚔️ SHADOW MONARCH CONTROL INTERFACE v8.0 ⚔️          │"
+    echo "│      ⚔️ SHADOW MONARCH CONTROL INTERFACE v8.5 ⚔️          │"
     echo "╰──────────────────────────────────────────────────────────┘"
     echo -e "${RESET}"
     echo -e " ${CYAN}⚡ Mana/RAM:${RESET}  ${GREEN}$RAM${RESET}    │  ${CYAN}👑 Monarch:${RESET} ${PURPLE}NightLord${RESET}"
@@ -375,6 +376,113 @@ playit_setup() {
 }
 
 # ==========================
+# ☁️ CLOUDFLARED MANAGEMENT
+# ==========================
+install_cloudflared() {
+    clear
+    echo -e "${BLUE}┌────────────────────────────────────┐"
+    echo -e "│       Installing Cloudflared       │"
+    echo -e "└────────────────────────────────────${NC}"
+
+    sudo mkdir -p --mode=0755 /usr/share/keyrings
+    curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg \
+        | sudo tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null
+
+    echo 'deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared any main' \
+        | sudo tee /etc/apt/sources.list.d/cloudflared.list >/dev/null
+
+    sudo apt update
+    sudo apt install -y cloudflared
+
+    if ! command -v cloudflared >/dev/null 2>&1; then
+        echo -e "${RED}✘ Cloudflared installation failed${NC}"
+        pause
+        return
+    fi
+
+    echo -e "${GREEN}✔ Cloudflared installed successfully${NC}"
+    echo ""
+
+    if systemctl list-units --type=service | grep -q cloudflared; then
+        echo -e "${YELLOW}⚠ Existing Cloudflared service detected${NC}"
+        echo -e "${CYAN}→ Removing old service...${NC}"
+        sudo cloudflared service uninstall
+        echo -e "${GREEN}✔ Old service removed${NC}"
+        echo ""
+    fi
+
+    echo -e "${BLUE}🔑 Paste Cloudflare Tunnel token"
+    echo -e "${DIM}(sirf token ya poora command — dono chalega)${NC}"
+    read -rp "> " USER_INPUT
+
+    CF_TOKEN=$(echo "$USER_INPUT" \
+        | sed 's/sudo cloudflared service install //g' \
+        | sed 's/cloudflared service install //g' \
+        | xargs)
+
+    if [[ -z "$CF_TOKEN" ]]; then
+        echo -e "${RED}✘ Invalid or empty token${NC}"
+        pause
+        return
+    fi
+
+    echo -e "${CYAN}🚀 Installing Cloudflared service...${NC}"
+    sudo cloudflared service install "$CF_TOKEN"
+
+    sleep 1
+
+    if systemctl is-active --quiet cloudflared; then
+        echo -e "${GREEN}✔ Cloudflared service installed & running${NC}"
+    else
+        echo -e "${YELLOW}⚠ Service installed but not running${NC}"
+        echo -e "${YELLOW}→ Check with: systemctl status cloudflared${NC}"
+    fi
+
+    pause
+}
+
+uninstall_cloudflared() {
+    clear
+    echo -e "${BLUE}┌────────────────────────────────────┐"
+    echo -e "│      Uninstalling Cloudflared      │"
+    echo -e "└────────────────────────────────────${NC}"
+
+    sudo cloudflared service uninstall 2>/dev/null
+    sudo apt remove -y cloudflared
+    sudo rm -f /etc/apt/sources.list.d/cloudflared.list
+    sudo rm -f /usr/share/keyrings/cloudflare-main.gpg
+
+    echo -e "${GREEN}✔ Cloudflared completely removed${NC}"
+    pause
+}
+
+cloudflared_menu() {
+    while true; do
+        header
+        echo -e "${YELLOW}"
+        echo "╔═════════════════════════════════════════════╗"
+        echo "║        CLOUDFLARED MANAGEMENT MENU          ║"
+        echo "╠═════════════════════════════════════════════╣"
+        echo "║                                             ║"
+        echo -e "║ ${GREEN}1) Install / Setup Tunnel${NC}             ║"
+        echo "║                                             ║"
+        echo -e "║ ${RED}2) Uninstall Completely${NC}                 ║"
+        echo "║                                             ║"
+        echo "║ ${RED}3) Return to Main System${NC}                 ║"
+        echo "╚═════════════════════════════════════════════╝"
+        echo -ne "${BLUE}Select an option [1-3]: ${NC}"
+        read choice
+
+        case $choice in
+            1) install_cloudflared ;;
+            2) uninstall_cloudflared ;;
+            3) break ;;
+            *) echo -e "${RED}Invalid option!${NC}"; sleep 1 ;;
+        esac
+    done
+}
+
+# ==========================
 # ⚡ PANELS INSTALLER HUB
 # ==========================
 panels_menu() {
@@ -405,7 +513,7 @@ panels_menu() {
             pause
             ;;
         0) break ;;
-        *) echo -e "${RED}Invalid Panel Choice!${RESET}"; sleep 1 ;;
+        *) echo -e "${RED}Invalid Panel Choice!${NC}"; sleep 1 ;;
         esac
     done
 }
@@ -418,22 +526,24 @@ system_awakening
 while true; do
     header
 
-    echo -e "${PURPLE}══ 🌟 NIGHTLORD'S SHADOW MONARCH DASHBOARD ══${RESET}"
+    echo -e "${PURPLE}══ 🌟 NIGHTLORD'S SHADOW MONARCH DASHBOARD v8.5 ══${RESET}"
     echo -e " ${CYAN}[1]${RESET} ⚔️ Command & Build Center (Server, Runtime, Backups)"
     echo -e " ${CYAN}[2]${RESET} ⚙️ Status & RAM Manager"
     echo -e " ${CYAN}[3]${RESET} 🔄 Infinite Dungeon Host (24/7)"
     echo -e " ${CYAN}[4]${RESET} 🌐 Playit Tunnel Setup"
-    echo -e " ${CYAN}[5]${RESET} ⚡ Panels Installer Hub"
+    echo -e " ${CYAN}[5]${RESET} ☁️ Cloudflared Tunnel Manager"
+    echo -e " ${CYAN}[6]${RESET} ⚡ Panels Installer Hub"
     echo -e " ${RED}[0]${RESET} ❌ Close System / Log Out"
     echo
-    read -p "Enter System Command [0-5]: " main_choice
+    read -p "Enter System Command [0-6]: " main_choice
 
     case $main_choice in
     1) mc_cb_menu ;;
     2) settings ;;
     3) host_24_7 ;;
     4) playit_setup ;;
-    5) panels_menu ;;
+    5) cloudflared_menu ;;
+    6) panels_menu ;;
     0)
        clear
        echo -e "${PURPLE}💬 [System]: Logging out, Monarch NightLord. Rise again when you are ready. 🌙${RESET}"
