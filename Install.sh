@@ -39,8 +39,8 @@ system_awakening() {
     clear
     echo -e "${PURPLE}"
     echo "    ╔══════════════════════════════════════════════════════════╗"
-    echo "    ║     [SYSTEM: Welcome Back, Monarch NightLord]           ║"
-    echo "    ║     ⚔️ INITIALIZING SHADOW MONARCH SYSTEM v8.5 ⚔️         ║"
+    echo "    ║     [SYSTEM: Welcome Back, Monarch NightLord]            ║"
+    echo "    ║     ⚔️ INITIALIZING SHADOW MONARCH SYSTEM v8.5 ⚔️          ║"
     echo "    ╚══════════════════════════════════════════════════════════╝"
     echo -e "${RESET}"
     echo -e " ${GRAY}Creator Profile:${RESET} ${PURPLE}NightLord${RESET}"
@@ -464,11 +464,11 @@ cloudflared_menu() {
         echo "║        CLOUDFLARED MANAGEMENT MENU          ║"
         echo "╠═════════════════════════════════════════════╣"
         echo "║                                             ║"
-        echo -e "║ ${GREEN}1) Install / Setup Tunnel${NC}              ║"
+        echo -e "║ ${GREEN}1) Install / Setup Tunnel${NC}             ║"
         echo "║                                             ║"
-        echo -e "║ ${RED}2) Uninstall Completely${NC}                ║"         
+        echo -e "║ ${RED}2) Uninstall Completely${NC}                 ║"
         echo "║                                             ║"
-        echo -e "║ ${RED}3) Return to Main System${NC}      ║" 
+        echo -e "║ ${RED}3) Return to Main System${NC}                ║"
         echo "╚═════════════════════════════════════════════╝${NC}"
         echo -ne "${BLUE}Select an option [1-3]: ${NC}"
         read choice
@@ -489,7 +489,7 @@ panels_menu() {
     while true; do
         header
         echo -e "${CYAN}════════════════════════════════════════════════════════${RESET}"
-        echo -e "${PURPLE}      ⚡ NIGHTLORD'S SHADOW MONARCH PANELS HUB ⚡      ${RESET}"
+        echo -e "${PURPLE}     ⚡ NIGHTLORD'S SHADOW MONARCH PANELS HUB ⚡      ${RESET}"
         echo -e "${CYAN}════════════════════════════════════════════════════════${RESET}"
         echo -e " ${YELLOW}Monarch Creator & Master:${RESET} ${GREEN}NightLord${RESET}"
         echo
@@ -525,6 +525,20 @@ system_awakening
 
 while true; do
     header
+
+    # --- NIGHTLORD BIG NAME BANNER (MAIN MENU ONLY) ---
+    echo -e "${PURPLE}${BOLD}"
+    echo "        _       _________ _______          _________ _        _______  _______  ______  
+( (    /|\__   __/(  ____ \|\     /|\__   __/( \      (  ___  )(  ____ )(  __  \ 
+|  \  ( |   ) (   | (    \/| )   ( |   ) (   | (      | (   ) || (    )|| (  \  )
+|   \ | |   | |   | |      | (___) |   | |   | |      | |   | || (____)|| |   ) |
+| (\ \) |   | |   | | ____ |  ___  |   | |   | |      | |   | ||     __)| |   | |
+| | \   |   | |   | | \_  )| (   ) |   | |   | |      | |   | || (\ (   | |   ) |
+| )  \  |___) (___| (___) || )   ( |   | |   | (____/\| (___) || ) \ \__| (__/  )
+|/    )_)\_______/(_______)|/     \|   )_(   (_______/(_______)|/   \__/(______/ 
+                                                                                                                                                                          "
+    echo -e "${RESET}"
+    # ---------------------------------------------------
 
     echo -e "${PURPLE}══ 🌟 NIGHTLORD'S SHADOW MONARCH DASHBOARD v8.5 ══${RESET}"
     echo -e " ${CYAN}[1]${RESET} ⚔️ Command & Build Center (Server, Runtime, Backups)"
