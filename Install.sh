@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # ==========================================================
-#   ⚔️ SOLO LEVELING: SHADOW MONARCH SYSTEM v8.5 ⚔️
-#   [Created by: NightLord | The Only Player Who Can Level Up]
+#   ⚔️ SOLO LEVELING: SHADOW MONARCH SYSTEM v9.2 ELITE ⚔️
+#   [Created by: NightLord | Universal Exit Protocol 0]
 # ==========================================================
 
 # Aesthetic Styles & Color Palette (Monarch Theme)
@@ -23,9 +23,10 @@ RESET="\033[0m"
 WORK_DIR="$(pwd)"
 MC_DIR="$WORK_DIR/server"
 PLUGIN_DIR="$MC_DIR/plugins"
+WORLD_DIR="$MC_DIR/world"
 BACKUP_DIR="$WORK_DIR/shadow_backups"
 CONFIG_FILE="$HOME/.shadow_monarch.conf"
-VERSION="8.5 SHADOW MONARCH ELITE (NightLord Edition)"
+VERSION="9.2 SHADOW MONARCH GOD-TIER (NightLord Edition)"
 
 # Load Config
 [ -f "$CONFIG_FILE" ] && source "$CONFIG_FILE"
@@ -39,18 +40,18 @@ system_awakening() {
     clear
     echo -e "${PURPLE}"
     echo "    ╔══════════════════════════════════════════════════════════╗"
-    echo "    ║     [SYSTEM: Welcome Back, Monarch NightLord]            ║"
-    echo "    ║     ⚔️ INITIALIZING SHADOW MONARCH SYSTEM v8.5 ⚔️          ║"
+    echo "    ║     [SYSTEM: Welcome Back, Sovereign NightLord]          ║"
+    echo "    ║     ⚔️ INITIALIZING SHADOW MONARCH SYSTEM v9.2 ⚔️         ║"
     echo "    ╚══════════════════════════════════════════════════════════╝"
     echo -e "${RESET}"
     echo -e " ${GRAY}Creator Profile:${RESET} ${PURPLE}NightLord${RESET}"
-    echo -ne "${CYAN} [System] Synchronizing Gate Matrix [${RESET}"
-    for i in {1..30}; do
+    echo -ne "${CYAN} [System] Synchronizing Absolute Gate Matrix [${RESET}"
+    for i in {1..35}; do
         echo -e -n "${PURPLE}█${RESET}"
-        sleep 0.02
+        sleep 0.015
     done
     echo -e "${CYAN}] ${GREEN}100% AWAKENED${RESET}"
-    echo -e "${YELLOW}💬 [System]: 'Arise, NightLord.' Your absolute power commands this domain.${RESET}"
+    echo -e "${YELLOW}💬 [System]: 'Arise, NightLord.' Your absolute domain is fully active.${RESET}"
     sleep 1
 }
 
@@ -61,11 +62,11 @@ header() {
     clear
     echo -e "${PURPLE}"
     echo "╭──────────────────────────────────────────────────────────╮"
-    echo "│      ⚔️ SHADOW MONARCH CONTROL INTERFACE v8.5 ⚔️          │"
+    echo "│      ⚔️ SHADOW MONARCH SUPREME INTERFACE v9.2 ⚔️          │"
     echo "╰──────────────────────────────────────────────────────────┘"
     echo -e "${RESET}"
     echo -e " ${CYAN}⚡ Mana/RAM:${RESET}  ${GREEN}$RAM${RESET}    │  ${CYAN}👑 Monarch:${RESET} ${PURPLE}NightLord${RESET}"
-    echo -e " ${CYAN}📂 Directory:${RESET} ${GREEN}$MC_DIR${RESET} │  ${CYAN}🛡️ Status:${RESET}  ${GREEN}Secure [ONLINE]${RESET}"
+    echo -e " ${CYAN}📂 Directory:${RESET} ${GREEN}$MC_DIR${RESET} │  ${CYAN}🛡️ Status:${RESET}  ${GREEN}God-Tier [ONLINE]${RESET}"
     echo -e "${GRAY}────────────────────────────────────────────────────────────${RESET}"
     echo
 }
@@ -105,9 +106,9 @@ version_selector() {
         echo -e " ${CYAN}[5]${RESET} Paper 1.21.4"
         echo -e " ${CYAN}[6]${RESET} Paper 1.21.1"
         echo -e " ${CYAN}[7]${RESET} Custom Direct URL"
-        echo -e " ${RED}[8] Return to Command Hub${RESET}"
+        echo -e " ${RED}[0] Return to Previous Menu${RESET}"
         echo
-        read -p "Select Gate Level [1-8]: " v_choice
+        read -p "Select Gate Level [0-7]: " v_choice
 
         case $v_choice in
         1) DOWNLOAD_URL="https://fill-data.papermc.io/v1/objects/e708e8c132dc143ffd73528cccb9532e2eb17628b1a0eee74469bf466c7003f8/paper-1.21.11-116.jar"; break ;;
@@ -120,7 +121,7 @@ version_selector() {
             read -p "Paste Custom Direct Jar URL: " DOWNLOAD_URL
             [ -z "$DOWNLOAD_URL" ] && echo -e "${RED}Invalid URL!${RESET}" && sleep 1 || break
             ;;
-        8) return 1 ;;
+        0) return 1 ;;
         *) echo -e "${RED}Invalid Gate Choice!${RESET}"; sleep 1 ;;
         esac
     done
@@ -181,62 +182,59 @@ run_server() {
 # 📦 SHADOW BACKUP VAULT
 # ==========================
 shadow_backup() {
-    header
-    echo -e "${PURPLE}══ 📦 NIGHTLORD'S SHADOW BACKUP VAULT ══${RESET}"
-    echo -e " ${CYAN}[1]${RESET} Create Backup (Store in Shadows)"
-    echo -e " ${CYAN}[2]${RESET} Restore Backup (Resurrect from Shadows)"
-    echo -e " ${RED}[3]${RESET} Back to Menu"
-    echo
-    read -p "Choose Shadow Action [1-3]: " b_choice
+    while true; do
+        header
+        echo -e "${PURPLE}══ 📦 NIGHTLORD'S SHADOW BACKUP VAULT ══${RESET}"
+        echo -e " ${CYAN}[1]${RESET} Create Backup (Store in Shadows)"
+        echo -e " ${CYAN}[2]${RESET} Restore Backup (Resurrect from Shadows)"
+        echo -e " ${RED}[0]${RESET} Return to Command Hub"
+        echo
+        read -p "Choose Shadow Action [0-2]: " b_choice
 
-    case $b_choice in
-    1)
-        if [ ! -d "$MC_DIR" ]; then
-            echo -e "${RED}❌ No server folder found to backup!${RESET}"
-            pause
-            return
-        fi
-        mkdir -p "$BACKUP_DIR"
-        TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
-        BACKUP_FILE="$BACKUP_DIR/nightlord_backup_$TIMESTAMP.tar.gz"
-        echo -e "${CYAN}📦 Compressing domain data into NightLord's Shadow Realm...${RESET}"
-        tar -czf "$BACKUP_FILE" -C "$WORK_DIR" server
-        echo -e "${GREEN}✔ Backup Secured successfully at: $BACKUP_FILE${RESET}"
-        pause
-        ;;
-    2)
-        if [ ! -d "$BACKUP_DIR" ]; then
-            echo -e "${RED}❌ No backups found in the vault!${RESET}"
-            pause
-            return
-        fi
-        echo -e "${CYAN}Available Shadows (Backups):${RESET}"
-        select b_file in "$BACKUP_DIR"/*.tar.gz; do
-            if [ -n "$b_file" ]; then
-                echo -e "${YELLOW}Extracting shadows back to NightLord's domain...${RESET}"
-                rm -rf "$MC_DIR"
-                tar -xzf "$b_file" -C "$WORK_DIR"
-                echo -e "${GREEN}✔ Resurrected Successfully, My Monarch!${RESET}"
-                break
-            else
-                echo -e "${RED}Invalid selection.${RESET}"
-                break
+        case $b_choice in
+        1)
+            if [ ! -d "$MC_DIR" ]; then
+                echo -e "${RED}❌ No server folder found to backup!${RESET}"
+                pause
+                continue
             fi
-        done
-        pause
-        ;;
-    3)
-        return
-        ;;
-    *)
-        echo -e "${RED}Invalid choice!${RESET}"
-        sleep 1
-        ;;
-    esac
+            mkdir -p "$BACKUP_DIR"
+            TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+            BACKUP_FILE="$BACKUP_DIR/nightlord_backup_$TIMESTAMP.tar.gz"
+            echo -e "${CYAN}📦 Compressing domain data into NightLord's Shadow Realm...${RESET}"
+            tar -czf "$BACKUP_FILE" -C "$WORK_DIR" server
+            echo -e "${GREEN}✔ Backup Secured successfully at: $BACKUP_FILE${RESET}"
+            pause
+            ;;
+        2)
+            if [ ! -d "$BACKUP_DIR" ]; then
+                echo -e "${RED}❌ No backups found in the vault!${RESET}"
+                pause
+                continue
+            fi
+            echo -e "${CYAN}Available Shadows (Backups):${RESET}"
+            select b_file in "$BACKUP_DIR"/*.tar.gz; do
+                if [ -n "$b_file" ]; then
+                    echo -e "${YELLOW}Extracting shadows back to NightLord's domain...${RESET}"
+                    rm -rf "$MC_DIR"
+                    tar -xzf "$b_file" -C "$WORK_DIR"
+                    echo -e "${GREEN}✔ Resurrected Successfully, My Monarch!${RESET}"
+                    break
+                else
+                    echo -e "${RED}Invalid selection.${RESET}"
+                    break
+                fi
+            done
+            pause
+            ;;
+        0) break ;;
+        *) echo -e "${RED}Invalid choice!${RESET}"; sleep 1 ;;
+        esac
+    done
 }
 
 # ==========================
-# 🔌 SHADOW SOLDIER PLUGINS
+# 🔌 SHADOW SOLDIER PLUGINS (UNLIMITED MODRINTH SEARCH)
 # ==========================
 plugins() {
     while true; do
@@ -244,38 +242,137 @@ plugins() {
         mkdir -p "$PLUGIN_DIR"
         cd "$PLUGIN_DIR" || return
 
-        echo -e "${PURPLE}══ 🔌 NIGHTLORD'S SHADOW SOLDIERS (PLUGINS) ══${RESET}"
-        echo -e " ${CYAN}[1]${RESET} ViaVersion (Cross-Gate Support)"
-        echo -e " ${CYAN}[2]${RESET} ViaBackwards"
-        echo -e " ${CYAN}[3]${RESET} SkinsRestorer"
-        echo -e " ${CYAN}[4]${RESET} Connect (Minekube Tunnel)"
-        echo -e " ${CYAN}[5]${RESET} Playit Plugin"
-        echo -e " ${CYAN}[6]${RESET} EssentialsX"
-        echo -e " ${CYAN}[7]${RESET} ⚡ Summon All Shadow Soldiers (Install All)"
-        echo -e " ${RED}[8]${RESET} Return to Hub"
+        echo -e "${PURPLE}══ 🔌 NIGHTLORD'S INFINITE PLUGIN SUMMONER ══${RESET}"
+        echo -e " ${CYAN}[1]${RESET} ⚡ Summon Plugin by Name/Keyword (No Limits - e.g. EssentialsX)"
+        echo -e " ${CYAN}[2]${RESET} 📦 View All Active Summoned Soldiers (Installed Plugins)"
+        echo -e " ${RED}[0]${RESET} Return to Command Hub"
         echo
-        read -p "Select Soldier Option [1-8]: " p
+        read -p "Select Plugin Action [0-2]: " p_choice
 
-        case $p in
-        1) curl -L -o ViaVersion.jar https://github.com/ViaVersion/ViaVersion/releases/download/5.10.0/ViaVersion-5.10.0.jar; echo -e "${GREEN}✔ ViaVersion Summoned for NightLord!${RESET}"; pause ;;
-        2) curl -L -o ViaBackwards.jar https://github.com/ViaVersion/ViaBackwards/releases/download/5.10.0/ViaBackwards-5.10.0.jar; echo -e "${GREEN}✔ ViaBackwards Summoned for NightLord!${RESET}"; pause ;;
-        3) curl -L -o SkinsRestorer.jar https://github.com/SkinsRestorer/SkinsRestorer/releases/download/15.12.0/SkinsRestorer.jar; echo -e "${GREEN}✔ SkinsRestorer Summoned for NightLord!${RESET}"; pause ;;
-        4) curl -L -o Connect.jar https://github.com/minekube/connect-java/releases/latest/download/connect-spigot.jar; echo -e "${GREEN}✔ Connect Summoned for NightLord!${RESET}"; pause ;;
-        5) curl -L -o playit-plugin.jar https://github.com/playit-cloud/playit-minecraft-plugin/releases/latest/download/playit-plugin.jar; echo -e "${GREEN}✔ Playit Summoned for NightLord!${RESET}"; pause ;;
-        6) curl -L -o EssentialsX.jar https://github.com/EssentialsX/Essentials/releases/latest/download/EssentialsX.jar; echo -e "${GREEN}✔ EssentialsX Summoned for NightLord!${RESET}"; pause ;;
-        7)
-            echo -e "${CYAN}💬 [System]: Extracting all shadow soldiers simultaneously for NightLord...${RESET}"
-            curl -L -o ViaVersion.jar https://github.com/ViaVersion/ViaVersion/releases/download/5.10.0/ViaVersion-5.10.0.jar
-            curl -L -o ViaBackwards.jar https://github.com/ViaVersion/ViaBackwards/releases/download/5.10.0/ViaBackwards-5.10.0.jar
-            curl -L -o SkinsRestorer.jar https://github.com/SkinsRestorer/SkinsRestorer/releases/download/15.12.0/SkinsRestorer.jar
-            curl -L -o Connect.jar https://github.com/minekube/connect-java/releases/latest/download/connect-spigot.jar
-            curl -L -o playit-plugin.jar https://github.com/playit-cloud/playit-minecraft-plugin/releases/latest/download/playit-plugin.jar
-            curl -L -o EssentialsX.jar https://github.com/EssentialsX/Essentials/releases/latest/download/EssentialsX.jar
-            echo -e "${GREEN}✔ NightLord's Full Army Deployed Successfully!${RESET}"
+        case $p_choice in
+        1)
+            echo
+            echo -e "${CYAN}💬 [System]: Enter the exact name or keyword of the plugin.${RESET}"
+            read -p "Plugin Name > " plugin_query
+
+            if [ -z "$plugin_query" ]; then
+                echo -e "${RED}❌ Plugin name cannot be empty!${RESET}"
+                pause
+                continue
+            fi
+
+            echo -e "${PURPLE}🔍 Searching the ancient archives for '$plugin_query'...${RESET}"
+            
+            # Using Modrinth API to search for plugins compatible with Paper/Spigot
+            API_URL="https://api.modrinth.com/v2/search?query=${plugin_query}&facets=[[\"project_type:plugin\"],[\"categories:paper\"],[\"server_side:required\"]]&limit=1"
+            
+            RESPONSE=$(curl -s "$API_URL")
+            TOTAL_HITS=$(echo "$RESPONSE" | grep -o '"total_hits":[0-9]*' | head -1 | cut -d':' -f2)
+
+            if [ -z "$TOTAL_HITS" ] || [ "$TOTAL_HITS" -eq 0 ]; then
+                API_URL="https://api.modrinth.com/v2/search?query=${plugin_query}&facets=[[\"project_type:plugin\"]]&limit=1"
+                RESPONSE=$(curl -s "$API_URL")
+                PROJECT_ID=$(echo "$RESPONSE" | grep -o '"project_id":"[^"]*"' | head -1 | cut -d'"' -f4)
+            else
+                PROJECT_ID=$(echo "$RESPONSE" | grep -o '"project_id":"[^"]*"' | head -1 | cut -d'"' -f4)
+            fi
+
+            if [ -z "$PROJECT_ID" ]; then
+                echo -e "${RED}❌ No matching plugins found for '$plugin_query'. Try another name!${RESET}"
+                pause
+                continue
+            fi
+
+            PROJECT_URL="https://api.modrinth.com/v2/project/$PROJECT_ID/versions"
+            VERSIONS_JSON=$(curl -s "$PROJECT_URL")
+            
+            DOWNLOAD_LINK=$(echo "$VERSIONS_JSON" | grep -o '"url":"[^"]*\.jar"' | head -1 | cut -d'"' -f4)
+            FILE_NAME=$(echo "$VERSIONS_JSON" | grep -o '"filename":"[^"]*\.jar"' | head -1 | cut -d'"' -f4)
+
+            if [ -z "$DOWNLOAD_LINK" ]; then
+                echo -e "${RED}❌ Could not retrieve direct download link for this plugin.${RESET}"
+                pause
+                continue
+            fi
+
+            echo -e "${GREEN}✔ Found: $FILE_NAME${RESET}"
+            echo -e "${CYAN}⚡ Summoning plugin into NightLord's server...${RESET}"
+            
+            curl -L -o "$FILE_NAME" "$DOWNLOAD_LINK"
+
+            if [ $? -eq 0 ] && [ -f "$FILE_NAME" ]; then
+                echo -e "${GREEN}✨ Success! '$FILE_NAME' has been bound to your domain.${RESET}"
+            else
+                echo -e "${RED}❌ Failed to download the plugin. Check connection.${RESET}"
+            fi
             pause
             ;;
-        8) break ;;
+        2)
+            echo -e "${CYAN}📦 Currently Active Shadow Soldiers (Installed Plugins):${RESET}"
+            echo -e "${GRAY}------------------------------------------------------------${RESET}"
+            if [ -n "$(ls -A "$PLUGIN_DIR" 2>/dev/null)" ]; then
+                ls -lh "$PLUGIN_DIR" | awk '{print " 🛡️ " $9 " (" $5 ")"}'
+            else
+                echo -e "${YELLOW}No plugins summoned yet in this domain.${RESET}"
+            fi
+            echo -e "${GRAY}------------------------------------------------------------${RESET}"
+            pause
+            ;;
+        0) break ;;
         *) echo -e "${RED}Invalid Command!${RESET}"; sleep 1 ;;
+        esac
+    done
+}
+
+# ==========================
+# ⚡ GOD-TIER MONARCH UTILITIES
+# ==========================
+monarch_utilities() {
+    while true; do
+        header
+        echo -e "${PURPLE}══ 🔮 NIGHTLORD'S GOD-TIER MONARCH UTILITIES ══${RESET}"
+        echo -e " ${CYAN}[1]${RESET} 🧹 Purge Server Cache & Junk Files"
+        echo -e " ${CYAN}[2]${RESET} ⚠️ Wipe World Data (Fresh Dungeon Reset)"
+        echo -e " ${CYAN}[3]${RESET} 📁 Open Direct Shell Terminal in Server Dir"
+        echo -e " ${CYAN}[4]${RESET} 🛠️ Auto-Fix Paper/Server Permissions"
+        echo -e " ${RED}[0]${RESET} ⬅ Back to Main System"
+        echo
+        read -p "Choose Utility Option [0-4]: " util_choice
+
+        case $util_choice in
+        1)
+            echo -e "${YELLOW}🧹 Purging useless logs, crash reports, and temp files...${RESET}"
+            rm -rf "$MC_DIR/logs/"*.gz
+            rm -rf "$MC_DIR/crash-reports/"*
+            rm -rf "$MC_DIR/cache/"*
+            echo -e "${GREEN}✔ Domain Cleaned Successfully! Maximum performance restored.${RESET}"
+            pause
+            ;;
+        2)
+            echo -e "${RED}⚠️ WARNING: This will completely destroy all blocks, builds, and players in the world folder!${RESET}"
+            read -p "Are you sure you want to reset NightLord's world? (y/N): " confirm_wipe
+            if [[ "$confirm_wipe" =~ ^[Yy]$ ]]; then
+                rm -rf "$WORLD_DIR" "$MC_DIR/world_nether" "$MC_DIR/world_the_end"
+                echo -e "${GREEN}✔ World wiped successfully. A fresh dungeon awaits your command!${RESET}"
+            else
+                echo -e "${YELLOW}Wipe aborted. Your world is safe.${RESET}"
+            fi
+            pause
+            ;;
+        3)
+            echo -e "${CYAN}🚀 Entering interactive sub-shell inside $MC_DIR. Type 'exit' to return.${RESET}"
+            cd "$MC_DIR" || return
+            bash
+            ;;
+        4)
+            echo -e "${CYAN}🛠️ Fixing ownership and execution permissions for server files...${RESET}"
+            chmod +x "$MC_DIR/server.jar" 2>/dev/null
+            find "$MC_DIR" -type f -name "*.sh" -exec chmod +x {} \; 2>/dev/null
+            echo -e "${GREEN}✔ Permissions normalized under Monarch authority!${RESET}"
+            pause
+            ;;
+        0) break ;;
+        *) echo -e "${RED}Invalid Selection!${RESET}"; sleep 1 ;;
         esac
     done
 }
@@ -289,17 +386,19 @@ mc_cb_menu() {
         echo -e "${PURPLE}══ ⚔️ NIGHTLORD'S COMMAND & BUILD CENTER ══${RESET}"
         echo -e " ${CYAN}[1]${RESET} 🚀 Setup Server Gate"
         echo -e " ${CYAN}[2]${RESET} 🎮 Awaken/Run Server Engine"
-        echo -e " ${CYAN}[3]${RESET} 🔌 Shadow Soldier Plugins"
+        echo -e " ${CYAN}[3]${RESET} 🔌 Shadow Soldier Plugins (Infinite Summoner)"
         echo -e " ${CYAN}[4]${RESET} 📦 Shadow Backup Vault"
+        echo -e " ${CYAN}[5]${RESET} 🔮 God-Tier Monarch Utilities"
         echo -e " ${RED}[0]${RESET} ⬅ Back to Main System"
         echo
-        read -p "Choose Command [0-4]: " mccb_choice
+        read -p "Choose Command [0-5]: " mccb_choice
 
         case $mccb_choice in
         1) setup_server ;;
         2) run_server ;;
         3) plugins ;;
         4) shadow_backup ;;
+        5) monarch_utilities ;;
         0) break ;;
         *) echo -e "${RED}Invalid Selection!${RESET}"; sleep 1 ;;
         esac
@@ -316,9 +415,9 @@ settings() {
         echo -e " ${CYAN}[1]${RESET} Auto-Detect Stat Cap (Smart RAM Optimize)"
         echo -e " ${CYAN}[2]${RESET} Allocate Custom Stat Power (Custom RAM)"
         echo -e " ${CYAN}[3]${RESET} View Current Monarch Profile"
-        echo -e " ${RED}[4]${RESET} Back to Main System"
+        echo -e " ${RED}[0]${RESET} Back to Main System"
         echo
-        read -p "Select Status Option [1-4]: " s
+        read -p "Select Status Option [0-3]: " s
 
         case $s in
         1)
@@ -341,7 +440,7 @@ settings() {
             echo -e " System Config Path : ${GREEN}$CONFIG_FILE${RESET}"
             pause
             ;;
-        4) break ;;
+        0) break ;;
         *) echo -e "${RED}Invalid Stat Choice!${RESET}"; sleep 1 ;;
         esac
     done
@@ -403,16 +502,7 @@ install_cloudflared() {
     echo -e "${GREEN}✔ Cloudflared installed successfully${NC}"
     echo ""
 
-    if systemctl list-units --type=service | grep -q cloudflared; then
-        echo -e "${YELLOW}⚠ Existing Cloudflared service detected${NC}"
-        echo -e "${CYAN}→ Removing old service...${NC}"
-        sudo cloudflared service uninstall
-        echo -e "${GREEN}✔ Old service removed${NC}"
-        echo ""
-    fi
-
-    echo -e "${BLUE}🔑 Paste Cloudflare Tunnel token"
-    echo -e "${DIM}(sirf token ya poora command — dono chalega)${NC}"
+    echo -e "${BLUE}🔑 Paste Cloudflare Tunnel token${NC}"
     read -rp "> " USER_INPUT
 
     CF_TOKEN=$(echo "$USER_INPUT" \
@@ -428,14 +518,12 @@ install_cloudflared() {
 
     echo -e "${CYAN}🚀 Installing Cloudflared service...${NC}"
     sudo cloudflared service install "$CF_TOKEN"
-
     sleep 1
 
     if systemctl is-active --quiet cloudflared; then
         echo -e "${GREEN}✔ Cloudflared service installed & running${NC}"
     else
         echo -e "${YELLOW}⚠ Service installed but not running${NC}"
-        echo -e "${YELLOW}→ Check with: systemctl status cloudflared${NC}"
     fi
 
     pause
@@ -459,24 +547,24 @@ uninstall_cloudflared() {
 cloudflared_menu() {
     while true; do
         header
-        echo -e "${RED}"
+        echo -e "${YELLOW}"
         echo "╔═════════════════════════════════════════════╗"
         echo "║        CLOUDFLARED MANAGEMENT MENU          ║"
         echo "╠═════════════════════════════════════════════╣"
         echo "║                                             ║"
-        echo -e " ${BLUE}1) Install / Setup Tunnel${NC}             "
+        echo -e " ${GREEN}1) Install / Setup Tunnel${NC}             "
         echo "║                                             ║"
-        echo -e " ${BLUE}2) Uninstall Completely${NC}                 "
+        echo -e " ${RED}2) Uninstall Completely${NC}                 "
         echo "║                                             ║"
-        echo -e " ${RED}3) Return to Main System${NC}                "
+        echo -e " ${RED}0) Return to Main System${NC}               " 
         echo "╚═════════════════════════════════════════════╝${NC}"
-        echo -ne "${GREEN}Select an option [1-3]: ${NC}"
+        echo -ne "${BLUE}Select an option [0-2]: ${NC}"
         read choice
 
         case $choice in
             1) install_cloudflared ;;
             2) uninstall_cloudflared ;;
-            3) break ;;
+            0) break ;;
             *) echo -e "${RED}Invalid option!${NC}"; sleep 1 ;;
         esac
     done
@@ -526,7 +614,7 @@ system_awakening
 while true; do
     header
 
-    # --- ASCII BANNER FOR "NIGHT" (LORD in small text below) ---
+    # --- BIG ASCII BANNER FOR "NIGHT" ---
     echo -e "${PURPLE}${BOLD}"
     echo "  ███╗   ██╗██╗ ██████╗ ██╗  ██╗████████╗"
     echo "  ████╗  ██║██║██╔════╝ ██║  ██║╚══██╔══╝"
@@ -535,20 +623,20 @@ while true; do
     echo "  ██║ ╚████║██║╚██████╔╝██║  ██║   ██║   "
     echo "  ╚═╝  ╚═══╝╚═╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝   "
     echo -e "${RESET}"
-    echo -e "${CYAN}               🔗 NIGHTLORD link 🔗                 ${RESET}"
+    echo -e "${CYAN}               🔗 nightlord link 🔗                 ${RESET}"
     echo -e "${GRAY}────────────────────────────────────────────────────────────${RESET}"
-    # -------------------------------------------------------------------
 
-    echo -e "${PURPLE}══ 🌟 NIGHTLORD'S SHADOW MONARCH DASHBOARD v8.5 ══${RESET}"
-    echo -e " ${CYAN}[1]${RESET} ⚔️ Command & Build Center (Server, Runtime, Backups)"
+    echo -e "${PURPLE}══ 🌟 NIGHTLORD'S SHADOW MONARCH DASHBOARD v9.2 ══${RESET}"
+    echo -e " ${CYAN}[1]${RESET} ⚔️ Command & Build Center (Server, Runtime, Plugins, Backups)"
     echo -e " ${CYAN}[2]${RESET} ⚙️ Status & RAM Manager"
     echo -e " ${CYAN}[3]${RESET} 🔄 Infinite Dungeon Host (24/7)"
     echo -e " ${CYAN}[4]${RESET} 🌐 Playit Tunnel Setup"
     echo -e " ${CYAN}[5]${RESET} ☁️ Cloudflared Tunnel Manager"
     echo -e " ${CYAN}[6]${RESET} ⚡ Panels Installer Hub"
+    echo -e " ${CYAN}[7]${RESET} 🔮 God-Tier Monarch Utilities & Cleaners"
     echo -e " ${RED}[0]${RESET} ❌ Close System / Log Out"
     echo
-    read -p "Enter System Command [0-6]: " main_choice
+    read -p "Enter System Command [0-7]: " main_choice
 
     case $main_choice in
     1) mc_cb_menu ;;
@@ -557,9 +645,10 @@ while true; do
     4) playit_setup ;;
     5) cloudflared_menu ;;
     6) panels_menu ;;
+    7) monarch_utilities ;;
     0)
        clear
-       echo -e "${PURPLE}💬 [System]: Logging out, Monarch NightLord. Rise again when you are ready. 🌙${RESET}"
+       echo -e "${PURPLE}💬 [System]: Logging out, Sovereign Monarch NightLord. Rise again when you are ready. 🌙${RESET}"
        exit 0
        ;;
     *)
