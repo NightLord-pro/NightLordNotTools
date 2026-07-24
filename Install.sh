@@ -459,18 +459,18 @@ uninstall_cloudflared() {
 cloudflared_menu() {
     while true; do
         header
-        echo -e "${YELLOW}"
+        echo -e "${RED}"
         echo "╔═════════════════════════════════════════════╗"
         echo "║        CLOUDFLARED MANAGEMENT MENU          ║"
         echo "╠═════════════════════════════════════════════╣"
         echo "║                                             ║"
-        echo -e "║ ${GREEN}1) Install / Setup Tunnel${NC}             ║"
+        echo -e " ${BLUE}1) Install / Setup Tunnel${NC}             "
         echo "║                                             ║"
-        echo -e "║ ${RED}2) Uninstall Completely${NC}                 ║"
+        echo -e " ${BLUE}2) Uninstall Completely${NC}                 "
         echo "║                                             ║"
-        echo -e "║ ${RED}3) Return to Main System${NC}                ║"
+        echo -e " ${RED}3) Return to Main System${NC}                "
         echo "╚═════════════════════════════════════════════╝${NC}"
-        echo -ne "${BLUE}Select an option [1-3]: ${NC}"
+        echo -ne "${GREEN}Select an option [1-3]: ${NC}"
         read choice
 
         case $choice in
@@ -526,15 +526,17 @@ system_awakening
 while true; do
     header
 
-    # --- BIG ASS-STYLE NIGHTLORD BANNER (MAIN MENU ONLY) ---
+    # --- ASCII BANNER FOR "NIGHT" (LORD in small text below) ---
     echo -e "${PURPLE}${BOLD}"
-  ███╗   ██╗██╗ ██████╗ ██╗  ██╗██╗      ██████╗ ██████╗ ██████╗ 
-  ████╗  ██║██║██╔════╝ ██║  ██║██║     ██╔═══██╗██╔══██╗██╔══██╗
-  ██╔██╗ ██║██║██║  ███╗███████║██║     ██║   ██║██████╔║██║  ██║
-  ██║╚██╗██║██║██║   ██║██╔══██║██║     ██║   ██║██╔══██╗██║  ██║
-  ██║ ╚████║██║╚██████╔╝██║  ██║███████╗╚██████╔╝██║  ██║██████╔╝
-  ╚═╝  ╚═══╝╚═╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝
+    echo "  ███╗   ██╗██╗ ██████╗ ██╗  ██╗████████╗"
+    echo "  ████╗  ██║██║██╔════╝ ██║  ██║╚══██╔══╝"
+    echo "  ██╔██╗ ██║██║██║  ███╗███████║   ██║   "
+    echo "  ██║╚██╗██║██║██║   ██║██╔══██║   ██║   "
+    echo "  ██║ ╚████║██║╚██████╔╝██║  ██║   ██║   "
+    echo "  ╚═╝  ╚═══╝╚═╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝   "
     echo -e "${RESET}"
+    echo -e "${CYAN}               🔗 NIGHTLORD link 🔗                 ${RESET}"
+    echo -e "${GRAY}────────────────────────────────────────────────────────────${RESET}"
     # -------------------------------------------------------------------
 
     echo -e "${PURPLE}══ 🌟 NIGHTLORD'S SHADOW MONARCH DASHBOARD v8.5 ══${RESET}"
