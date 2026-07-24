@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ==========================================================
-#   ⚔️ SOLO LEVELING: SHADOW MONARCH SYSTEM v9.2 ELITE ⚔️
+#   ⚔️ SOLO LEVELING: SHADOW MONARCH SYSTEM v9.4 ELITE ⚔️
 #   [Created by: NightLord | Universal Exit Protocol 0]
 # ==========================================================
 
@@ -26,7 +26,7 @@ PLUGIN_DIR="$MC_DIR/plugins"
 WORLD_DIR="$MC_DIR/world"
 BACKUP_DIR="$WORK_DIR/shadow_backups"
 CONFIG_FILE="$HOME/.shadow_monarch.conf"
-VERSION="9.2 SHADOW MONARCH GOD-TIER (NightLord Edition)"
+VERSION="9.4 SHADOW MONARCH GOD-TIER (NightLord Edition)"
 
 # Load Config
 [ -f "$CONFIG_FILE" ] && source "$CONFIG_FILE"
@@ -41,7 +41,7 @@ system_awakening() {
     echo -e "${PURPLE}"
     echo "    ╔══════════════════════════════════════════════════════════╗"
     echo "    ║     [SYSTEM: Welcome Back, Sovereign NightLord]          ║"
-    echo "    ║     ⚔️ INITIALIZING SHADOW MONARCH SYSTEM v9.2 ⚔️         ║"
+    echo "    ║     ⚔️ INITIALIZING SHADOW MONARCH SYSTEM v9.4 ⚔️          ║"
     echo "    ╚══════════════════════════════════════════════════════════╝"
     echo -e "${RESET}"
     echo -e " ${GRAY}Creator Profile:${RESET} ${PURPLE}NightLord${RESET}"
@@ -62,7 +62,7 @@ header() {
     clear
     echo -e "${PURPLE}"
     echo "╭──────────────────────────────────────────────────────────╮"
-    echo "│      ⚔️ SHADOW MONARCH SUPREME INTERFACE v9.2 ⚔️          │"
+    echo "│      ⚔️ SHADOW MONARCH SUPREME INTERFACE v9.4 ⚔️           │"
     echo "╰──────────────────────────────────────────────────────────┘"
     echo -e "${RESET}"
     echo -e " ${CYAN}⚡ Mana/RAM:${RESET}  ${GREEN}$RAM${RESET}    │  ${CYAN}👑 Monarch:${RESET} ${PURPLE}NightLord${RESET}"
@@ -263,7 +263,6 @@ plugins() {
 
             echo -e "${PURPLE}🔍 Searching the ancient archives for '$plugin_query'...${RESET}"
             
-            # Using Modrinth API to search for plugins compatible with Paper/Spigot
             API_URL="https://api.modrinth.com/v2/search?query=${plugin_query}&facets=[[\"project_type:plugin\"],[\"categories:paper\"],[\"server_side:required\"]]&limit=1"
             
             RESPONSE=$(curl -s "$API_URL")
@@ -480,7 +479,7 @@ playit_setup() {
 install_cloudflared() {
     clear
     echo -e "${BLUE}┌────────────────────────────────────┐"
-    echo -e "│       Installing Cloudflared       │"
+    echo -e "│        Installing Cloudflared        │"
     echo -e "└────────────────────────────────────${NC}"
 
     sudo mkdir -p --mode=0755 /usr/share/keyrings
@@ -554,9 +553,9 @@ cloudflared_menu() {
         echo "║                                             ║"
         echo -e " ${GREEN}1) Install / Setup Tunnel${NC}             "
         echo "║                                             ║"
-        echo -e " ${RED}2) Uninstall Completely${NC}                 "
+        echo -e " ${RED}2) Uninstall Completely${NC}                   "
         echo "║                                             ║"
-        echo -e " ${RED}0) Return to Main System${NC}               " 
+        echo -e " ${RED}0) Return to Main System${NC}                " 
         echo "╚═════════════════════════════════════════════╝${NC}"
         echo -ne "${BLUE}Select an option [0-2]: ${NC}"
         read choice
@@ -571,13 +570,35 @@ cloudflared_menu() {
 }
 
 # ==========================
+# 🪽 WINGS INSTALLER (PTERODACTYL DAEMON)
+# ==========================
+wings_setup() {
+    header
+    echo -e "${GREEN}🪽 Initializing Pterodactyl Wings installation suite for NightLord...${RESET}"
+    cd "$WORK_DIR"
+    bash <(curl -s https://raw.githubusercontent.com/nobita586/Nobita-Hosting/main/cd/wing.sh)
+    pause
+}
+
+# ==========================
+# 📋 BLUEPRINT SETUP (PANEL EXTENSION MANAGER)
+# ==========================
+blueprint_setup() {
+    header
+    echo -e "${GREEN}📋 Initializing Blueprint installation suite for NightLord...${RESET}"
+    cd "$WORK_DIR"
+    bash <(curl -s https://raw.githubusercontent.com/nobita586/Nobita-Hosting/main/cd/blueprint.sh)
+    pause
+}
+
+# ==========================
 # ⚡ PANELS INSTALLER HUB
 # ==========================
 panels_menu() {
     while true; do
         header
         echo -e "${CYAN}════════════════════════════════════════════════════════${RESET}"
-        echo -e "${PURPLE}     ⚡ NIGHTLORD'S SHADOW MONARCH PANELS HUB ⚡      ${RESET}"
+        echo -e "${PURPLE}      ⚡ NIGHTLORD'S SHADOW MONARCH PANELS HUB ⚡      ${RESET}"
         echo -e "${CYAN}════════════════════════════════════════════════════════${RESET}"
         echo -e " ${YELLOW}Monarch Creator & Master:${RESET} ${GREEN}NightLord${RESET}"
         echo
@@ -623,20 +644,22 @@ while true; do
     echo "  ██║ ╚████║██║╚██████╔╝██║  ██║   ██║   "
     echo "  ╚═╝  ╚═══╝╚═╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝   "
     echo -e "${RESET}"
-    echo -e "${CYAN}               🔗 nightlord link 🔗                 ${RESET}"
+    echo -e "${CYAN}                🔗 nightlord link 🔗                 ${RESET}"
     echo -e "${GRAY}────────────────────────────────────────────────────────────${RESET}"
 
-    echo -e "${PURPLE}══ 🌟 NIGHTLORD'S SHADOW MONARCH DASHBOARD v9.2 ══${RESET}"
+    echo -e "${PURPLE}══ 🌟 NIGHTLORD'S SHADOW MONARCH DASHBOARD v9.4 ══${RESET}"
     echo -e " ${CYAN}[1]${RESET} ⚔️ Command & Build Center (Server, Runtime, Plugins, Backups)"
     echo -e " ${CYAN}[2]${RESET} ⚙️ Status & RAM Manager"
     echo -e " ${CYAN}[3]${RESET} 🔄 Infinite Dungeon Host (24/7)"
     echo -e " ${CYAN}[4]${RESET} 🌐 Playit Tunnel Setup"
     echo -e " ${CYAN}[5]${RESET} ☁️ Cloudflared Tunnel Manager"
     echo -e " ${CYAN}[6]${RESET} ⚡ Panels Installer Hub"
-    echo -e " ${CYAN}[7]${RESET} 🔮 God-Tier Monarch Utilities & Cleaners"
+    echo -e " ${CYAN}[7]${RESET} 🪽 Install Wings (Pterodactyl Daemon)"
+    echo -e " ${CYAN}[8]${RESET} 📋 Blueprint Setup (Extension Manager)"
+    echo -e " ${CYAN}[9]${RESET} 🔮 God-Tier Monarch Utilities & Cleaners"
     echo -e " ${RED}[0]${RESET} ❌ Close System / Log Out"
     echo
-    read -p "Enter System Command [0-7]: " main_choice
+    read -p "Enter System Command [0-9]: " main_choice
 
     case $main_choice in
     1) mc_cb_menu ;;
@@ -645,7 +668,9 @@ while true; do
     4) playit_setup ;;
     5) cloudflared_menu ;;
     6) panels_menu ;;
-    7) monarch_utilities ;;
+    7) wings_setup ;;
+    8) blueprint_setup ;;
+    9) monarch_utilities ;;
     0)
        clear
        echo -e "${PURPLE}💬 [System]: Logging out, Sovereign Monarch NightLord. Rise again when you are ready. 🌙${RESET}"
