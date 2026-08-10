@@ -584,7 +584,7 @@ install_cf() {
         echo ""
         echo -e "${RED}  ERROR: Gate failed to open.${NC}"
         echo -e "${GRAY}  Debug command: sudo journalctl -u cloudflared -f${NC}"
-    end
+    fi
 
     echo ""
     read -p "  Press [Enter] to return to the throne..."
@@ -599,7 +599,7 @@ uninstall_cf() {
     echo -e "${RED}  WARNING: SYSTEM PURGE PROTOCOL${NC}"
     echo -e "${GRAY}  This will completely strip the tunnel service and core binary.${NC}"
     echo ""
-    echo -ne "${RED}  Do you wish to banish this power completely? (y/N): ${NC}"
+    printf "%b" "${RED}  Do you wish to banish this power completely? (y/N): ${NC}"
     read confirm
     
     if [[ "$confirm" =~ ^[Yy]$ ]]; then
