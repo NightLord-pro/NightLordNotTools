@@ -599,7 +599,7 @@ uninstall_cf() {
     echo -e "${RED}  WARNING: SYSTEM PURGE PROTOCOL${NC}"
     echo -e "${GRAY}  This will completely strip the tunnel service and core binary.${NC}"
     echo ""
-    printf "%b" "${RED}  Do you wish to banish this power completely? (y/N): ${NC}"
+    printf "" "${RED}  Do you wish to banish this power completely? (y/N): ${NC}"
     read confirm
     
     if [[ "$confirm" =~ ^[Yy]$ ]]; then
