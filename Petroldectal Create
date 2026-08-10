@@ -1,307 +1,206 @@
+
 #!/bin/bash
+
 # ====================================================
-#   🐲 SHADOW MONARCH: PTERODACTYL MASTER TOOLKIT 🐲
-#       [Created by: NightLord | Sovereign of Shadows]
+#       NIGHT CLOUD - PTERODACTYL CONTROL CENTER
+#       Developed & Maintained by: NightLord
 # ====================================================
 
-set -e
+# --- COLORS & STYLING ---
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+WHITE='\033[0;37m'
+BOLD='\033[1m'
+NC='\033[0m'
+GOLD='\033[0;33m'
+GRAY='\033[0;90m'
 
-# Monarch Color Palette
-PURPLE="\033[1;35m"
-DARK_PURPLE="\033[0;35m"
-GREEN="\033[1;32m"
-RED="\033[1;31m"
-YELLOW="\033[1;33m"
-CYAN="\033[1;36m"
-WHITE="\033[1;37m"
-GRAY="\033[0;90m"
-MAGENTA="\033[0;35m"
-NC="\033[0m"
+# --- UI HELPER FUNCTIONS ---
 
-# ================== AWAKENING PROTOCOL ==================
-monarch_awakening() {
+show_header() {
     clear
-    echo -e "${PURPLE}"
-    echo "    ╔══════════════════════════════════════════════════════════╗"
-    echo "    ║     [SYSTEM: Welcome Back, Monarch NightLord]           ║"
-    echo "    ║     ⚔️ PTERODACTYL MASTER GATEWAY v8.5 ⚔️             ║"
-    echo "    ╚══════════════════════════════════════════════════════════╝"
-    echo -e "${RESET}"
-    echo -e " ${GRAY}Sovereign Profile:${RESET} ${PURPLE}NightLord${RESET}"
-    echo -ne "${CYAN} [System] Synchronizing Master Matrix [${RESET}"
-    for i in {1..25}; do
-        echo -e -n "${PURPLE}█${RESET}"
-        sleep 0.01
-    done
-    echo -e "${CYAN}] ${GREEN}READY${RESET}"
-    echo -e "${YELLOW}💬 [System]: 'Arise, Monarch.' All server domains and portals obey your absolute command.${RESET}"
-    sleep 1
+    echo -e "${PURPLE}════════════════════════════════════════════════════════════${NC}"
+    echo -e "${PURPLE}║${NC}     ${BOLD}${WHITE}NIGHT CLOUD PANEL MANAGEMENT SYSTEM${NC}                 ${PURPLE}║${NC}"
+    echo -e "${PURPLE}║${NC}     ${GRAY}Developed by NightLord${NC}                             ${PURPLE}║${NC}"
+    echo -e "${PURPLE}════════════════════════════════════════════════════════════${NC}"
+    echo -e "${CYAN}  Current Module: ${YELLOW}$1${NC}"
+    echo -e "${PURPLE}────────────────────────────────────────────────────────────${NC}"
+    echo ""
 }
 
-# Helper Print Functions
-print_header() {
-    echo -e "\n${PURPLE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${CYAN} ⚔️ $1 ⚔️ ${NC}"
-    echo -e "${PURPLE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}\n"
+status_msg() {
+    case $1 in
+        "OK")   echo -e "  [${GREEN} ✔ ${NC}] $2" ;;
+        "ERR")  echo -e "  [${RED} ✘ ${NC}] $2" ;;
+        "INFO") echo -e "  [${CYAN} ➜ ${NC}] $2" ;;
+        "WAIT") echo -e "  [${YELLOW} ⏳ ${NC}] $2" ;;
+    esac
 }
 
-print_status() {
-    echo -e "${YELLOW}⏳ [NightLord System]: $1...${NC}"
+pause() {
+    echo ""
+    read -p "  Press [Enter] to return to main menu..."
 }
 
-print_success() {
-    echo -e "${GREEN}✅ [System Success]: $1${NC}"
-}
-
-print_error() {
-    echo -e "${RED}❌ [Gate Error]: $1${NC}"
-}
-
-confirm_action() {
-    local message="$1"
-    echo -e "${YELLOW}$message${NC}"
-    read -p "$(echo -e "${PURPLE}Are you sure you wish to proceed, My Monarch? (y/N): ${NC}")" -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        echo -e "${GREEN}Operation cancelled by Monarch decree.${NC}"
-        return 1
-    fi
-    return 0
-}
-
-# ================== 1. INSTALL FUNCTION ==================
+# ================== INSTALL FUNCTION ==================
 install_ptero() {
-    clear
-    echo -e "${PURPLE}"
-    echo "┌──────────────────────────────────────────────┐"
-    echo "│     🚀 Pterodactyl Installation (Monarch)    │"
-    echo "└──────────────────────────────────────────────┘${NC}"
+    show_header "PANEL INSTALLATION"
+    status_msg "INFO" "Initiating installation script..."
+    sleep 1
     
-    bash <(curl -s https://raw.githubusercontent.com/nobita329/The-Coding-Hub/refs/heads/main/srv/panel/pterodactyl.sh)
+    bash <(curl -s https://raw.githubusercontent.com/nobita329/Nobita-Cloud/refs/heads/main/panel/pterodactyl/install.sh)
     
-    echo -e "${GREEN}✔ Gate Installation Complete, My Monarch${NC}"
-    read -p "$(echo -e "${PURPLE}Press Enter to return to the Shadow Throne...${NC}")"
+    echo ""
+    status_msg "OK" "Installation Sequence Complete."
+    pause
 }
 
-# ================== 2. CREATE USER FUNCTION ==================
+# ================== CREATE USER ==================
 create_user() {
-    clear
-    echo -e "${PURPLE}"
-    echo "┌──────────────────────────────────────────────┐"
-    echo "│     👤 Create Pterodactyl Monarch User       │"
-    echo "└──────────────────────────────────────────────┘${NC}"
+    show_header "USER MANAGEMENT"
 
     if [ ! -d /var/www/pterodactyl ]; then
-        echo -e "${RED}❌ Gate Error: Panel sanctuary not installed!${NC}"
-        read -p "Press Enter to return..."
+        status_msg "ERR" "Panel directory not found (/var/www/pterodactyl)."
+        pause
         return
     fi
+
+    echo -e "  ${WHITE}1)${NC} Custom User Create"
+    echo -e "  ${WHITE}2)${NC} Auto Create Admin User"
+    echo ""
+    read -p "  Choose option: " choice
 
     cd /var/www/pterodactyl || exit
-    php artisan p:user:make
 
-    echo -e "${GREEN}✔ Sovereign User forged successfully${NC}"
-    read -p "$(echo -e "${PURPLE}Press Enter to return...${NC}")"
-}
+    if [ "$choice" = "1" ]; then
+        status_msg "WAIT" "Launching manual user creation..."
+        php artisan p:user:make
+    elif [ "$choice" = "2" ]; then
+        status_msg "WAIT" "Creating auto admin user..."
 
-# ================== 3. UPDATE FUNCTION ==================
-update_panel() {
-    clear
-    echo -e "${PURPLE}"
-    echo "═══════════════════════════════════════════════"
-    echo "       ⚡ PTERODACTYL PANEL UPGRADE ⚡          "
-    echo "═══════════════════════════════════════════════${NC}"
-
-    if [ "$EUID" -ne 0 ]; then
-        print_error "Please run this script as root or with sudo, My Monarch!"
-        read -p "Press Enter to return..."
-        return
-    fi
-
-    cd /var/www/pterodactyl || {
-        echo -e "${RED}❌ Gate Error: Panel sanctuary not found at /var/www/pterodactyl!${NC}"
-        read -p "Press Enter to return..."
-        return
-    }
-
-    print_status "Putting panel into maintenance mode"
-    php artisan down > /dev/null 2>&1 || true
-
-    print_status "Downloading latest Panel release matrix"
-    curl -L https://github.com/pterodactyl/panel/releases/latest/download/panel.tar.gz | tar -xzv > /dev/null 2>&1
-
-    print_status "Setting correct storage permissions"
-    chmod -R 755 storage/* bootstrap/cache > /dev/null 2>&1
-
-    print_status "Synchronizing composer dependencies"
-    composer install --no-dev --optimize-autoloader > /dev/null 2>&1
-
-    print_status "Clearing system caches"
-    php artisan view:clear > /dev/null 2>&1
-    php artisan config:clear > /dev/null 2>&1
-
-    print_status "Running database migrations"
-    php artisan migrate --seed --force > /dev/null 2>&1
-
-    print_status "Securing file ownership"
-    chown -R www-data:www-data /var/www/pterodactyl/* > /dev/null 2>&1
-
-    print_status "Restarting queue workers"
-    php artisan queue:restart > /dev/null 2>&1
-
-    print_status "Bringing panel back online"
-    php artisan up > /dev/null 2>&1
-
-    echo -e "${GREEN}🎉 Panel Upgraded Successfully, Monarch!${NC}"
-    read -p "$(echo -e "${PURPLE}Press Enter to return...${NC}")"
-}
-
-# ================== 4. UNINSTALL FUNCTIONS ==================
-cleanup_nginx() {
-    print_status "Banish Nginx configurations for Pterodactyl"
-    
-    if [[ -f "/etc/nginx/sites-enabled/pterodactyl.conf" ]]; then
-        sudo rm -f /etc/nginx/sites-enabled/pterodactyl.conf
-    fi
-    if [[ -f "/etc/nginx/sites-available/pterodactyl.conf" ]]; then
-        sudo rm -f /etc/nginx/sites-available/pterodactyl.conf
-    fi
-    if [[ -f "/etc/nginx/conf.d/pterodactyl.conf" ]]; then
-        sudo rm -f /etc/nginx/conf.d/pterodactyl.conf
-    fi
-
-    if command -v nginx >/dev/null 2>&1; then
-        sudo systemctl restart nginx
-        print_success "Nginx reloaded and cleansed"
-    fi
-}
-
-uninstall_panel() {
-    print_header "PURGING PTERODACTYL PANEL"
-    
-    if ! confirm_action "This will completely eradicate the Pterodactyl Panel and all its data matrix."; then
-        return
-    fi
-
-    print_status "Halting Panel service"
-    sudo systemctl stop pteroq.service 2>/dev/null || true
-    sudo systemctl disable pteroq.service 2>/dev/null || true
-    sudo rm -f /etc/systemd/system/pteroq.service
-    sudo systemctl daemon-reload
-
-    print_status "Erasing Panel cronjob"
-    sudo crontab -l | grep -v 'php /var/www/pterodactyl/artisan schedule:run' | sudo crontab - 2>/dev/null || true
-
-    print_status "Obliterating Panel files"
-    sudo rm -rf /var/www/pterodactyl
-
-    print_status "Eradicating Panel MySQL database and user"
-    sudo mysql -u root -e "DROP DATABASE IF EXISTS panel;" 2>/dev/null || true
-    sudo mysql -u root -e "DROP USER IF EXISTS 'pterodactyl'@'127.0.0.1';" 2>/dev/null || true
-    sudo mysql -u root -e "FLUSH PRIVILEGES;" 2>/dev/null || true
-
-    cleanup_nginx
-
-    print_success "Panel uninstalled successfully, My Monarch!"
-}
-
-uninstall_wings() {
-    print_header "PURGING PTERODACTYL WINGS"
-    
-    if ! confirm_action "This will remove Wings and all associated daemon nodes."; then
-        return
-    fi
-
-    print_status "Halting Wings service"
-    sudo systemctl stop wings.service 2>/dev/null || true
-    sudo systemctl disable wings.service 2>/dev/null || true
-    sudo rm -f /etc/systemd/system/wings.service
-    sudo systemctl daemon-reload
-
-    print_status "Removing Wings files"
-    sudo rm -rf /etc/pterodactyl
-    sudo rm -rf /var/lib/pterodactyl
-    sudo rm -rf /var/log/pterodactyl
-    sudo rm -f /usr/local/bin/wings
-    sudo rm -f /usr/local/bin/wing
-
-    print_success "Wings uninstalled successfully, Monarch!"
-}
-
-uninstall_both() {
-    print_header "PURGING BOTH PANEL AND WINGS"
-    
-    if ! confirm_action "This will eradicate both Pterodactyl Panel and Wings completely from the server realm."; then
-        return
-    fi
-
-    uninstall_panel
-    uninstall_wings
-    
-    print_success "Panel and Wings completely obliterated together, My Monarch!"
-}
-
-uninstall_menu() {
-    while true; do
-        clear
-        echo -e "${PURPLE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-        echo -e "${CYAN}        SHADOW MONARCH UNINSTALL GATEWAY         ${NC}"
-        echo -e "${YELLOW}               Created by: NightLord               ${NC}"
-        echo -e "${PURPLE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-        echo -e ""
-        echo -e "${YELLOW}╔═══════════════════════════════════════════════╗${NC}"
-        echo -e "${YELLOW}║                📋 PURGE OPTIONS               ║${NC}"
-        echo -e "${YELLOW}╠═══════════════════════════════════════════════╣${NC}"
-        echo -e "${YELLOW}║    ${GREEN}1)${NC} ${CYAN}Uninstall Panel Only${NC}                ${YELLOW}║${NC}"
-        echo -e "${YELLOW}║    ${GREEN}2)${NC} ${CYAN}Uninstall Wings Only${NC}                ${YELLOW}║${NC}"
-        echo -e "${YELLOW}║    ${GREEN}3)${NC} ${CYAN}Uninstall Panel + Wings${NC}             ${YELLOW}║${NC}"
-        echo -e "${YELLOW}║    ${GREEN}0)${NC} ${RED}Return to Main Menu${NC}                   ${YELLOW}║${NC}"
-        echo -e "${YELLOW}╚═══════════════════════════════════════════════╝${NC}"
-        echo -e ""
-        echo -e "${MAGENTA}⚠️  Warning: These destructive actions cannot be reversed!${NC}"
-        echo -e ""
+        USERNAME="user$(openssl rand -hex 2)"
+        PASSWORD="$(openssl rand -base64 10)"
+        EMAIL="$(openssl rand -base64 4)@email.com"
+        FIRST="Night"
+        LAST="Lord"
         
-        read -p "$(echo -e "${PURPLE}Select Monarch Option [0-3] → ${NC}" )" subchoice
+        php artisan p:user:make -n \
+            --email=${EMAIL} \
+            --username=${USERNAME} \
+            --password=${PASSWORD} \
+            --admin=1 \
+            --name-first=${FIRST} \
+            --name-last=${LAST}
 
-        case $subchoice in
-            1) uninstall_panel ;;
-            2) uninstall_wings ;;
-            3) uninstall_both ;;
-            0) break ;;
-            *) echo -e "${RED}❌ Invalid selection, My Monarch!${NC}"; sleep 1 ;;
-        esac
-
-        echo -e ""
-        read -p "$(echo -e "${PURPLE}Press Enter to continue...${NC}")" -n 1
-    done
+        echo ""
+        status_msg "OK" "Auto Admin User Created!"
+        echo -e "  Username : ${WHITE}$USERNAME${NC}"
+        echo -e "  Password : ${WHITE}$PASSWORD${NC}"
+        echo -e "  Email    : ${WHITE}$EMAIL${NC}"
+    else
+        status_msg "ERR" "Invalid option."
+    fi
+    pause
 }
 
-# Run Awakening Sequence on Startup
-monarch_awakening
+# ================= PANEL UNINSTALL =================
+uninstall_logic() {
+    status_msg "WAIT" "Stopping Panel services..."
+    systemctl stop pteroq.service 2>/dev/null || true
+    systemctl disable pteroq.service 2>/dev/null || true
+    rm -f /etc/systemd/system/pteroq.service
+    systemctl daemon-reload
 
-# ===================== MAIN CONTROL LOOP =====================
+    status_msg "WAIT" "Removing cronjobs..."
+    crontab -l | grep -v 'php /var/www/pterodactyl/artisan schedule:run' | crontab - 2>/dev/null || true
+
+    ENV_FILE="/var/www/pterodactyl/.env"
+    DB_NAME="panel"
+    DB_USER="pterodactyl"
+    DB_HOST="127.0.0.1"
+
+    if [ -f "$ENV_FILE" ]; then
+        DB_NAME=$(grep '^DB_DATABASE=' "$ENV_FILE" | cut -d'=' -f2-)
+        DB_USER=$(grep '^DB_USERNAME=' "$ENV_FILE" | cut -d'=' -f2-)
+        DB_HOST=$(grep '^DB_HOST=' "$ENV_FILE" | cut -d'=' -f2-)
+        [ -z "$DB_NAME" ] && DB_NAME="panel"
+        [ -z "$DB_USER" ] && DB_USER="pterodactyl"
+        [ -z "$DB_HOST" ] && DB_HOST="127.0.0.1"
+    fi
+
+    status_msg "WAIT" "Deleting panel files & databases..."
+    rm -rf /var/www/pterodactyl
+    mysql -u root -e "DROP DATABASE IF EXISTS \`$DB_NAME\`;"
+    mysql -u root -e "DROP USER IF EXISTS '$DB_USER'@'$DB_HOST';"
+    mysql -u root -e "FLUSH PRIVILEGES;"
+
+    status_msg "WAIT" "Cleaning configurations..."
+    rm -f /etc/nginx/sites-enabled/pterodactyl.conf
+    rm -f /etc/nginx/sites-available/pterodactyl.conf
+    systemctl reload nginx 2>/dev/null || true
+    rm -rf /etc/certs/panel
+}
+
+uninstall_ptero() {
+    show_header "UNINSTALLATION"
+    echo -e "${RED}WARNING:${NC} This will permanently wipe your Pterodactyl Panel panel data."
+    echo ""
+    read -rp "  Are you sure you want to continue? (y/N): " confirm
+
+    if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
+        status_msg "INFO" "Uninstallation cancelled."
+        pause
+        return
+    fi
+
+    uninstall_logic
+    status_msg "OK" "Pterodactyl Panel successfully uninstalled."
+    pause
+}
+
+# ===================== MAIN MENU =====================
 while true; do
     clear
-    echo -e "${PURPLE}"
-    echo "╔═══════════════════════════════════════════════╗"
-    echo "║      🐲 SHADOW MONARCH MASTER CONTROL 🐲      ║"
-    echo "║          [Created by: NightLord]              ║"
-    echo "╠═══════════════════════════════════════════════╣"
-    echo -e "║ ${GREEN}1) Install Panel (Awaken Gate)${NC}"
-    echo -e "║ ${CYAN}2) Create Panel User (Summon Sovereign)${NC}"
-    echo -e "║ ${YELLOW}3) Update Panel (Level Up Matrix)${NC}"
-    echo -e "║ ${RED}4) Uninstall / Purge Center${NC}"
-    echo -e "║ ${WHITE}5) Exit (Close Portal)${NC}"
-    echo "╚═══════════════════════════════════════════════╝"
-    echo -ne "${PURPLE}Select Monarch Option → ${NC}"
+    echo -e "${PURPLE}  ____  _                     _            _         _ ${NC}"
+    echo -e "${PURPLE} |  _ \| |_ ___ _ __ ___   __| | __ _  ___| |_ _   _| |${NC}"
+    echo -e "${PURPLE} | |_) | __/ _ \ '__/ _ \ / _\` |/ _\` |/ __| __| | | | |${NC}"
+    echo -e "${PURPLE} |  __/| ||  __/ | | (_) | (_| | (_| | (__| |_| |_| | |${NC}"
+    echo -e "${PURPLE} |_|    \__\___|_|  \___/ \__,_|\__,_|\___|\__|\__, |_|${NC}"
+    echo -e "${PURPLE}                                               |___/   ${NC}"
+    echo -e "                   ${GRAY}Created by NightLord${NC}\n"
+    
+    echo -e "${CYAN} ┌───────────────────────────────────────────────────────┐${NC}"
+    if [ -d "/var/www/pterodactyl" ]; then
+        echo -e "${CYAN} │${NC} ${BOLD}${WHITE}PANEL STATUS:${NC} ${GREEN}INSTALLED ✔${NC}                                 ${CYAN}│${NC}"
+    else
+        echo -e "${CYAN} │${NC} ${BOLD}${WHITE}PANEL STATUS:${NC} ${RED}NOT INSTALLED ✘${NC}                             ${CYAN}│${NC}"
+    fi
+    echo -e "${CYAN} ├───────────────────────────────────────────────────────┤${NC}"
+    echo -e "${CYAN} │${NC}  ${GREEN}[1]${NC} Install        ${GRAY}:: (Fresh Install)${NC}          ${CYAN}│${NC}"
+    echo -e "${CYAN} │${NC}  ${GREEN}[2]${NC} User           ${GRAY}:: (Add Admin/User)${NC}        ${CYAN}│${NC}"
+    echo -e "${CYAN} │${NC}  ${YELLOW}[3]${NC} Update         ${GRAY}:: (Latest Release)${NC}        ${CYAN}│${NC}"
+    echo -e "${CYAN} │${NC}  ${PURPLE}[4]${NC} Domain/SSL     ${GRAY}:: (Change Domain/SSL)${NC}     ${CYAN}│${NC}"
+    echo -e "${CYAN} │${NC}  ${RED}[5]${NC} Uninstall      ${GRAY}:: (Wipe Panel Data)${NC}      ${CYAN}│${NC}"
+    echo -e "${CYAN} │${NC}  ${CYAN}[6]${NC} phpMyAdmin     ${GRAY}:: (Install phpMyAdmin)${NC}    ${CYAN}│${NC}"
+    echo -e "${CYAN} │${NC}                                                       ${CYAN}│${NC}"
+    echo -e "${CYAN} │${NC}  ${WHITE}[0] Exit System${NC}                                   ${CYAN}│${NC}"
+    echo -e "${CYAN} └───────────────────────────────────────────────────────┘${NC}"
+    echo ""
+    echo -ne "${BOLD}${WHITE}  nightlord@ptero:~# ${NC}"
     read choice
 
     case $choice in
         1) install_ptero ;;
         2) create_user ;;
-        3) update_panel ;;
-        4) uninstall_menu ;;
-        5) clear; echo -e "${PURPLE}Exiting portal... Arise when ready, Monarch NightLord.${NC}\n"; exit 0 ;;
-        *) echo -e "${RED}Invalid portal selection, My Monarch...${NC}"; sleep 1 ;;
+        3) bash <(curl -s https://raw.githubusercontent.com/nobita329/Nobita-Cloud/refs/heads/main/panel/pterodactyl/update.sh) ;;
+        4) bash <(curl -fsSL https://raw.githubusercontent.com/nobita329/Nobita-Cloud/refs/heads/main/panel/pterodactyl/ssl.sh) ;;
+        5) uninstall_ptero ;;
+        6) bash <(curl -fsSL https://raw.githubusercontent.com/nobita329/Nobita-Cloud/refs/heads/main/panel/pterodactyl/phpMyAdmin.sh) ;;
+        0) clear; exit ;;
+        *) echo -e "${RED}  Invalid option selected...${NC}"; sleep 1 ;;
     esac
 done
