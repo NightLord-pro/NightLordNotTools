@@ -557,7 +557,7 @@ install_cf() {
     echo -e "${PURPLE}  ║${NC} Provide your Monarch Token (Tunnel Token) below.        ${PURPLE}║${NC}"
     echo -e "${PURPLE}  ╚════════════════════════════════════════════════════════╝${NC}"
     echo ""
-    echo -ne "${BRIGHT_PURPLE}  ➤ ENTER TOKEN:${NC} 
+    echo -ne "${BRIGHT_PURPLE}  ➤ ENTER TOKEN:${NC} "
     read USER_TOKEN
 
     CLEAN_TOKEN=$(echo "$USER_TOKEN" | sed 's/sudo cloudflared service install //g' | sed 's/cloudflared service install //g' | xargs)
@@ -599,7 +599,7 @@ uninstall_cf() {
     echo -e "${RED}  WARNING: SYSTEM PURGE PROTOCOL${NC}"
     echo -e "${GRAY}  This will completely strip the tunnel service and core binary.${NC}"
     echo ""
-    printf "" "${RED}  Do you wish to banish this power completely? (y/N): ${NC}"
+    printf "${RED}  Do you wish to banish this power completely? (y/N): ${NC}"
     read confirm
     
     if [[ "$confirm" =~ ^[Yy]$ ]]; then
@@ -694,7 +694,7 @@ panels_menu() {
     while true; do
         header
         echo -e "${PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
-        echo -e "${PURPLE} ║${RESET}            ${WHITE}[ SHADOW MONARCH PANELS HUB ]${RESET}              ${PURPLE}║${RESET}"
+        echo -e "${PURPLE} ║${NC}            ${WHITE}[ SHADOW MONARCH PANELS HUB ]${RESET}              ${PURPLE}║${RESET}"
         echo -e "${PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
         echo
         echo -e "  ${BRIGHT_PURPLE}[1]${RESET} 🚀 NTH ${GRAY}(NTH MY OWN PANEL - Installed via Official Script)${RESET}"
