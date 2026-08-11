@@ -337,7 +337,7 @@ plugins() {
 }
 
 # ==========================
-# 🔮 UTILITIES (KEPT INTERNAL TO AVOID TOP-LEVEL MENU CLUTTER)
+# 🔮 UTILITIES
 # ==========================
 monarch_utilities() {
     while true; do
@@ -671,14 +671,276 @@ wings_setup() {
 }
 
 # ==========================
-# 📋 BLUEPRINT SETUP
+# 📋 BLUEPRINT / EXTENSIONS SETUP (PETROTOOLS)
 # ==========================
 blueprint_setup() {
-    header
-    echo -e "${GREEN} 📋 Initializing Blueprint installation suite for NightLord...${RESET}"
-    cd "$WORK_DIR"
-    bash <(curl -s https://raw.githubusercontent.com/nobita586/Nobita-Hosting/main/cd/blueprint.sh)
-    pause
+    while true; do
+        clear
+
+        if command -v blueprint >/dev/null 2>&1; then
+            status="${GREEN}● ONLINE${RESET}"
+            installed=true
+        else
+            status="${RED}● OFFLINE${RESET}"
+            installed=false
+        fi
+
+        echo -e "${PURPLE}${BOLD}"
+        echo "   ██████╗ ██╗     ██╗   ██╗███████╗██████╗"
+        echo "   ██╔══██╗██║     ██║   ██║██╔════╝██╔══██╗"
+        echo "   ██████╔╝██║     ██║   ██║█████╗  ██████╔╝"
+        echo "   ██╔══██╗██║     ██║   ██║██╔══╝  ██╔═══╝"
+        echo "   ██████╔╝███████╗╚██████╔╝███████╗██║"
+        echo "   ╚═════╝ ╚══════╝ ╚═════╝ ╚══════╝╚═╝"
+        echo -e "${RESET}"
+        echo -e "${CYAN}               MADE BY NIGHTLORD               ${RESET}"
+        echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
+        echo
+        echo -e "   ${CYAN}BLUEPRINT FRAMEWORK${RESET}"
+        echo -e "   Status : $status"
+        echo ""
+
+        if [ "$installed" = false ]; then
+            echo -e "   ${BRIGHT_PURPLE}[1]${RESET} ${GREEN}Install Framework${RESET}"
+            echo -e "   ${RED}[0] Back${RESET}"
+        else
+            echo -e "   ${BRIGHT_PURPLE}[1]${RESET} ${GREEN}Reinstall Framework${RESET}"
+            echo -e "   ${BRIGHT_PURPLE}[2]${RESET} ${GREEN}Update Framework${RESET}"
+            echo -e "   ${BRIGHT_PURPLE}[3]${RESET} ${GREEN}Info${RESET}"
+            echo -e "   ${BRIGHT_PURPLE}[4]${RESET} ${GREEN}Version${RESET}"
+            echo -e "   ${BRIGHT_PURPLE}[5]${RESET} ${RED}Uninstall Framework${RESET}"
+            echo -e "   ${RED}[0] Back${RESET}"
+        fi
+
+        echo ""
+        echo -ne "${PURPLE}  nightlord@blueprint:~# ${RESET}"
+        read bp
+
+        case $bp in
+            1)
+                if [ "$installed" = false ]; then
+                    echo -e "${CYAN}Installing...${RESET}"
+                    rm -f /etc/apt/keyrings/nodesource.gpg 2>/dev/null
+                    yes | bash <(curl -s https://raw.githubusercontent.com/nobita329/Nobita-Cloud/refs/heads/main/thame/install.sh)
+                else
+                    yes | blueprint -rerun-install
+                fi
+                pause
+                ;;
+            2)
+                yes | blueprint -upgrade
+                pause
+                ;;
+            3)
+                blueprint -info
+                pause
+                ;;
+            4)
+                blueprint -version
+                pause
+                ;;
+            5)
+                echo -e "${RED}Uninstalling Blueprint Framework + Extensions...${RESET}"
+                path=$(which blueprint 2>/dev/null)
+
+                if [ -n "$path" ]; then
+                    systemctl stop pterodactyl-queue 2>/dev/null || true
+                    rm -f "$path"
+                    rm -rf ~/.blueprint
+                    rm -rf ~/.config/blueprint
+                    rm -rf /var/www/pterodactyl/.blueprint
+                    rm -rf /var/www/pterodactyl/app/BlueprintFramework
+                    rm -rf /var/www/pterodactyl/app/BlueprintFramework/*
+                    rm -rf /var/www/pterodactyl/extensions
+                    rm -rf /var/www/pterodactyl/extensions/*
+                    rm -rf /etc/blueprint
+                    rm -f /etc/systemd/system/blueprint* 2>/dev/null
+                    rm -f /etc/systemd/system/pteroq.service 2>/dev/null
+
+                    if [ -f /var/www/pterodactyl/blueprint.backup.tar.gz ]; then
+                        echo -e "${YELLOW}Restoring backup...${RESET}"
+                        rm -f /var/www/pterodactyl/blueprint.backup.tar.gz
+                    fi
+
+                    if command -v mysql >/dev/null 2>&1; then
+                        echo -e "${YELLOW}Cleaning database...${RESET}"
+                        mysql -e "DROP TABLE IF EXISTS pterodactyl.blueprint_extensions;" 2>/dev/null || true
+                    fi
+
+                    systemctl daemon-reload 2>/dev/null || true
+
+                    echo -e "${GREEN}Fully uninstalled (Framework + Extensions) ✔${RESET}"
+                else
+                    echo -e "${RED}Not installed ❌${RESET}"
+                fi
+                pause
+                ;;
+            0)
+                break
+                ;;
+            *)
+                echo -e "${RED}Invalid option${RESET}"
+                sleep 1
+                ;;
+        esac
+    done
+}
+
+petrotools_extensions_menu() {
+    local URL="https://github.com/NightLord-pro/NightLordNotTools/tree/main/PETROTOOLS/EXTENSIONS"
+    local selected_indices=()
+
+    local names=(
+        "versionchanger.blueprint"
+        "stats.blueprint"
+        "servericonimporter.blueprint"
+        "serverbackgrounds.blueprint"
+        "motdmaker.blueprint"
+        "modrinthbrowser.blueprint"
+        "huxregister.blueprint"
+        "minecraftplayermanager.blueprint"
+    )
+
+    local is_installed_ext() {
+        [[ -d "/var/www/pterodactyl/storage/extensions/${1%.blueprint}" ]] && return 0 || return 1
+    }
+
+    local is_selected_ext() {
+        local index=$1
+        [[ " ${selected_indices[*]} " =~ " $index " ]] && return 0 || return 1
+    }
+
+    local run_blueprint_ext() {
+        local NAME="$1"
+        local ACTION="$2"
+        cd /var/www/pterodactyl || exit 1
+        if [[ "$ACTION" == "install" ]]; then
+            echo -e "${GREEN}📥 Installing ${NAME%.blueprint}...${NC}"
+            wget -q "$URL/$NAME" -O "$NAME"
+            if [[ -s "$NAME" ]]; then
+                yes | blueprint -i "$NAME"
+                rm -f "$NAME"
+            else
+                echo -e "${RED}[!] Failed to download $NAME${NC}"
+            fi
+        else
+            echo -e "${RED}🗑️ Removing ${NAME%.blueprint}...${NC}"
+            yes | blueprint -r "${NAME%.blueprint}"
+        fi
+    }
+
+    while true; do
+        clear
+
+        echo -e "${PURPLE}${BOLD}"
+        echo "   ███████╗██╗  ██╗████████╗███████╗███╗   ██╗"
+        echo "   ██╔════╝╚██╗██╔╝╚══██╔══╝██╔════╝████╗  ██║"
+        echo "   █████╗   ╚███╔╝    ██║   █████╗  ██╔██╗ ██║"
+        echo "   ██╔══╝   ██╔██╗    ██║   ██╔══╝  ██║╚██╗██║"
+        echo "   ███████╗██╔╝ ██╗   ██║   ███████╗██║ ╚████║"
+        echo "   ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═══╝"
+        echo -e "${RESET}"
+        echo -e "${CYAN}               MADE BY NIGHTLORD               ${RESET}"
+        echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
+        echo
+        echo -e "   ${CYAN}EXTEN${RESET}"
+        echo ""
+
+        local count=0
+        for i in "${!names[@]}"; do
+            num=$((i+1))
+            clean_name="${names[$i]%.blueprint}"
+
+            is_installed_ext "$clean_name" && status="${GREEN}●${NC}" || status="${RED}○${NC}"
+            is_selected_ext "$i" && select_mark="${YELLOW}[+]${NC}" || select_mark="   "
+
+            display_name="${clean_name:0:22}"
+            printf " %b ${BRIGHT_PURPLE}%2d${NC} %-22s %b  " "$select_mark" "$num" "$display_name" "$status"
+
+            ((count++))
+            [[ $((count % 2)) -eq 0 ]] && echo ""
+        done
+
+        [[ $((count % 2)) -ne 0 ]] && echo ""
+
+        echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
+        echo -e " ${WHITE}SELECTED:${NC} ${YELLOW}${#selected_indices[@]}${NC} items"
+        echo -e " ${GREEN}I${NC} => Install All    ${RED}R${NC} => Remove All    ${RED}0${NC} => Back"
+        echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
+        echo -ne "${PURPLE}  nightlord@extensions:~# ${RESET}"
+        read choice
+
+        case $choice in
+            0)
+                break
+                ;;
+            i|I|r|R)
+                if [[ ${#selected_indices[@]} -eq 0 ]]; then
+                    echo -e "${RED}Nothing selected!${NC}"
+                    sleep 1
+                    continue
+                fi
+                action_type="install"
+                [[ "$choice" =~ [rR] ]] && action_type="remove"
+                for idx in "${selected_indices[@]}"; do
+                    run_blueprint_ext "${names[$idx]}" "$action_type"
+                done
+                selected_indices=()
+                echo ""
+                read -p "Done. Press Enter to return..."
+                ;;
+            *)
+                for val in $choice; do
+                    if [[ "$val" =~ ^[0-9]+$ ]] && (( val >= 1 && val <= ${#names[@]} )); then
+                        idx=$((val-1))
+                        if is_selected_ext "$idx"; then
+                            for i in "${!selected_indices[@]}"; do
+                                if [[ ${selected_indices[i]} -eq $idx ]]; then
+                                    unset 'selected_indices[i]'
+                                fi
+                            done
+                            selected_indices=("${selected_indices[@]}")
+                        else
+                            selected_indices+=("$idx")
+                        fi
+                    else
+                        echo -e "${RED}Invalid option: $val${NC}"
+                        sleep 0.5
+                    fi
+                done
+                ;;
+        esac
+    done
+}
+
+petro_tools_menu() {
+    while true; do
+        header
+        echo -e "${PURPLE}${BOLD}"
+        echo "   ██████╗ ███████╗████████╗██████╗  ██████╗      ████████╗"
+        echo "   ██╔══██╗██╔════╝╚══██╔══╝██╔══██╗██╔═══██╗     ╚══██╔══╝"
+        echo "   ██████╔╝█████╗     ██║   ██████╔╝██║   ██║        ██║   "
+        echo "   ██╔═══╝ ██╔══╝     ██║   ██╔══██╗██║   ██║        ██║   "
+        echo "   ██║     ███████╗   ██║   ██║  ██║╚██████╔╝        ██║   "
+        echo "   ╚═╝     ╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝         ╚═╝   "
+        echo -e "${RESET}"
+        echo -e "${CYAN}               MADE BY NIGHTLORD               ${RESET}"
+        echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
+        echo
+        echo -e "  ${BRIGHT_PURPLE}[1]${RESET} 📋 BLUEP"
+        echo -e "  ${BRIGHT_PURPLE}[2]${RESET} 🧩 EXTEN"
+        echo -e "  ${RED}[0]${RESET} ⬅ Back to Main System"
+        echo
+        echo -ne "${PURPLE}  nightlord@petrotools:~# ${RESET}"
+        read pt_choice
+
+        case $pt_choice in
+        1) blueprint_setup ;;
+        2) petrotools_extensions_menu ;;
+        0) break ;;
+        *) echo -e "${RED} Invalid Option!${NC}"; sleep 1 ;;
+        esac
+    done
 }
 
 # ==========================
@@ -746,13 +1008,13 @@ while true; do
 
     echo -e "${PURPLE} ══ 🌟 NIGHTLORD'S SHADOW MONARCH DASHBOARD v10.0 ══${RESET}"
     
-    # --- UPDATED CLEAN MENU (GOD-TIER REMOVED, TOOLS PLACED, EXIT AT BOTTOM SEPARATELY) ---
+    # --- UPDATED CLEAN MENU ---
     echo ""
     printf "  \033[1;36m[1]\033[0m ⚔️ Command & Build Center       \033[1;36m[4]\033[0m ⚡ Panels Installer Hub\n"
     echo ""
     printf "  \033[1;36m[2]\033[0m ⚙️ Status & RAM Manager        \033[1;36m[5]\033[0m 🪽 Install Wings (Daemon)\n"
     echo ""
-    printf "  \033[1;36m[3]\033[0m 🛠️ TOOLS                       \033[1;36m[6]\033[0m 📋 Blueprint Setup\n"
+    printf "  \033[1;36m[3]\033[0m 🛠️ TOOLS                       \033[1;36m[6]\033[0m 🛠️ PETRO_T\n"
     echo ""
     echo -e "${CYAN}                MADE BY NIGHTLORD               ${RESET}"
     echo ""
@@ -770,7 +1032,7 @@ while true; do
     3) tools_menu ;;
     4) panels_menu ;;
     5) wings_setup ;;
-    6) blueprint_setup ;;
+    6) petro_tools_menu ;;
     0)
        clear
        echo -e "${PURPLE} 💬 [System]: Logging out, Sovereign Monarch NightLord. Rise again when you are ready. 🌙${RESET}"
