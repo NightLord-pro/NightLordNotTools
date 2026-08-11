@@ -499,28 +499,12 @@ playit_setup() {
 }
 
 # ==========================
-# ☁️ CLOUDFLARED MANAGEMENT
+# ☁️ CLOUDFLARED MANAGEMENT (OLD CLEAN VERSION)
 # ==========================
 install_cf() {
     clear
-    local s_status="${GRAY}NOT AWAKENED${RESET}"
-    local s_pid="${GRAY}---${RESET}"
-    local s_uptime="${GRAY}---${RESET}"
-    local arch=$(dpkg --print-architecture 2>/dev/null || uname -m)
-
-    if command -v cloudflared &>/dev/null; then
-        if systemctl is-active --quiet cloudflared; then
-            s_status="${NEON_BLUE}MONARCH ACTIVE (RUNNING)${NC}"
-            s_pid="${WHITE}$(pgrep -x cloudflared)${NC}"
-            s_uptime="$(systemctl show -p ActiveEnterTimestamp cloudflared | cut -d'=' -f2 | cut -d' ' -f2-3)"
-        else
-            s_status="${RED}SHADOW SEALED (STOPPED)${NC}"
-        fi
-    fi
-
     echo -e "${PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
-    echo -e "${PURPLE} ║${RESET}             ${WHITE}[ SYSTEM: SHADOW MONARCH TUNNEL ]${RESET}              ${PURPLE}║${RESET}"
-    echo -e "${PURPLE} ║${RESET}         ${NEON_BLUE}v3.0${RESET} ${GRAY}|${RESET} ${DEEP_PURPLE}ARISE EDITION${RESET} ${GRAY}|${RESET} ${WHITE}NIGHT LORD${RESET}        ${PURPLE}║${RESET}"
+    echo -e "${PURPLE} ║${NC}             ${WHITE}[ SYSTEM: SHADOW MONARCH TUNNEL ]${NC}              ${PURPLE}║${RESET}"
     echo -e "${PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
     echo ""
     echo -e "${WHITE}  INITIALIZING MONARCH AWAKENING PROTOCOL${NC}"
@@ -534,8 +518,8 @@ install_cf() {
     echo -e "  ${NEON_BLUE}[SUCCESS]${NC} Repository Forged"
 
     echo -e "  ${BRIGHT_PURPLE}[ARISE]${NC} Extracting Powers & Installing Binary..."
-    sudo apt-get update -qq >/dev/null
-    sudo apt-get install -y cloudflared -qq >/dev/null 2>&1
+    sudo apt-get update -qq
+    sudo apt-get install -y cloudflared
     
     if command -v cloudflared &>/dev/null; then
         echo -e "  ${NEON_BLUE}[SUCCESS]${NC} Cloudflared Core Bound"
@@ -599,7 +583,7 @@ uninstall_cf() {
     echo -e "${RED}  WARNING: SYSTEM PURGE PROTOCOL${NC}"
     echo -e "${GRAY}  This will completely strip the tunnel service and core binary.${NC}"
     echo ""
-    printf "${RED}  Do you wish to banish this power completely? (y/N): ${NC}"
+    printf "%b" "${RED}  Do you wish to banish this power completely? (y/N): ${NC}"
     read confirm
     
     if [[ "$confirm" =~ ^[Yy]$ ]]; then
@@ -622,9 +606,9 @@ uninstall_cf() {
 cloudflared_menu() {
     while true; do
         clear
-        local s_status="${GRAY}NOT AWAKENED${NC}"
-        local s_pid="${GRAY}---${NC}"
-        local s_uptime="${GRAY}---${NC}"
+        local s_status="${GRAY}NOT AWAKENED${RESET}"
+        local s_pid="${GRAY}---${RESET}"
+        local s_uptime="${GRAY}---${RESET}"
         local arch=$(dpkg --print-architecture 2>/dev/null || uname -m)
 
         if command -v cloudflared &>/dev/null; then
@@ -649,7 +633,7 @@ cloudflared_menu() {
         echo -e "${GRAY} ────────────────────────────────────────────────────────────${NC}"
         echo ""
         echo -e "  ${WHITE}SELECT COMMAND:${NC}"
-        echo -e "  ${BRIGHT_PURPLE}[1]${NC} Awaken Tunnel    ${GRAY}(Install & Auto-Fix)${NC}"
+        echo -e "  ${BRIGHT_PURPLE}[1]${NC} Awaken Tunnel    ${GRAY}(Install & Token Setup)${NC}"
         echo -e "  ${RED}[2]${NC} Purge Domain      ${GRAY}(Remove Everything)${NC}"
         echo -e "  ${GRAY}[0]${NC} Exit Realm / Back"
         echo ""
@@ -752,12 +736,12 @@ while true; do
 
     echo -e "${PURPLE} ══ 🌟 NIGHTLORD'S SHADOW MONARCH DASHBOARD v10.0 ══${RESET}"
     
-    # --- BALANCED TWO-COLUMN OPTIONS LAYOUT ---
-    printf "  %-38s  %-38s\n" "${CYAN}[1]${RESET} ⚔️ Command & Build Center" "${CYAN}[6]${RESET} ⚡ Panels Installer Hub"
-    printf "  %-38s  %-38s\n" "${CYAN}[2]${RESET} ⚙️ Status & RAM Manager"  "${CYAN}[7]${RESET} 🪽 Install Wings (Daemon)"
-    printf "  %-38s  %-38s\n" "${CYAN}[3]${RESET} 🔄 Infinite Dungeon Host"  "${CYAN}[8]${RESET} 📋 Blueprint Setup"
-    printf "  %-38s  %-38s\n" "${CYAN}[4]${RESET} 🌐 Playit Tunnel Setup"    "${CYAN}[9]${RESET} 🔮 God-Tier Utilities"
-    printf "  %-38s  %-38s\n" "${CYAN}[5]${RESET} ☁️ Cloudflared Manager"    "${RED}[0]${RESET} ❌ Close System / Log Out"
+    # --- BALANCED TWO-COLUMN OPTIONS LAYOUT WITH FORMAT SPECIFIERS ---
+    printf "%b" "$(printf "  %-48s  %-48s\n" "${CYAN}[1]${RESET} ⚔️ Command & Build Center" "${CYAN}[6]${RESET} ⚡ Panels Installer Hub")"
+    printf "%b" "$(printf "  %-48s  %-48s\n" "${CYAN}[2]${RESET} ⚙️ Status & RAM Manager"  "${CYAN}[7]${RESET} 🪽 Install Wings (Daemon)")"
+    printf "%b" "$(printf "  %-48s  %-48s\n" "${CYAN}[3]${RESET} 🔄 Infinite Dungeon Host"  "${CYAN}[8]${RESET} 📋 Blueprint Setup")"
+    printf "%b" "$(printf "  %-48s  %-48s\n" "${CYAN}[4]${RESET} 🌐 Playit Tunnel Setup"    "${CYAN}[9]${RESET} 🔮 God-Tier Utilities")"
+    printf "%b" "$(printf "  %-48s  %-48s\n" "${CYAN}[5]${RESET} ☁️ Cloudflared Manager"    "${RED}[0]${RESET}  ❌ Close System / Log Out")"
     
     echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
     echo
