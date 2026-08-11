@@ -337,7 +337,7 @@ plugins() {
 }
 
 # ==========================
-# ⚡ GOD-TIER MONARCH UTILITIES
+# 🔮 UTILITIES (KEPT INTERNAL TO AVOID TOP-LEVEL MENU CLUTTER)
 # ==========================
 monarch_utilities() {
     while true; do
@@ -350,7 +350,7 @@ monarch_utilities() {
         echo -e "  ${BRIGHT_PURPLE}[2]${RESET} ⚠️ Wipe World Data ${GRAY}(Fresh Dungeon Reset)${RESET}"
         echo -e "  ${BRIGHT_PURPLE}[3]${RESET} 📁 Open Direct Shell Terminal in Server Dir"
         echo -e "  ${BRIGHT_PURPLE}[4]${RESET} 🛠️ Auto-Fix Paper/Server Permissions"
-        echo -e "  ${RED}[0] ⬅ Back to Main System${RESET}"
+        echo -e "  ${RED}[0] ⬅ Back to Previous Menu${RESET}"
         echo
         echo -ne "${PURPLE}  nightlord@utilities:~# ${RESET}"
         read util_choice
@@ -500,7 +500,7 @@ playit_setup() {
 }
 
 # ==========================
-# ☁️ CLOUDFLARED MANAGEMENT (UPDATED)
+# ☁️ CLOUDFLARED MANAGEMENT
 # ==========================
 install_cloudflared() {
     clear
@@ -508,7 +508,6 @@ install_cloudflared() {
     echo -e "│      Installing Cloudflared       │"
     echo -e "└────────────────────────────────────${NC}"
 
-    # Install repo + package
     sudo mkdir -p --mode=0755 /usr/share/keyrings
     curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg \
         | sudo tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null
@@ -528,7 +527,6 @@ install_cloudflared() {
     echo -e "${GREEN}✔ Cloudflared installed successfully${NC}"
     echo ""
 
-    # Detect existing service
     if systemctl list-units --type=service | grep -q cloudflared; then
         echo -e "${YELLOW}⚠ Existing Cloudflared service detected${NC}"
         echo -e "${CYAN}→ Removing old service...${NC}"
@@ -537,12 +535,10 @@ install_cloudflared() {
         echo ""
     fi
 
-    # Ask for token or command
     echo -e "${BLUE}🔑 Paste Cloudflare Tunnel token"
     echo -e "${DIM}(sirf token ya poora command — dono chalega)${NC}"
     read -rp "> " USER_INPUT
 
-    # Clean input (remove command if pasted)
     CF_TOKEN=$(echo "$USER_INPUT" \
         | sed 's/sudo cloudflared service install //g' \
         | sed 's/cloudflared service install //g' \
@@ -587,19 +583,78 @@ uninstall_cloudflared() {
 cloudflared_menu() {
     while true; do
         header
-        echo -e "${YELLOW}╔═════════════════════════════════════════════╗"
-        echo "║        CLOUDFLARED MANAGEMENT MENU          ║"
-        echo "╠═════════════════════════════════════════════╣"
-        echo -e " ${GREEN}1) Install / Setup Tunnel${NC}                ║"
-        echo -e " ${RED}2) Uninstall Completely${NC}                  ║"
-        echo -e " ${RED}0) Return to Main System${NC}                 ║"
-        echo "╚═════════════════════════════════════════════╝"
-        read -p "Select an option [0-2]: " choice
+        
+        arch=$(uname -m)
+        if systemctl is-active --quiet cloudflared 2>/dev/null; then
+            s_status="${GREEN}ONLINE${NC}"
+            s_pid=$(pgrep -u root -f cloudflared | head -n 1)
+            [ -z "$s_pid" ] && s_pid="Active"
+            s_uptime=$(systemctl show cloudflared --property=ActiveEnterTimestamp --value 2>/dev/null)
+            [ -z "$s_uptime" ] && s_uptime="Running"
+        else
+            s_status="${RED}OFFLINE${NC}"
+            s_pid="None"
+            s_uptime="Gate Closed"
+        fi
+
+        echo -e "${PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
+        echo -e "${PURPLE} ║${NC}             ${WHITE}[ SYSTEM: SHADOW MONARCH TUNNEL ]${NC}              ${PURPLE}║${RESET}"
+        echo -e "${PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
+        echo ""
+        echo -e "${BRIGHT_PURPLE}  GATE STATUS ${GRAY}───────────────────────────────────────────${NC}"
+        echo -e "  ${PURPLE}◆${NC} Architecture : ${WHITE}$arch${NC}"
+        echo -e "  ${PURPLE}◆${NC} Monarch Stat : $s_status"
+        echo -e "  ${PURPLE}◆${NC} Shadow ID    : $s_pid"
+        echo -e "  ${PURPLE}◆${NC} Gate Open    : ${NEON_BLUE}$s_uptime${NC}"
+        echo -e "${GRAY} ────────────────────────────────────────────────────────────${NC}"
+        echo ""
+        echo -e "  ${BRIGHT_PURPLE}[1]${RESET} 🚀 Install / Setup Tunnel"
+        echo -e "  ${RED}[2]${RESET} 🗑️ Uninstall Completely"
+        echo -e "  ${RED}[0]${RESET} ⬅ Return to Tools Menu"
+        echo ""
+        echo -ne "${PURPLE}  nightlord@tunnel-hub:~# ${RESET}"
+        read choice
+
         case $choice in
             1) install_cloudflared ;;
             2) uninstall_cloudflared ;;
             0) break ;;
             *) echo -e "${RED}Invalid option!${NC}"; sleep 1 ;;
+        esac
+    done
+}
+
+# ==========================
+# 🛠️ TOOLS HUB MENU
+# ==========================
+tools_menu() {
+    while true; do
+        header
+        echo -e "${PURPLE}${BOLD}"
+        echo "   ████████╗ ██████╗  ██████╗ ██╗     ███████╗"
+        echo "   ╚══██╔══╝██╔═══██╗██╔═══██╗██║     ██╔════╝"
+        echo "      ██║   ██║   ██║██║   ██║██║     ███████╗"
+        echo "      ██║   ██║   ██║██║   ██║██║     ╚════██║"
+        echo "      ██║   ╚██████╔╝╚██████╔╝███████╗███████║"
+        echo "      ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝╚══════╝"
+        echo -e "${RESET}"
+        echo -e "${CYAN}               MADE BY NIGHTLORD               ${RESET}"
+        echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
+        echo
+        echo -e "  ${BRIGHT_PURPLE}[1]${RESET} 🔄 Infinite Dungeon Host ${GRAY}(24/7 Host)${RESET}"
+        echo -e "  ${BRIGHT_PURPLE}[2]${RESET} 🌐 Playit Tunnel Setup"
+        echo -e "  ${BRIGHT_PURPLE}[3]${RESET} ☁️ Cloudflared Manager"
+        echo -e "  ${RED}[0]${RESET} ⬅ Back to Main System"
+        echo
+        echo -ne "${PURPLE}  nightlord@tools-hub:~# ${RESET}"
+        read tool_choice
+
+        case $tool_choice in
+        1) host_24_7 ;;
+        2) playit_setup ;;
+        3) cloudflared_menu ;;
+        0) break ;;
+        *) echo -e "${RED} Invalid Option!${NC}"; sleep 1 ;;
         esac
     done
 }
@@ -691,17 +746,17 @@ while true; do
 
     echo -e "${PURPLE} ══ 🌟 NIGHTLORD'S SHADOW MONARCH DASHBOARD v10.0 ══${RESET}"
     
-    # --- SPACED 2-COLUMN LEFT/RIGHT LAYOUT ---
+    # --- UPDATED CLEAN MENU (GOD-TIER REMOVED, TOOLS PLACED, EXIT AT BOTTOM SEPARATELY) ---
     echo ""
-    printf "  \033[1;36m[1]\033[0m ⚔️ Command & Build Center       \033[1;36m[6]\033[0m ⚡ Panels Installer Hub\n"
+    printf "  \033[1;36m[1]\033[0m ⚔️ Command & Build Center       \033[1;36m[4]\033[0m ⚡ Panels Installer Hub\n"
     echo ""
-    printf "  \033[1;36m[2]\033[0m ⚙️ Status & RAM Manager        \033[1;36m[7]\033[0m 🪽 Install Wings (Daemon)\n"
+    printf "  \033[1;36m[2]\033[0m ⚙️ Status & RAM Manager        \033[1;36m[5]\033[0m 🪽 Install Wings (Daemon)\n"
     echo ""
-    printf "  \033[1;36m[3]\033[0m 🔄 Infinite Dungeon Host       \033[1;36m[8]\033[0m 📋 Blueprint Setup\n"
+    printf "  \033[1;36m[3]\033[0m 🛠️ TOOLS                       \033[1;36m[6]\033[0m 📋 Blueprint Setup\n"
     echo ""
-    printf "  \033[1;36m[4]\033[0m 🌐 Playit Tunnel Setup         \033[1;36m[9]\033[0m 🔮 God-Tier Utilities\n"
+    echo -e "${CYAN}                MADE BY NIGHTLORD               ${RESET}"
     echo ""
-    printf "  \033[1;36m[5]\033[0m ☁️ Cloudflared Manager         \033[1;31m[0]\033[0m  ❌ Close System / Log Out\n"
+    printf "  \033[1;31m[0]\033[0m ❌ Close System / Log Out\n"
     echo ""
     
     echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
@@ -712,13 +767,10 @@ while true; do
     case $main_choice in
     1) mc_cb_menu ;;
     2) settings ;;
-    3) host_24_7 ;;
-    4) playit_setup ;;
-    5) cloudflared_menu ;;
-    6) panels_menu ;;
-    7) wings_setup ;;
-    8) blueprint_setup ;;
-    9) monarch_utilities ;;
+    3) tools_menu ;;
+    4) panels_menu ;;
+    5) wings_setup ;;
+    6) blueprint_setup ;;
     0)
        clear
        echo -e "${PURPLE} 💬 [System]: Logging out, Sovereign Monarch NightLord. Rise again when you are ready. 🌙${RESET}"
