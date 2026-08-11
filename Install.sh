@@ -786,8 +786,36 @@ blueprint_setup() {
     done
 }
 
-petrotools_extensions_menu() {
+is_installed_ext() {
+    [[ -d "/var/www/pterodactyl/storage/extensions/${1%.blueprint}" ]] && return 0 || return 1
+}
+
+is_selected_ext() {
+    local index=$1
+    [[ " ${selected_indices[*]} " =~ " $index " ]] && return 0 || return 1
+}
+
+run_blueprint_ext() {
+    local NAME="$1"
+    local ACTION="$2"
     local URL="https://github.com/NightLord-pro/NightLordNotTools/tree/main/PETROTOOLS/EXTENSIONS"
+    cd /var/www/pterodactyl || exit 1
+    if [[ "$ACTION" == "install" ]]; then
+        echo -e "${GREEN}📥 Installing ${NAME%.blueprint}...${NC}"
+        wget -q "$URL/$NAME" -O "$NAME"
+        if [[ -s "$NAME" ]]; then
+            yes | blueprint -i "$NAME"
+            rm -f "$NAME"
+        else
+            echo -e "${RED}[!] Failed to download $NAME${NC}"
+        fi
+    else
+        echo -e "${RED}🗑️ Removing ${NAME%.blueprint}...${NC}"
+        yes | blueprint -r "${NAME%.blueprint}"
+    fi
+}
+
+petrotools_extensions_menu() {
     local selected_indices=()
 
     local names=(
@@ -800,34 +828,6 @@ petrotools_extensions_menu() {
         "huxregister.blueprint"
         "minecraftplayermanager.blueprint"
     )
-
-    local is_installed_ext() {
-        [[ -d "/var/www/pterodactyl/storage/extensions/${1%.blueprint}" ]] && return 0 || return 1
-    }
-
-    local is_selected_ext() {
-        local index=$1
-        [[ " ${selected_indices[*]} " =~ " $index " ]] && return 0 || return 1
-    }
-
-    local run_blueprint_ext() {
-        local NAME="$1"
-        local ACTION="$2"
-        cd /var/www/pterodactyl || exit 1
-        if [[ "$ACTION" == "install" ]]; then
-            echo -e "${GREEN}📥 Installing ${NAME%.blueprint}...${NC}"
-            wget -q "$URL/$NAME" -O "$NAME"
-            if [[ -s "$NAME" ]]; then
-                yes | blueprint -i "$NAME"
-                rm -f "$NAME"
-            else
-                echo -e "${RED}[!] Failed to download $NAME${NC}"
-            fi
-        else
-            echo -e "${RED}🗑️ Removing ${NAME%.blueprint}...${NC}"
-            yes | blueprint -r "${NAME%.blueprint}"
-        fi
-    }
 
     while true; do
         clear
