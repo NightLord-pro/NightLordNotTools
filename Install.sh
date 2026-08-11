@@ -499,7 +499,7 @@ playit_setup() {
 }
 
 # ==========================
-# ☁️ CLOUDFLARED MANAGEMENT (OLD CLEAN VERSION)
+# ☁️ CLOUDFLARED MANAGEMENT (CLEAN UI & SILENT BACKGROUND INSTALL)
 # ==========================
 install_cf() {
     clear
@@ -509,30 +509,36 @@ install_cf() {
     echo ""
     echo -e "${WHITE}  INITIALIZING MONARCH AWAKENING PROTOCOL${NC}"
     echo -e "${GRAY}  ────────────────────────────────────────${NC}"
-    sleep 1
+    echo -ne "  ${BRIGHT_PURPLE}[ARISE]${NC} Forging Shadow Repository & Installing Binary..."
 
-    echo -e "  ${BRIGHT_PURPLE}[ARISE]${NC} Forging Shadow Repository Keys..."
-    sudo mkdir -p --mode=0755 /usr/share/keyrings
-    curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | sudo tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null
-    echo 'deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared any main' | sudo tee /etc/apt/sources.list.d/cloudflared.list >/dev/null
-    echo -e "  ${NEON_BLUE}[SUCCESS]${NC} Repository Forged"
-
-    echo -e "  ${BRIGHT_PURPLE}[ARISE]${NC} Extracting Powers & Installing Binary..."
-    sudo apt-get update -qq
-    sudo apt-get install -y cloudflared
+    # Silent Background Installation Process with Cool Loading Bar
+    (
+        sudo mkdir -p --mode=0755 /usr/share/keyrings >/dev/null 2>&1
+        curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | sudo tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null 2>&1
+        echo 'deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared any main' | sudo tee /etc/apt/sources.list.d/cloudflared.list >/dev/null 2>&1
+        sudo apt-get update -qq >/dev/null 2>&1
+        sudo apt-get install -y cloudflared >/dev/null 2>&1
+    ) &
     
-    if command -v cloudflared &>/dev/null; then
-        echo -e "  ${NEON_BLUE}[SUCCESS]${NC} Cloudflared Core Bound"
-    else
+    PID=$!
+    while kill -0 $PID 2>/dev/null; do
+        for i in "▓▒░" "▒░▓" "░▓▒"; do
+            echo -ne "\r  ${BRIGHT_PURPLE}[ARISE]${NC} Forging Shadow Repository & Installing Binary... $i"
+            sleep 0.2
+        done
+    done
+    wait $PID
+
+    echo -e "\r  ${BRIGHT_PURPLE}[ARISE]${NC} Forging Shadow Repository & Installing Binary... ${NEON_BLUE}[SUCCESS]${NC}"
+
+    if ! command -v cloudflared &>/dev/null; then
         echo -e "  ${RED}[FAILURE]${NC} Power Extraction Failed"
         read -p "Press Enter to return..."
         return
     fi
 
     if systemctl list-units --type=service | grep -q cloudflared; then
-        echo -e "  ${BRIGHT_PURPLE}[ARISE]${NC} Banishing old conflicting shadows..."
         sudo cloudflared service uninstall >/dev/null 2>&1
-        echo -e "  ${NEON_BLUE}[SUCCESS]${NC} Domain Cleansed"
     fi
 
     echo ""
@@ -576,25 +582,37 @@ install_cf() {
 
 uninstall_cf() {
     clear
-    echo -e "${PURPLE} ╔════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${PURPLE} ║${NC}             ${WHITE}[ SYSTEM: SHADOW MONARCH TUNNEL ]${NC}              ${PURPLE}║${NC}"
-    echo -e "${PURPLE} ╚════════════════════════════════════════════════════════════╝${NC}"
+    echo -e "${PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
+    echo -e "${PURPLE} ║${NC}             ${WHITE}[ SYSTEM: SHADOW MONARCH TUNNEL ]${NC}              ${PURPLE}║${RESET}"
+    echo -e "${PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
     echo ""
     echo -e "${RED}  WARNING: SYSTEM PURGE PROTOCOL${NC}"
     echo -e "${GRAY}  This will completely strip the tunnel service and core binary.${NC}"
     echo ""
-    printf "%b" "${RED}  Do you wish to banish this power completely? (y/N): ${NC}"
+    echo -ne "${RED}  Do you wish to banish this power completely? (y/N): ${NC}"
     read confirm
     
     if [[ "$confirm" =~ ^[Yy]$ ]]; then
         echo ""
-        echo -e "  ${BRIGHT_PURPLE}[ARISE]${NC} Sealing and Stopping Service..."
-        sudo cloudflared service uninstall >/dev/null 2>&1
-        echo -e "  ${BRIGHT_PURPLE}[ARISE]${NC} Stripping Binary..."
-        sudo apt-get remove -y cloudflared -qq >/dev/null 2>&1
-        echo -e "  ${BRIGHT_PURPLE}[ARISE]${NC} Wiping Traces..."
-        sudo rm -f /etc/apt/sources.list.d/cloudflared.list
-        sudo rm -f /usr/share/keyrings/cloudflare-main.gpg
+        echo -e "  ${BRIGHT_PURPLE}[ARISE]${NC} Sealing, Stopping & Stripping Domain Traces..."
+        
+        (
+            sudo cloudflared service uninstall >/dev/null 2>&1
+            sudo apt-get remove -y cloudflared -qq >/dev/null 2>&1
+            sudo rm -f /etc/apt/sources.list.d/cloudflared.list
+            sudo rm -f /usr/share/keyrings/cloudflare-main.gpg
+        ) &
+        
+        PID=$!
+        while kill -0 $PID 2>/dev/null; do
+            for i in "▓▒░" "▒░▓" "░▓▒"; do
+                echo -ne "\r  ${BRIGHT_PURPLE}[ARISE]${NC} Purging shadows... $i"
+                sleep 0.2
+            done
+        done
+        wait $PID
+
+        echo -e "\r  ${BRIGHT_PURPLE}[ARISE]${NC} Purging shadows... ${NEON_BLUE}[SUCCESS]${NC}"
         echo ""
         echo -e "  ${NEON_BLUE}[SUCCESS]${NC} Shadow Purge Complete. All powers revoked."
     else
@@ -621,9 +639,9 @@ cloudflared_menu() {
             fi
         fi
 
-        echo -e "${PURPLE} ╔════════════════════════════════════════════════════════════╗${NC}"
-        echo -e "${PURPLE} ║${NC}             ${WHITE}[ SYSTEM: SHADOW MONARCH TUNNEL ]${NC}              ${PURPLE}║${NC}"
-        echo -e "${PURPLE} ╚════════════════════════════════════════════════════════════╝${NC}"
+        echo -e "${PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
+        echo -e "${PURPLE} ║${NC}             ${WHITE}[ SYSTEM: SHADOW MONARCH TUNNEL ]${NC}              ${PURPLE}║${RESET}"
+        echo -e "${PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
         echo ""
         echo -e "${BRIGHT_PURPLE}  GATE STATUS ${GRAY}───────────────────────────────────────────${NC}"
         echo -e "  ${PURPLE}◆${NC} Architecture : ${WHITE}$arch${NC}"
@@ -736,12 +754,12 @@ while true; do
 
     echo -e "${PURPLE} ══ 🌟 NIGHTLORD'S SHADOW MONARCH DASHBOARD v10.0 ══${RESET}"
     
-    # --- BALANCED TWO-COLUMN OPTIONS LAYOUT WITH FORMAT SPECIFIERS ---
-    printf "%b" "$(printf "  %-48s  %-48s\n" "${CYAN}[1]${RESET} ⚔️ Command & Build Center" "${CYAN}[6]${RESET} ⚡ Panels Installer Hub")"
-    printf "%b" "$(printf "  %-48s  %-48s\n" "${CYAN}[2]${RESET} ⚙️ Status & RAM Manager"  "${CYAN}[7]${RESET} 🪽 Install Wings (Daemon)")"
-    printf "%b" "$(printf "  %-48s  %-48s\n" "${CYAN}[3]${RESET} 🔄 Infinite Dungeon Host"  "${CYAN}[8]${RESET} 📋 Blueprint Setup")"
-    printf "%b" "$(printf "  %-48s  %-48s\n" "${CYAN}[4]${RESET} 🌐 Playit Tunnel Setup"    "${CYAN}[9]${RESET} 🔮 God-Tier Utilities")"
-    printf "%b" "$(printf "  %-48s  %-48s\n" "${CYAN}[5]${RESET} ☁️ Cloudflared Manager"    "${RED}[0]${RESET}  ❌ Close System / Log Out")"
+    # --- PERFECT 2-COLUMN LEFT/RIGHT LAYOUT ---
+    printf "  \033[1;36m[1]\033[0m ⚔️ Command & Build Center       \033[1;36m[6]\033[0m ⚡ Panels Installer Hub\n"
+    printf "  \033[1;36m[2]\033[0m ⚙️ Status & RAM Manager        \033[1;36m[7]\033[0m 🪽 Install Wings (Daemon)\n"
+    printf "  \033[1;36m[3]\033[0m 🔄 Infinite Dungeon Host       \033[1;36m[8]\033[0m 📋 Blueprint Setup\n"
+    printf "  \033[1;36m[4]\033[0m 🌐 Playit Tunnel Setup         \033[1;36m[9]\033[0m 🔮 God-Tier Utilities\n"
+    printf "  \033[1;36m[5]\033[0m ☁️ Cloudflared Manager     \033[1;31m[0]\033[0m  ❌ Close System / Log Out\n"
     
     echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
     echo
