@@ -913,6 +913,145 @@ petrotools_extensions_menu() {
     done
 }
 
+# ==========================
+# 🎨 THEME UI MENU (PETROTOOLS)
+# ==========================
+petrotools_theme_menu() {
+    local theme_names=(
+        "nebula.blueprint"
+        "euphoriatheme.blueprint"
+    )
+
+    is_installed_theme() {
+        local slug="${1%.blueprint}"
+        [[ -d "/var/www/pterodactyl/storage/extensions/$slug" ]] && return 0 || return 1
+    }
+
+    run_theme_blueprint() {
+        local NAME="$1"
+        local ACTION="$2"
+        local THEME_URL="https://github.com/NightLord-pro/NightLordNotTools/tree/main/PETROTOOLS/ui"
+
+        cd /var/www/pterodactyl || {
+            echo -e "${RED}Directory not found!${RESET}"
+            return
+        }
+
+        if [[ "$ACTION" == "install" ]]; then
+            echo -e "\n${GREEN}📥 Downloading & Installing ${NAME%.blueprint}...${RESET}"
+            wget -q "$THEME_URL/$NAME" -O "$NAME"
+            if [[ -f "$NAME" ]]; then
+                yes | blueprint -i "$NAME"
+                rm -f "$NAME"
+                echo -e "${GREEN}✅ Installation completed!${RESET}"
+            else
+                echo -e "${RED}❌ Download failed!${RESET}"
+            fi
+        else
+            echo -e "\n${RED}🗑️ Removing ${NAME%.blueprint}...${RESET}"
+            yes | blueprint -r "${NAME%.blueprint}"
+            echo -e "${GREEN}✅ Removal completed!${RESET}"
+        fi
+    }
+
+    while true; do
+        clear
+        echo -e "${PURPLE}${BOLD}"
+        echo "   ████████╗██╗  ██╗███████╗███╗   ███╗███████╗"
+        echo "   ╚══██╔══╝██║  ██║██╔════╝████╗ ████║██╔════╝"
+        echo "      ██║   ███████║█████╗  ██╔████╔██║█████╗  "
+        echo "      ██║   ██╔══██║██╔══╝  ██║╚██╔╝██║██╔══╝  "
+        echo "      ██║   ██║  ██║███████╗██║ ╚═╝ ██║███████╗"
+        echo "      ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝╚══════╝"
+        echo -e "${RESET}"
+        echo -e "${CYAN}               MADE BY NIGHTLORD               ${RESET}"
+        echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
+        echo
+        echo -e "   ${CYAN}SELECT A THEME UI:${RESET}"
+        echo ""
+
+        local count=0
+        for i in "${!theme_names[@]}"; do
+            num=$((i+1))
+            clean_name="${theme_names[$i]%.blueprint}"
+
+            if is_installed_theme "$clean_name"; then
+                status="${GREEN}●${RESET}"
+            else
+                status="${RED}○${RESET}"
+            fi
+
+            printf "  ${BRIGHT_PURPLE}%2d${RESET} %-22s %b   " "$num" "$clean_name" "$status"
+            ((count++))
+            (( count % 2 == 0 )) && echo ""
+        done
+
+        (( count % 2 != 0 )) && echo ""
+
+        echo -e "\n  ${RED} 0 ${RESET} Back to PetroTools"
+        echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
+        echo -ne "${PURPLE}  nightlord@theme:~# ${RESET}"
+        read opt
+
+        [[ "$opt" == "0" ]] && break
+
+        if ! [[ "$opt" =~ ^[0-9]+$ ]]; then
+            echo -e "\n${RED} ❌ Invalid Option${RESET}"
+            sleep 1
+            continue
+        fi
+
+        index=$((opt-1))
+        NAME="${theme_names[$index]}"
+
+        if [[ -z "$NAME" ]]; then
+            echo -e "\n${RED} ❌ Invalid Option${RESET}"
+            sleep 1
+            continue
+        fi
+
+        clean_name="${NAME%.blueprint}"
+
+        while true; do
+            header
+            if is_installed_theme "$clean_name"; then
+                cur_status="${GREEN}ALREADY INSTALLED${RESET}"
+            else
+                cur_status="${RED}NOT INSTALLED${RESET}"
+            fi
+
+            echo -e " ${WHITE}SELECTED UI:${RESET} ${CYAN}$clean_name${RESET}"
+            echo -e " ${WHITE}STATUS:${RESET}      $cur_status"
+            echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
+            echo -e "  ${BRIGHT_PURPLE}[ 1 ]${RESET} Install"
+            echo -e "  ${RED}[ 2 ]${RESET} Uninstall"
+            echo -e "  ${YELLOW}[ 0 ]${RESET} Back to Theme Menu"
+            echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
+            read -p " 👉 Action: " action
+
+            case "$action" in
+                1)
+                    run_theme_blueprint "$NAME" "install"
+                    pause
+                    break
+                    ;;
+                2)
+                    run_theme_blueprint "$NAME" "remove"
+                    pause
+                    break
+                    ;;
+                0)
+                    break
+                    ;;
+                *)
+                    echo -e "\n${RED}❌ Invalid Choice${RESET}"
+                    sleep 1
+                    ;;
+            esac
+        done
+    done
+}
+
 petro_tools_menu() {
     while true; do
         header
@@ -929,6 +1068,7 @@ petro_tools_menu() {
         echo
         echo -e "  ${BRIGHT_PURPLE}[1]${RESET} 📋 BLUEP"
         echo -e "  ${BRIGHT_PURPLE}[2]${RESET} 🧩 EXTEN"
+        echo -e "  ${BRIGHT_PURPLE}[3]${RESET} 🎨 THEME"
         echo -e "  ${RED}[0]${RESET} ⬅ Back to Main System"
         echo
         echo -ne "${PURPLE}  nightlord@petrotools:~# ${RESET}"
@@ -937,6 +1077,7 @@ petro_tools_menu() {
         case $pt_choice in
         1) blueprint_setup ;;
         2) petrotools_extensions_menu ;;
+        3) petrotools_theme_menu ;;
         0) break ;;
         *) echo -e "${RED} Invalid Option!${NC}"; sleep 1 ;;
         esac
