@@ -798,7 +798,7 @@ is_selected_ext() {
 run_blueprint_ext() {
     local NAME="$1"
     local ACTION="$2"
-    local URL="https://github.com/NightLord-pro/NightLordNotTools/tree/main/PETROTOOLS/EXTENSIONS"
+    local URL="https://github.com/nobita329/Nobita-Cloud/raw/refs/heads/main/thame/Extension"
     cd /var/www/pterodactyl || exit 1
     if [[ "$ACTION" == "install" ]]; then
         echo -e "${GREEN}📥 Installing ${NAME%.blueprint}...${NC}"
@@ -930,7 +930,7 @@ petrotools_theme_menu() {
     run_theme_blueprint() {
         local NAME="$1"
         local ACTION="$2"
-        local THEME_URL="https://github.com/NightLord-pro/NightLordNotTools/tree/main/PETROTOOLS/ui"
+        local THEME_URL="https://github.com/nobita329/Nobita-Cloud/raw/refs/heads/main/thame/UI"
 
         cd /var/www/pterodactyl || {
             echo -e "${RED}Directory not found!${RESET}"
