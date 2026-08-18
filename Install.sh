@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ==========================================================
-#   ⚔️ SOLO LEVELING: SHADOW MONARCH SYSTEM v10.0 ELITE ⚔️
+#   ⚔️ SOLO LEVELING: SHADOW MONARCH SYSTEM v11.0 ELITE ⚔️
 #   [Created by: NightLord | Universal Exit Protocol 0]
 # ==========================================================
 
@@ -29,12 +29,18 @@ PLUGIN_DIR="$MC_DIR/plugins"
 WORLD_DIR="$MC_DIR/world"
 BACKUP_DIR="$WORK_DIR/shadow_backups"
 CONFIG_FILE="$HOME/.shadow_monarch.conf"
-VERSION="10.0 SHADOW MONARCH GOD-TIER (NightLord Edition)"
+VERSION="11.0 SHADOW MONARCH GOD-TIER (NightLord Edition)"
 
 # Load Config
 [ -f "$CONFIG_FILE" ] && source "$CONFIG_FILE"
 RAM=${RAM:-"8192M"}
 JAVA_FLAGS=${JAVA_FLAGS:-"-Xms${RAM} -Xmx${RAM}"}
+SERVER_JAR="${SERVER_JAR:-}"
+SERVER_JAR_GLOB="${SERVER_JAR_GLOB:-paper-*.jar}"
+MC_VERSION="1.21.11"
+LOADER="paper"
+MODRINTH_API="https://api.modrinth.com/v2"
+USER_AGENT="Shadow-Monarch-Paper-Plugin-Panel/11.0"
 
 # ==========================
 # 💠 SOLO LEVELING EPIC SYSTEM AWAKENING
@@ -44,7 +50,7 @@ system_awakening() {
     echo -e "${PURPLE}"
     echo "    ╔══════════════════════════════════════════════════════════╗"
     echo "    ║     [SYSTEM: Welcome Back, Sovereign NightLord]          ║"
-    echo "    ║     ⚔️ INITIALIZING SHADOW MONARCH SYSTEM v10.0 ⚔️          ║"
+    echo "    ║     ⚔️ INITIALIZING SHADOW MONARCH SYSTEM v11.0 ⚔️          ║"
     echo "    ╚══════════════════════════════════════════════════════════╝"
     echo -e "${RESET}"
     echo -e " ${GRAY}Creator Profile:${RESET} ${PURPLE}NightLord${RESET}"
@@ -65,7 +71,7 @@ header() {
     clear
     echo -e "${PURPLE}"
     echo "╔══════════════════════════════════════════════════════════════╗"
-    echo "║         ⚔️ SHADOW MONARCH SUPREME INTERFACE v10.0 ⚔️         ║"
+    echo "║         ⚔️ SHADOW MONARCH SUPREME INTERFACE v11.0 ⚔️         ║"
     echo "╚══════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}"
     echo -e " ${BRIGHT_PURPLE}◆${RESET} ${CYAN}Mana/RAM:${RESET}  ${GREEN}$RAM${RESET}    │  ${BRIGHT_PURPLE}◆${RESET} ${CYAN}Monarch:${RESET} ${PURPLE}NightLord${RESET}"
@@ -174,7 +180,19 @@ run_server() {
     header
     cd "$MC_DIR" || return
 
-    if [ ! -f server.jar ]; then
+    local jar="$SERVER_JAR"
+    if [[ -z "$jar" ]]; then
+        shopt -s nullglob
+        local jars=("$MC_DIR"/$SERVER_JAR_GLOB)
+        shopt -u nullglob
+        if ((${#jars[@]})); then
+            jar="${jars[0]}"
+        elif [ -f "server.jar" ]; then
+            jar="server.jar"
+        fi
+    fi
+
+    if [[ -z "$jar" || ! -f "$jar" ]]; then
         echo -e "${RED} ❌ No core found in NightLord's domain! Setup a server first.${RESET}"
         pause
         return
@@ -183,7 +201,7 @@ run_server() {
     echo -e "${PURPLE} 💬 [System]: Invoking server runtime initialization for Monarch NightLord...${RESET}"
     echo -e "${GRAY} Assigned Power Flags: $JAVA_FLAGS${RESET}"
     echo
-    java $JAVA_FLAGS -jar server.jar nogui
+    java $JAVA_FLAGS -jar "$(basename "$jar")" nogui
     pause
 }
 
@@ -247,89 +265,386 @@ shadow_backup() {
     done
 }
 
-# ==========================
-# 🔌 SHADOW SOLDIER PLUGINS (UNLIMITED MODRINTH SEARCH)
-# ==========================
-plugins() {
+# ==========================================================
+# 🔌 ADVANCED SHADOW MONARCH MODRINTH PLUGIN SYSTEM v11.0
+# ==========================================================
+urlencode() {
+    jq -nr --arg v "$1" '$v|@uri'
+}
+
+api_get() {
+    curl -fsSL \
+        --connect-timeout 10 \
+        --max-time 30 \
+        -A "$USER_AGENT" \
+        -H "Accept: application/json" \
+        "$1"
+}
+
+normalize() {
+    printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]'
+}
+
+levenshtein() {
+    local a="$1"
+    local b="$2"
+    local la=${#a}
+    local lb=${#b}
+    local i j
+    local -a prev
+    local -a cur
+
+    for ((j=0;j<=lb;j++)); do
+        prev[j]=$j
+    done
+
+    for ((i=1;i<=la;i++)); do
+        cur[0]=$i
+        for ((j=1;j<=lb;j++)); do
+            local cost=0
+            [[ "${a:i-1:1}" != "${b:j-1:1}" ]] && cost=1
+            local x=$((cur[j-1]+1))
+            local y=$((prev[j]+1))
+            local z=$((prev[j-1]+cost))
+            local m=$x
+            ((y<m)) && m=$y
+            ((z<m)) && m=$z
+            cur[j]=$m
+        done
+        prev=("${cur[@]}")
+    done
+    printf '%s' "${prev[lb]}"
+}
+
+similarity() {
+    local a b
+    a="$(normalize "$1")"
+    b="$(normalize "$2")"
+
+    [[ -z "$a" || -z "$b" ]] && { printf "0"; return; }
+    [[ "$a" == "$b" ]] && { printf "100"; return; }
+
+    if [[ "$a" == *"$b"* || "$b" == *"$a"* ]]; then
+        local small=${#a}
+        local large=${#b}
+        (( ${#a} < ${#b} )) && { small=${#a}; large=${#b}; }
+        printf "%s" $((small*100/large))
+        return
+    fi
+
+    local distance
+    distance="$(levenshtein "$a" "$b")"
+    local max=${#a}
+    (( ${#b} > max )) && max=${#b}
+    printf "%s" $(((max-distance)*100/max))
+}
+
+save_config() {
+cat > "$CONFIG_FILE" <<EOF
+RAM=$(printf '%q' "$RAM")
+JAVA_FLAGS=$(printf '%q' "$JAVA_FLAGS")
+SERVER_JAR=$(printf '%q' "$SERVER_JAR")
+SERVER_JAR_GLOB=$(printf '%q' "$SERVER_JAR_GLOB")
+EOF
+}
+
+search_plugins() {
+    local query="$1"
+    local encoded
+    encoded="$(urlencode "$query")"
+    local facets='[["project_type:plugin"],["categories:paper"],["versions:1.21.11"]]'
+    local url="${MODRINTH_API}/search?query=${encoded}&facets=$(urlencode "$facets")&limit=20&index=relevance"
+    api_get "$url"
+}
+
+get_project_version() {
+    local project_id="$1"
+    local loaders
+    local versions
+    loaders="$(urlencode '["paper"]')"
+    versions="$(urlencode '["1.21.11"]')"
+    local url="${MODRINTH_API}/project/${project_id}/version?loaders=${loaders}&game_versions=${versions}"
+    local data
+    data="$(api_get "$url")" || return 1
+
+    jq -c '
+    [
+        .[]
+        | select(
+            .version_type=="release"
+            or .version_type=="beta"
+            or .version_type=="alpha"
+        )
+        | . as $v
+        | (
+            $v.files
+            | map(select(.filename | endswith(".jar")))
+            | .[0]
+        ) as $f
+        | select($f != null)
+        | {
+            id:$v.id,
+            version_number:$v.version_number,
+            version_type:$v.version_type,
+            date_published:$v.date_published,
+            file:{
+                url:$f.url,
+                filename:$f.filename,
+                size:($f.size // 0),
+                sha1:($f.hashes.sha1 // "")
+            }
+        }
+    ]
+    | sort_by(.date_published)
+    | reverse
+    | .[0]
+    // empty
+    ' <<< "$data"
+}
+
+download_plugin_advanced() {
+    local url="$1"
+    local filename="$2"
+    local expected_sha1="$3"
+
+    local tmp="$PLUGIN_DIR/.${filename}.part"
+    local target="$PLUGIN_DIR/$filename"
+
+    echo -e "\n${VIOLET}◈ Awakening plugin...${RESET}"
+
+    if curl -fL --retry 3 --connect-timeout 10 --max-time 300 -A "$USER_AGENT" --progress-bar "$url" -o "$tmp"; then
+        if [[ -n "$expected_sha1" ]] && command -v sha1sum >/dev/null 2>&1; then
+            local actual
+            actual="$(sha1sum "$tmp" | awk '{print $1}')"
+            if [[ "$actual" != "$expected_sha1" ]]; then
+                rm -f "$tmp"
+                echo -e "${RED}✖ SHA-1 verification failed.${RESET}"
+                pause
+                return 1
+            fi
+        fi
+        mv -f "$tmp" "$target"
+        echo -e "\n${GREEN}✓ PLUGIN AWAKENED${RESET}"
+        echo -e "${GRAY}$target${RESET}"
+    else
+        rm -f "$tmp"
+        echo -e "${RED}✖ Download failed.${RESET}"
+    fi
+    pause
+}
+
+plugin_search_menu() {
+    header
+    echo -e "${LPURPLE}${BOLD}◆ PLUGIN SEARCH${RESET}"
+    echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
+
+    read -rp "$(echo -e "${WHITE}Plugin name: ${RESET}")" query
+    [[ -n "$query" ]] || {
+        echo -e "${RED}Plugin name cannot be empty.${RESET}"
+        pause
+        return
+    }
+
+    echo -e "\n${VIOLET}◈ Searching the Shadow Archive...${RESET}"
+    local data
+    data="$(search_plugins "$query")" || {
+        echo -e "${RED}✖ Modrinth API request failed.${RESET}"
+        pause
+        return
+    }
+
+    local count
+    count="$(jq '.hits | length' <<< "$data")"
+    ((count > 0)) || {
+        echo -e "${RED}✖ No plugin found.${RESET}"
+        pause
+        return
+    }
+
+    local -a matches=()
+    local i
+    for ((i=0;i<count;i++)); do
+        local project_id title author description downloads score version
+        project_id="$(jq -r ".hits[$i].project_id" <<< "$data")"
+        title="$(jq -r ".hits[$i].title" <<< "$data")"
+        author="$(jq -r ".hits[$i].author // \"Unknown\"" <<< "$data")"
+        description="$(jq -r ".hits[$i].description // \"\"" <<< "$data")"
+        downloads="$(jq -r ".hits[$i].downloads // 0" <<< "$data")"
+
+        score="$(similarity "$query" "$title")"
+        ((score >= 55)) || continue
+
+        version="$(get_project_version "$project_id" 2>/dev/null || true)"
+        [[ -n "$version" ]] || continue
+
+        matches+=("$score"$'\t'"$project_id"$'\t'"$title"$'\t'"$author"$'\t'"$description"$'\t'"$downloads"$'\t'"$version")
+    done
+
+    if ((${#matches[@]}==0)); then
+        echo -e "\n${RED}✖ No sufficiently close Paper 1.21.11 plugin match.${RESET}"
+        echo -e "${GRAY}The Shadow Monarch rejected weak matches.${RESET}"
+        pause
+        return
+    fi
+
+    IFS=$'\n'
+    matches=($(printf '%s\n' "${matches[@]}" | sort -t$'\t' -k1,1nr))
+    unset IFS
+
+    echo -e "\n${GREEN}✓ Compatible plugins found:${RESET}\n"
+
+    local n=1
+    local row
+    for row in "${matches[@]:0:10}"; do
+        IFS=$'\t' read -r score project_id title author description downloads version <<< "$row"
+        local version_number version_type filename
+        version_number="$(jq -r '.version_number' <<< "$version")"
+        version_type="$(jq -r '.version_type' <<< "$version")"
+        filename="$(jq -r '.file.filename' <<< "$version")"
+
+        echo -e "${LPURPLE}[$n]${RESET} ${BOLD}$title${RESET} ${GRAY}— $score%% match${RESET}"
+        echo -e "    ${GRAY}Author:${RESET} $author"
+        echo -e "    ${GRAY}Version:${RESET} $version_number"
+        echo -e "    ${GRAY}Type:${RESET} $version_type"
+        echo -e "    ${GRAY}Jar:${RESET} $filename"
+        echo -e "    ${GRAY}${description:0:150}${RESET}\n"
+        ((n++))
+    done
+
+    read -rp "$(echo -e "${WHITE}Select [1-${#matches[@]}] or 0 to cancel: ${RESET}")" choice
+    [[ "$choice" =~ ^[0-9]+$ ]] || return
+    ((choice==0)) && return
+    ((choice>=1 && choice<=${#matches[@]})) || {
+        echo -e "${RED}Invalid selection.${RESET}"
+        pause
+        return
+    }
+
+    local selected="${matches[$((choice-1))]}"
+    IFS=$'\t' read -r score project_id title author description downloads version <<< "$selected"
+    local version_number filename url sha1
+    version_number="$(jq -r '.version_number' <<< "$version")"
+    filename="$(jq -r '.file.filename' <<< "$version")"
+    url="$(jq -r '.file.url' <<< "$version")"
+    sha1="$(jq -r '.file.sha1' <<< "$version")"
+
+    header
+    echo -e "${LPURPLE}${BOLD}◆ PLUGIN AWAKENED${RESET}"
+    echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
+    echo -e "${WHITE}Name       :${RESET} $title"
+    echo -e "${WHITE}Author     :${RESET} $author"
+    echo -e "${WHITE}Minecraft  :${RESET} $MC_VERSION"
+    echo -e "${WHITE}Platform   :${RESET} $LOADER"
+    echo -e "${WHITE}Version    :${RESET} $version_number"
+    echo -e "${WHITE}Match      :${RESET} $score%"
+    echo -e "${WHITE}Jar        :${RESET} $filename"
+    echo -e "${WHITE}Destination:${RESET} $PLUGIN_DIR/$filename"
+    echo -e "\n${GREEN}✓ Compatibility verified.${RESET}"
+
+    read -rp "$(echo -e "${WHITE}Download? [Y/n]: ${RESET}")" ans
+    ans="${ans:-Y}"
+    [[ "$ans" =~ ^[Yy]$ ]] || return
+
+    download_plugin_advanced "$url" "$filename" "$sha1"
+}
+
+installed_plugins() {
+    header
+    echo -e "${LPURPLE}${BOLD}◆ INSTALLED PLUGINS${RESET}"
+    echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
+
+    shopt -s nullglob
+    local files=("$PLUGIN_DIR"/*.jar)
+    shopt -u nullglob
+
+    if ((${#files[@]}==0)); then
+        echo -e "${GRAY}No plugins installed.${RESET}"
+        pause
+        return
+    fi
+
+    local i=1
+    for file in "${files[@]}"; do
+        echo -e "${LPURPLE}%2d.${RESET} $(basename "$file") ${GRAY}($(du -h "$file" | awk '{print $1}'))${RESET}"
+        ((i++))
+    done
+    echo -e "\n${GRAY}Total: ${#files[@]} plugin(s)${RESET}"
+    pause
+}
+
+remove_plugin() {
+    header
+    echo -e "${LPURPLE}${BOLD}◆ REMOVE PLUGIN${RESET}"
+    echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
+
+    shopt -s nullglob
+    local files=("$PLUGIN_DIR"/*.jar)
+    shopt -u nullglob
+
+    ((${#files[@]})) || {
+        echo -e "${GRAY}No plugins installed.${RESET}"
+        pause
+        return
+    }
+
+    local i=1
+    for file in "${files[@]}"; do
+        echo -e "${LPURPLE}[$i]${RESET} $(basename "$file")"
+        ((i++))
+    done
+
+    read -rp "$(echo -e "${WHITE}Plugin number: ${RESET}")" n
+    [[ "$n" =~ ^[0-9]+$ ]] || return
+    ((n>=1 && n<=${#files[@]})) || return
+
+    local file="${files[$((n-1))]}"
+    read -rp "$(echo -e "${YELLOW}Remove $(basename "$file")? [y/N]: ${RESET}")" ans
+    [[ "$ans" =~ ^[Yy]$ ]] || return
+
+    rm -f -- "$file"
+    echo -e "${GREEN}✓ Plugin removed.${RESET}"
+    pause
+}
+
+backup_plugins() {
+    header
+    echo -e "${LPURPLE}${BOLD}◆ PLUGIN BACKUP${RESET}"
+    echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
+
+    local timestamp
+    timestamp="$(date '+%Y-%m-%d_%H-%M-%S')"
+    local archive="$BACKUP_DIR/plugins_${timestamp}.tar.gz"
+
+    if tar -czf "$archive" -C "$MC_DIR" plugins 2>/dev/null; then
+        echo -e "${GREEN}✓ Backup created.${RESET}"
+        echo "$archive"
+    else
+        echo -e "${RED}✖ Backup failed.${RESET}"
+    fi
+    pause
+}
+
+shadow_plugin_menu() {
     while true; do
         header
-        mkdir -p "$PLUGIN_DIR"
-        cd "$PLUGIN_DIR" || return
-
         echo -e "${PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
-        echo -e "${PURPLE} ║${RESET}             ${WHITE}[ INFINITE PLUGIN SUMMONER ]${RESET}             ${PURPLE}║${RESET}"
+        echo -e "${PURPLE} ║${RESET}           ${WHITE}[ SHADOW MONARCH — PLUGIN PANEL ]${RESET}              ${PURPLE}║${RESET}"
         echo -e "${PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
         echo
-        echo -e "  ${BRIGHT_PURPLE}[1]${RESET} ⚡ Summon Plugin by Name/Keyword ${GRAY}(e.g. EssentialsX)${RESET}"
-        echo -e "  ${BRIGHT_PURPLE}[2]${RESET} 📦 View All Active Summoned Soldiers ${GRAY}(Installed Plugins)${RESET}"
-        echo -e "  ${RED}[0] Return to Command Hub${RESET}"
+        echo -e "  ${BRIGHT_PURPLE}[1]${RESET} 🔎 Search & Download Plugin"
+        echo -e "  ${BRIGHT_PURPLE}[2]${RESET} 📦 Installed Plugins"
+        echo -e "  ${BRIGHT_PURPLE}[3]${RESET} 🗑️ Remove Plugin"
+        echo -e "  ${BRIGHT_PURPLE}[4]${RESET} 💾 Backup Plugins"
+        echo -e "  ${RED}[0] ⬅ Back to Command Center${RESET}"
         echo
-        echo -ne "${PURPLE}  nightlord@plugin-hub:~# ${RESET}"
-        read p_choice
+        echo -ne "${PURPLE}  nightlord@plugin-panel:~# ${RESET}"
+        read sp_choice
 
-        case $p_choice in
-        1)
-            echo
-            echo -e "${CYAN} 💬 [System]: Enter the exact name or keyword of the plugin.${RESET}"
-            echo -ne "${BRIGHT_PURPLE}  ➤ Plugin Name: ${RESET}"
-            read plugin_query
-
-            if [ -z "$plugin_query" ]; then
-                echo -e "${RED} ❌ Plugin name cannot be empty!${RESET}"
-                pause
-                continue
-            fi
-
-            echo -e "${PURPLE} 🔍 Searching the ancient archives for '$plugin_query'...${RESET}"
-            API_URL="https://api.modrinth.com/v2/search?query=${plugin_query}&facets=[[\"project_type:plugin\"],[\"categories:paper\"],[\"server_side:required\"]]&limit=1"
-            RESPONSE=$(curl -s "$API_URL")
-            TOTAL_HITS=$(echo "$RESPONSE" | grep -o '"total_hits":[0-9]*' | head -1 | cut -d':' -f2)
-
-            if [ -z "$TOTAL_HITS" ] || [ "$TOTAL_HITS" -eq 0 ]; then
-                API_URL="https://api.modrinth.com/v2/search?query=${plugin_query}&facets=[[\"project_type:plugin\"]]&limit=1"
-                RESPONSE=$(curl -s "$API_URL")
-            fi
-            PROJECT_ID=$(echo "$RESPONSE" | grep -o '"project_id":"[^"]*"' | head -1 | cut -d'"' -f4)
-
-            if [ -z "$PROJECT_ID" ]; then
-                echo -e "${RED} ❌ No matching plugins found for '$plugin_query'. Try another name!${RESET}"
-                pause
-                continue
-            fi
-
-            PROJECT_URL="https://api.modrinth.com/v2/project/$PROJECT_ID/versions"
-            VERSIONS_JSON=$(curl -s "$PROJECT_URL")
-            DOWNLOAD_LINK=$(echo "$VERSIONS_JSON" | grep -o '"url":"[^"]*\.jar"' | head -1 | cut -d'"' -f4)
-            FILE_NAME=$(echo "$VERSIONS_JSON" | grep -o '"filename":"[^"]*\.jar"' | head -1 | cut -d'"' -f4)
-
-            if [ -z "$DOWNLOAD_LINK" ]; then
-                echo -e "${RED} ❌ Could not retrieve direct download link for this plugin.${RESET}"
-                pause
-                continue
-            fi
-
-            echo -e "${GREEN} ✔ Found: $FILE_NAME${RESET}"
-            echo -e "${CYAN} ⚡ Summoning plugin into NightLord's server...${RESET}"
-            curl -L -o "$FILE_NAME" "$DOWNLOAD_LINK"
-
-            if [ $? -eq 0 ] && [ -f "$FILE_NAME" ]; then
-                echo -e "${GREEN} ✨ Success! '$FILE_NAME' has been bound to your domain.${RESET}"
-            else
-                echo -e "${RED} ❌ Failed to download the plugin. Check connection.${RESET}"
-            fi
-            pause
-            ;;
-        2)
-            echo -e "${CYAN} 📦 Currently Active Shadow Soldiers (Installed Plugins):${RESET}"
-            echo -e "${GRAY} ──────────────────────────────────────────────────────────────${RESET}"
-            if [ -n "$(ls -A "$PLUGIN_DIR" 2>/dev/null)" ]; then
-                ls -lh "$PLUGIN_DIR" | awk '{print "  🛡️ " $9 " (" $5 ")"}'
-            else
-                echo -e "${YELLOW} ❖ No plugins summoned yet in this domain.${RESET}"
-            fi
-            echo -e "${GRAY} ──────────────────────────────────────────────────────────────${RESET}"
-            pause
-            ;;
+        case $sp_choice in
+        1) plugin_search_menu ;;
+        2) installed_plugins ;;
+        3) remove_plugin ;;
+        4) backup_plugins ;;
         0) break ;;
         *) echo -e "${RED} Invalid Command!${RESET}"; sleep 1 ;;
         esac
@@ -404,7 +719,7 @@ mc_cb_menu() {
         echo
         echo -e "  ${BRIGHT_PURPLE}[1]${RESET} 🚀 Setup Server Gate"
         echo -e "  ${BRIGHT_PURPLE}[2]${RESET} 🎮 Awaken/Run Server Engine"
-        echo -e "  ${BRIGHT_PURPLE}[3]${RESET} 🔌 Shadow Soldier Plugins ${GRAY}(Infinite Summoner)${RESET}"
+        echo -e "  ${BRIGHT_PURPLE}[3]${RESET} 🔌 Shadow Soldier Plugins ${GRAY}(Advanced Modrinth System)${RESET}"
         echo -e "  ${BRIGHT_PURPLE}[4]${RESET} 📦 Shadow Backup Vault"
         echo -e "  ${BRIGHT_PURPLE}[5]${RESET} 🔮 God-Tier Monarch Utilities"
         echo -e "  ${RED}[0] ⬅ Back to Main System${RESET}"
@@ -415,7 +730,7 @@ mc_cb_menu() {
         case $mccb_choice in
         1) setup_server ;;
         2) run_server ;;
-        3) plugins ;;
+        3) shadow_plugin_menu ;;
         4) shadow_backup ;;
         5) monarch_utilities ;;
         0) break ;;
@@ -798,7 +1113,7 @@ is_selected_ext() {
 run_blueprint_ext() {
     local NAME="$1"
     local ACTION="$2"
-    local URL="https://github.com/nobita329/Nobita-Cloud/raw/refs/heads/main/thame/Extension"
+    local URL="https://github.com/NightLord-pro/NightLordNotTools/tree/main/PETROTOOLS/EXTENSIONS"
     cd /var/www/pterodactyl || exit 1
     if [[ "$ACTION" == "install" ]]; then
         echo -e "${GREEN}📥 Installing ${NAME%.blueprint}...${NC}"
@@ -930,7 +1245,7 @@ petrotools_theme_menu() {
     run_theme_blueprint() {
         local NAME="$1"
         local ACTION="$2"
-        local THEME_URL="https://github.com/nobita329/Nobita-Cloud/raw/refs/heads/main/thame/UI"
+        local THEME_URL="https://github.com/NightLord-pro/NightLordNotTools/tree/main/PETROTOOLS/ui"
 
         cd /var/www/pterodactyl || {
             echo -e "${RED}Directory not found!${RESET}"
@@ -1147,7 +1462,7 @@ while true; do
     echo -e "${CYAN}                👑 NIGHTLORD SUPREME DOMAIN 👑               ${RESET}"
     echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
 
-    echo -e "${PURPLE} ══ 🌟 NIGHTLORD'S SHADOW MONARCH DASHBOARD v10.0 ══${RESET}"
+    echo -e "${PURPLE} ══ 🌟 NIGHTLORD'S SHADOW MONARCH DASHBOARD v11.0 ══${RESET}"
     
     # --- UPDATED CLEAN MENU ---
     echo ""
@@ -1185,3 +1500,4 @@ while true; do
        ;;
     esac
 done
+
