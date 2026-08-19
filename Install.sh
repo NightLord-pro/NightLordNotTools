@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ==========================================================
-#   ⚔️ SOLO LEVELING: SHADOW MONARCH SYSTEM v12.5 SUPREME ⚔️
+#   ⚔️ SOLO LEVELING: SHADOW MONARCH SYSTEM v12.9 SUPREME ⚔️
 #   [Creator: NightLord | Universal Gate Matrix]
 # ==========================================================
 
@@ -27,7 +27,7 @@ MC_DIR="$WORK_DIR/server"
 WORLD_DIR="$MC_DIR/world"
 BACKUP_DIR="$WORK_DIR/shadow_backups"
 CONFIG_FILE="$HOME/.shadow_monarch.conf"
-VERSION="v12.5 SUPREME"
+VERSION="v12.9 SUPREME"
 
 # Load Config if exists
 [ -f "$CONFIG_FILE" ] && source "$CONFIG_FILE"
@@ -54,7 +54,7 @@ system_awakening() {
     echo -e "${BRIGHT_PURPLE}"
     echo "    ╔══════════════════════════════════════════════════════════╗"
     echo "    ║     [SYSTEM: Welcome Back, Sovereign Monarch NightLord]  ║"
-    echo "    ║     ⚔️ INITIALIZING SHADOW MONARCH SYSTEM v12.5 ⚔️         ║"
+    echo "    ║     ⚔️ INITIALIZING SHADOW MONARCH SYSTEM v12.9 ⚔️         ║"
     echo "    ╚══════════════════════════════════════════════════════════╝"
     echo -e "${RESET}"
     echo -e " ${GRAY}Creator Profile:${RESET} ${PURPLE}NightLord${RESET}"
@@ -69,27 +69,32 @@ system_awakening() {
 }
 
 # ==========================
-# ⚡ CYBERPUNK MANA LOAD EFFECT
+# ⚡ ADVANCED SYSTEM LOADING WITH "SYSTEM" BANNER
 # ==========================
 system_load() {
     local msg="$1"
     clear
-    echo -e "${BRIGHT_PURPLE}"
-    echo "    ╔══════════════════════════════════════════════════════════╗"
-    echo -e "    ║  ${NEON_BLUE}⚡ GATEWAY PROCESS: ${WHITE}${msg}${BRIGHT_PURPLE} "
-    echo "    ╚══════════════════════════════════════════════════════════╝"
+    echo -e "${BRIGHT_PURPLE}${BOLD}"
+    echo "    ███████╗██╗   ██╗███████╗████████╗███████╗███╗   ███╗"
+    echo "    ██╔════╝╚██╗ ██╔╝██╔════╝╚══██╔══╝██╔════╝████╗ ████║"
+    echo "    ███████╗ ╚████╔╝ ███████╗   ██║   █████╗  ██╔████╔██║"
+    echo "    ╚════██║  ╚██╔╝  ╚════██║   ██║   ██╔══╝  ██║╚██╔╝██║"
+    echo "    ███████║   ██║   ███████║   ██║   ███████╗██║ ╚═╝ ██║"
+    echo "    ╚══════╝   ╚═╝   ╚══════╝   ╚═╝   ╚══════╝╚═╝     ╚═╝"
     echo -e "${RESET}"
+    echo -e "    ${NEON_BLUE}⚡ SUB-ROUTINE: ${WHITE}${msg}${RESET}"
+    echo -e "${BRIGHT_PURPLE}    ──────────────────────────────────────────────────────────${RESET}"
     
     local spin=('⠋' '⠙' '⠹' '⠸' '⠼' '⠴' '⠦' '⠧' '⠇' '⠏')
     echo -ne "    ${GRAY}Channeling Mana Matrix: [${RESET}"
-    for i in {1..22}; do
-        echo -ne "${BRIGHT_PURPLE}▒${RESET}"
+    for i in {1..24}; do
+        echo -ne "${NEON_BLUE}▒${RESET}"
         echo -ne "\b${spin[$((i%10))]}"
         sleep 0.02
         echo -ne "\b${BRIGHT_PURPLE}█${RESET}"
     done
-    echo -e "${GRAY}] ${GREEN}COMPLETED${RESET}"
-    sleep 0.35
+    echo -e "${GRAY}] ${GREEN}100% SUCCESS${RESET}"
+    sleep 0.3
 }
 
 # ==========================
@@ -155,6 +160,7 @@ version_selector() {
 
         case $v_choice in
         1) 
+            system_load "Accessing PaperMC Database..."
             echo -ne "${NEON_BLUE}  Enter Paper Version (e.g., 1.21.11, 1.21.1): ${RESET}"
             read MC_VER
             system_load "Fetching PaperMC API for $MC_VER..."
@@ -163,29 +169,33 @@ version_selector() {
             DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/${MC_VER}/builds/${LATEST_BUILD}/downloads/paper-${MC_VER}-${LATEST_BUILD}.jar"
             LOADER="paper"; break ;;
         2) 
+            system_load "Accessing PurpurMC Database..."
             echo -ne "${NEON_BLUE}  Enter Purpur Version (e.g., 1.21.11, 1.21.1): ${RESET}"
             read MC_VER
             system_load "Fetching PurpurMC API for $MC_VER..."
             DOWNLOAD_URL="https://api.purpurmc.org/v2/purpur/${MC_VER}/latest/download"
             LOADER="paper"; break ;;
         3)
+            system_load "Accessing FabricMC Database..."
             echo -ne "${NEON_BLUE}  Enter Fabric Version (e.g., 1.21.11, 1.21.1): ${RESET}"
             read MC_VER
             system_load "Generating Fabric Installer for $MC_VER..."
             DOWNLOAD_URL="https://meta.fabricmc.net/v2/versions/loader/${MC_VER}/0.16.5/1.0.1/server/jar"
             LOADER="fabric"; break ;;
         4)
+            system_load "Accessing Forge Setup..."
             echo -e "${YELLOW}  ⚠️ Forge requires manual direct link installation via CLI usually.${RESET}"
             echo -ne "${NEON_BLUE}  Paste Forge Installer URL: ${RESET}"
             read DOWNLOAD_URL
             LOADER="forge"; break ;;
         5)
+            system_load "Accessing Custom Core Link..."
             echo -ne "${NEON_BLUE}  Paste Custom Direct Jar URL: ${RESET}"
             read DOWNLOAD_URL
             echo -ne "${NEON_BLUE}  Select Loader Type (paper/fabric/forge): ${RESET}"
             read LOADER
             [ -z "$LOADER" ] && LOADER="paper"; break ;;
-        0) return 1 ;;
+        0) system_load "Returning to Main Command Hub..."; return 1 ;;
         *) echo -e "${RED}  Invalid Gateway!${RESET}"; sleep 1 ;;
         esac
     done
@@ -261,6 +271,7 @@ plugin_manager() {
 
         case $p_choice in
         1) 
+            system_load "Accessing Modrinth Search Protocol..."
             echo -ne "${NEON_BLUE} Enter Mod/Plugin name: ${RESET}"
             read query
             [[ -z "$query" ]] && continue
@@ -271,6 +282,7 @@ plugin_manager() {
             echo -e "\n${NEON_BLUE} Paste the direct .jar download link here (or press Enter to cancel):${RESET}"
             read plug_url
             if [[ -n "$plug_url" ]]; then
+                system_load "Downloading Shadow Component..."
                 cd "$MOD_DIR" || continue
                 wget --content-disposition "$plug_url"
                 echo -e "${GREEN} ✔ Component Awakened!${RESET}"
@@ -278,11 +290,12 @@ plugin_manager() {
             pause
             ;;
         2)
+            system_load "Reading Installed Components..."
             echo -e "${NEON_BLUE} Installed Components:${RESET}"
             ls -lh "$MOD_DIR" | awk '{print $5, $9}' | grep "\.jar"
             pause
             ;;
-        0) break ;;
+        0) system_load "Returning to Command Center..."; break ;;
         esac
     done
 }
@@ -309,17 +322,25 @@ tools_menu_sub() {
 
         case $t_choice in
         1) 
+            system_load "Cleansing Server Logs & Cache..."
             rm -rf "$MC_DIR/logs" "$MC_DIR/cache" 2>/dev/null
             echo -e "${GREEN}✔ Domain Cleansed!${RESET}"; pause ;;
         2) 
+            system_load "Preparing World Wipe Protocol..."
             echo -ne "${RED}Wipe World? (y/n): ${RESET}"; read w_conf
-            if [[ "$w_conf" == "y" ]]; then rm -rf "$WORLD_DIR" "$MC_DIR/world_nether" "$MC_DIR/world_the_end"; echo -e "${GREEN}✔ World Erased!${RESET}"; fi
+            if [[ "$w_conf" == "y" ]]; then 
+                system_load "Erasing World Dimensions..."
+                rm -rf "$WORLD_DIR" "$MC_DIR/world_nether" "$MC_DIR/world_the_end"
+                echo -e "${GREEN}✔ World Erased!${RESET}"
+            fi
             pause ;;
         3) 
+            system_load "Spawning Eternal Daemon..."
             echo -e "${YELLOW}Spawning Daemon...${RESET}"; pause ;;
         4) 
+            system_load "Accessing Tunnel Configuration..."
             echo -e "${YELLOW}Deploying Tunnel...${RESET}"; pause ;;
-        0) break ;;
+        0) system_load "Returning to Command Center..."; break ;;
         esac
     done
 }
@@ -328,6 +349,7 @@ tools_menu_sub() {
 # 🎮 COMMAND & BUILD CENTER
 # ==========================
 mc_cb_menu() {
+    system_load "Initializing Command & Build Center..."
     while true; do
         header
         echo -e "${NEON_BLUE}                🔥 WHAT IS YOUR COMMAND? 🔥               ${RESET}"
@@ -348,6 +370,7 @@ mc_cb_menu() {
         1) setup_server ;;
         2) run_server ;;
         3) 
+           system_load "Accessing Mana Core Adjustment..."
            echo -ne "${NEON_BLUE}  Enter new Mana limit (e.g., 4096M, 8192M): ${RESET}"
            read RAM
            echo "RAM=\"$RAM\"" > "$CONFIG_FILE"
@@ -356,7 +379,7 @@ mc_cb_menu() {
            ;;
         4) plugin_manager ;;
         5) tools_menu_sub ;;
-        0) break ;;
+        0) system_load "Returning to Sovereign Main Domain..."; break ;;
         *)
            echo -e "${RED}  Invalid Command Structure!${RESET}"
            sleep 1
@@ -369,6 +392,7 @@ mc_cb_menu() {
 # ⚙️ STATUS STATS / SETTINGS
 # ==========================
 settings() {
+    system_load "Accessing Status & RAM Manager..."
     while true; do
         header
         echo -e "${BRIGHT_PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
@@ -385,19 +409,23 @@ settings() {
 
         case $s in
         1)
+            system_load "Detecting System Memory..."
             detect_ram
             echo -e "${GREEN} ✔ Status synchronized for NightLord! Maximum RAM assigned: $RAM${RESET}"
             pause
             ;;
         2)
+            system_load "Opening Custom Power Allocation..."
             echo -ne "${NEON_BLUE} Enter custom power capacity for NightLord (e.g., 4096M, 8192M): ${RESET}"
             read RAM
             echo "RAM=\"$RAM\"" > "$CONFIG_FILE"
             JAVA_FLAGS="-Xms${RAM} -Xmx${RAM}"
+            system_load "Recalibrating Power Matrix..."
             echo -e "${GREEN} ✔ Power successfully recalibrated to $RAM${RESET}"
             pause
             ;;
         3)
+            system_load "Retrieving Monarch Profile..."
             echo -e "${NEON_BLUE} Monarch Profile Details:${RESET}"
             echo -e "${GRAY} ──────────────────────────────────────────────────────────────${RESET}"
             echo -e "  Monarch Name        : ${BRIGHT_PURPLE}NightLord${RESET}"
@@ -407,7 +435,7 @@ settings() {
             echo -e "${GRAY} ──────────────────────────────────────────────────────────────${RESET}"
             pause
             ;;
-        0) break ;;
+        0) system_load "Returning to Sovereign Main Domain..."; break ;;
         *) echo -e "${RED} Invalid Stat Choice!${RESET}"; sleep 1 ;;
         esac
     done
@@ -417,6 +445,7 @@ settings() {
 # 🔄 24/7 ETERNAL DUNGEON HOST
 # ==========================
 host_24_7() {
+    system_load "Initializing Infinite Dungeon Daemon..."
     header
     echo -e "${GREEN} 🔄 Opening NightLord's Infinite Dungeon Daemon (24/7 Host)...${RESET}"
     sleep 1
@@ -431,6 +460,7 @@ host_24_7() {
 # 🌐 PLAYIT TUNNEL AGENT
 # ==========================
 playit_setup() {
+    system_load "Deploying Playit Tunneling Gate..."
     header
     echo -e "${GREEN} 🌐 Deploying Playit Tunneling Gate for NightLord...${RESET}"
     echo
@@ -444,6 +474,7 @@ playit_setup() {
 # ☁️ CLOUDFLARED MANAGEMENT
 # ==========================
 install_cloudflared() {
+    system_load "Initiating Cloudflared Setup..."
     clear
     echo -e "${NEON_BLUE}┌────────────────────────────────────┐"
     echo -e "│      Installing Cloudflared       │"
@@ -507,6 +538,7 @@ install_cloudflared() {
 }
 
 uninstall_cloudflared() {
+    system_load "Preparing Cloudflared Removal..."
     clear
     echo -e "${NEON_BLUE}┌────────────────────────────────────┐"
     echo -e "│      Uninstalling Cloudflared     │"
@@ -522,6 +554,7 @@ uninstall_cloudflared() {
 }
 
 cloudflared_menu() {
+    system_load "Accessing Cloudflared Manager..."
     while true; do
         header
         arch=$(uname -m)
@@ -558,7 +591,7 @@ cloudflared_menu() {
         case $choice in
             1) install_cloudflared ;;
             2) uninstall_cloudflared ;;
-            0) break ;;
+            0) system_load "Returning to Tools Menu..."; break ;;
             *) echo -e "${RED}Invalid option!${NC}"; sleep 1 ;;
         esac
     done
@@ -568,6 +601,7 @@ cloudflared_menu() {
 # 🛠️ TOOLS HUB MENU
 # ==========================
 tools_menu() {
+    system_load "Initializing Tools & Network Hub..."
     while true; do
         header
         echo -e "${BRIGHT_PURPLE}${BOLD}"
@@ -593,7 +627,7 @@ tools_menu() {
         1) host_24_7 ;;
         2) playit_setup ;;
         3) cloudflared_menu ;;
-        0) break ;;
+        0) system_load "Returning to Sovereign Main Domain..."; break ;;
         *) echo -e "${RED} Invalid Option!${NC}"; sleep 1 ;;
         esac
     done
@@ -603,6 +637,7 @@ tools_menu() {
 # 🪽 WINGS INSTALLER
 # ==========================
 wings_setup() {
+    system_load "Initializing Pterodactyl Wings Suite..."
     header
     echo -e "${GREEN} 🪽 Initializing Pterodactyl Wings installation suite for NightLord...${RESET}"
     cd "$WORK_DIR"
@@ -614,6 +649,7 @@ wings_setup() {
 # 📋 BLUEPRINT / EXTENSIONS SETUP (PETROTOOLS)
 # ==========================
 blueprint_setup() {
+    system_load "Initializing Blueprint Framework Suite..."
     while true; do
         clear
         if command -v blueprint >/dev/null 2>&1; then
@@ -657,6 +693,7 @@ blueprint_setup() {
 
         case $bp in
             1)
+                system_load "Processing Blueprint Core..."
                 if [ "$installed" = false ]; then
                     echo -e "${NEON_BLUE}Installing...${RESET}"
                     rm -f /etc/apt/keyrings/nodesource.gpg 2>/dev/null
@@ -666,10 +703,11 @@ blueprint_setup() {
                 fi
                 pause
                 ;;
-            2) yes | blueprint -upgrade; pause ;;
-            3) blueprint -info; pause ;;
+            2) system_load "Upgrading Blueprint..."; yes | blueprint -upgrade; pause ;;
+            3) system_load "Fetching Blueprint Info..."; blueprint -info; pause ;;
             4) blueprint -version; pause ;;
             5)
+                system_load "Executing Blueprint Deletion..."
                 echo -e "${RED}Uninstalling Blueprint Framework + Extensions...${RESET}"
                 path=$(which blueprint 2>/dev/null)
                 if [ -n "$path" ]; then
@@ -682,7 +720,7 @@ blueprint_setup() {
                 fi
                 pause
                 ;;
-            0) break ;;
+            0) system_load "Returning to Petrotools..."; break ;;
             *) echo -e "${RED}Invalid option${RESET}"; sleep 1 ;;
         esac
     done
@@ -692,6 +730,7 @@ blueprint_setup() {
 # 🎨 THEME & EXTENSIONS UI MENU (PETROTOOLS)
 # ==========================
 petro_tools_menu() {
+    system_load "Accessing PetroTools Menu..."
     while true; do
         header
         echo -e "${BRIGHT_PURPLE}${BOLD}"
@@ -715,9 +754,9 @@ petro_tools_menu() {
 
         case $pt_choice in
         1) blueprint_setup ;;
-        2) echo -e "${YELLOW}Extensions menu active.${RESET}"; pause ;;
-        3) echo -e "${YELLOW}Themes menu active.${RESET}"; pause ;;
-        0) break ;;
+        2) system_load "Loading Extensions Menu..."; echo -e "${YELLOW}Extensions menu active.${RESET}"; pause ;;
+        3) system_load "Loading Themes Menu..."; echo -e "${YELLOW}Themes menu active.${RESET}"; pause ;;
+        0) system_load "Returning to Sovereign Main Domain..."; break ;;
         *) echo -e "${RED} Invalid Option!${NC}"; sleep 1 ;;
         esac
     done
@@ -727,6 +766,7 @@ petro_tools_menu() {
 # ⚡ PANELS INSTALLER HUB
 # ==========================
 panels_menu() {
+    system_load "Accessing Panels Installer Hub..."
     while true; do
         header
         echo -e "${BRIGHT_PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
@@ -743,24 +783,27 @@ panels_menu() {
 
         case $panel_choice in
         1)
+            system_load "Deploying NTH Panel Suite..."
             echo -e "${GREEN} 🚀 Initializing NTH installation suite...${RESET}"
             cd "$WORK_DIR"
             bash <(curl -s https://raw.githubusercontent.com/NightLord-pro/NTH/refs/heads/main/install.sh)
             pause
             ;;
         2)
+            system_load "Deploying JishnuTheGamer Suite..."
             echo -e "${GREEN} 🚀 Initializing jtg installation suite...${RESET}"
             cd "$WORK_DIR"
             bash <(curl -s https://raw.githubusercontent.com/JishnuTheGamer/Jtg/refs/heads/main/install.sh)
             pause
             ;;
         3)
+            system_load "Deploying Pterodactyl Panel Suite..."
             echo -e "${GREEN} ⚡ Initializing Pterodactyl installation suite...${RESET}"
             cd "$WORK_DIR"
             bash <(curl -s https://raw.githubusercontent.com/NightLord-pro/NightLordNotTools/refs/heads/main/Petroldectal%20Create)
             pause
             ;;
-        0) break ;;
+        0) system_load "Returning to Sovereign Main Domain..."; break ;;
         *) echo -e "${RED} Invalid Panel Choice!${NC}"; sleep 1 ;;
         esac
     done
@@ -785,7 +828,7 @@ while true; do
     echo -e "${NEON_BLUE}                👑 NIGHTLORD SUPREME DOMAIN 👑               ${RESET}"
     echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
 
-    echo -e "${BRIGHT_PURPLE} ══ 🌟 NIGHTLORD'S SHADOW MONARCH DASHBOARD v12.5 ══${RESET}"
+    echo -e "${BRIGHT_PURPLE} ══ 🌟 NIGHTLORD'S SHADOW MONARCH DASHBOARD v12.9 ══${RESET}"
     
     echo ""
     printf "  \033[1;36m[1]\033[0m ⚔️ Command & Build Center       \033[1;36m[4]\033[0m ⚡ Panels Installer Hub\n"
@@ -812,6 +855,7 @@ while true; do
     5) wings_setup ;;
     6) petro_tools_menu ;;
     0)
+       system_load "Shutting Down Shadow Protocol..."
        clear
        echo -e "${BRIGHT_PURPLE} 💬 [System]: Logging out, Sovereign Monarch NightLord. Rise again when you are ready. 🌙${RESET}"
        exit 0
