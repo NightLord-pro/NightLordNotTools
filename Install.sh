@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ==========================================================
-#   ⚔️ SOLO LEVELING: SHADOW MONARCH SYSTEM v12.0 ⚔️
+#   ⚔️ SOLO LEVELING: SHADOW MONARCH SYSTEM v12.5 SUPREME ⚔️
 #   [Creator: NightLord | Universal Gate Matrix]
 # ==========================================================
 
@@ -10,7 +10,6 @@ PURPLE="\033[1;35m"
 DEEP_PURPLE="\033[38;5;54m"
 BRIGHT_PURPLE="\033[38;5;171m"
 NEON_BLUE="\033[38;5;39m"
-BLUE="\033[1;34m"
 CYAN="\033[1;36m"
 GREEN="\033[1;32m"
 RED="\033[1;31m"
@@ -28,7 +27,7 @@ MC_DIR="$WORK_DIR/server"
 WORLD_DIR="$MC_DIR/world"
 BACKUP_DIR="$WORK_DIR/shadow_backups"
 CONFIG_FILE="$HOME/.shadow_monarch.conf"
-VERSION="v12.0 SUPREME"
+VERSION="v12.5 SUPREME"
 
 # Load Config if exists
 [ -f "$CONFIG_FILE" ] && source "$CONFIG_FILE"
@@ -48,46 +47,49 @@ update_loader_dirs() {
 update_loader_dirs
 
 # ==========================
-# 💠 SOLO LEVELING EPIC SYSTEM AWAKENING
+# 💠 EPIC SYSTEM AWAKENING
 # ==========================
 system_awakening() {
     clear
-    echo -e "${PURPLE}"
+    echo -e "${BRIGHT_PURPLE}"
     echo "    ╔══════════════════════════════════════════════════════════╗"
-    echo "    ║     [SYSTEM: Welcome Back, Sovereign NightLord]          ║"
-    echo "    ║     ⚔️ INITIALIZING SHADOW MONARCH SYSTEM v12.0 ⚔️          ║"
+    echo "    ║     [SYSTEM: Welcome Back, Sovereign Monarch NightLord]  ║"
+    echo "    ║     ⚔️ INITIALIZING SHADOW MONARCH SYSTEM v12.5 ⚔️         ║"
     echo "    ╚══════════════════════════════════════════════════════════╝"
     echo -e "${RESET}"
     echo -e " ${GRAY}Creator Profile:${RESET} ${PURPLE}NightLord${RESET}"
-    echo -ne "${CYAN} [System] Synchronizing Absolute Gate Matrix [${RESET}"
-    for i in {1..35}; do
-        echo -e -n "${BRIGHT_PURPLE}◆${RESET}"
-        sleep 0.01
+    echo -ne "${NEON_BLUE} [System] Synchronizing Absolute Gate Matrix [${RESET}"
+    for i in {1..30}; do
+        echo -e -n "${BRIGHT_PURPLE}█${RESET}"
+        sleep 0.012
     done
-    echo -e "${CYAN}] ${GREEN}100% AWAKENED${RESET}"
+    echo -e "${NEON_BLUE}] ${GREEN}100% AWAKENED${RESET}"
     echo -e "${YELLOW}💬 [System]: 'Arise, NightLord.' Your absolute domain is fully active.${RESET}"
-    sleep 0.8
+    sleep 0.9
 }
 
+# ==========================
+# ⚡ CYBERPUNK MANA LOAD EFFECT
+# ==========================
 system_load() {
     local msg="$1"
     clear
-    echo -e "${PURPLE}"
+    echo -e "${BRIGHT_PURPLE}"
     echo "    ╔══════════════════════════════════════════════════════════╗"
-    echo -e "    ║  ${CYAN}⚡ SYSTEM PROCESS: ${WHITE}${msg}${PURPLE} "
+    echo -e "    ║  ${NEON_BLUE}⚡ GATEWAY PROCESS: ${WHITE}${msg}${BRIGHT_PURPLE} "
     echo "    ╚══════════════════════════════════════════════════════════╝"
     echo -e "${RESET}"
     
     local spin=('⠋' '⠙' '⠹' '⠸' '⠼' '⠴' '⠦' '⠧' '⠇' '⠏')
-    echo -ne "    ${GRAY}Channeling Mana: [${RESET}"
-    for i in {1..20}; do
-        echo -ne "${BRIGHT_PURPLE}▓${RESET}"
+    echo -ne "    ${GRAY}Channeling Mana Matrix: [${RESET}"
+    for i in {1..22}; do
+        echo -ne "${BRIGHT_PURPLE}▒${RESET}"
         echo -ne "\b${spin[$((i%10))]}"
-        sleep 0.03
-        echo -ne "\b${BRIGHT_PURPLE}▓${RESET}"
+        sleep 0.02
+        echo -ne "\b${BRIGHT_PURPLE}█${RESET}"
     done
-    echo -e "${GRAY}] ${GREEN}100% SUCCESS${RESET}"
-    sleep 0.3
+    echo -e "${GRAY}] ${GREEN}COMPLETED${RESET}"
+    sleep 0.35
 }
 
 # ==========================
@@ -98,13 +100,13 @@ header() {
     local cpu_use=$(top -bn1 | grep load | awk '{printf "%.2f%%", $(NF-2)}' 2>/dev/null || echo "0.00%")
     local mem_use=$(free -m | awk 'NR==2{printf "%.2f%%", $3*100/$2 }' 2>/dev/null || echo "0.00%")
     
-    echo -e "${PURPLE}"
+    echo -e "${BRIGHT_PURPLE}"
     echo "╔══════════════════════════════════════════════════════════════════╗"
-    echo "║          ⚔️ SHADOW MONARCH SUPREME DASHBOARD ${VERSION} ⚔️           ║"
+    echo "║         ⚔️ SHADOW MONARCH SUPREME DASHBOARD ${VERSION} ⚔️          ║"
     echo "╠══════════════════════════════════════════════════════════════════╣"
-    echo -e "║ ${CYAN}👑 Monarch:${RESET} ${BRIGHT_PURPLE}NightLord${PURPLE}      │ ${CYAN}🌐 Loader:${RESET}  ${GREEN}$(echo $LOADER | tr '[:lower:]' '[:upper:]')${PURPLE}"
-    echo -e "║ ${CYAN}⚡ Mana(RAM):${RESET} ${GREEN}${RAM}${PURPLE}          │ ${CYAN}📂 Dir:${RESET}     ${WHITE}${MC_DIR}${PURPLE}"
-    echo -e "║ ${CYAN}⚙️ CPU Load:${RESET}  ${YELLOW}${cpu_use}${PURPLE}          │ ${CYAN}💾 Mem Use:${RESET} ${YELLOW}${mem_use}${PURPLE}"
+    echo -e "║ ${NEON_BLUE}👑 Monarch:${RESET} ${BRIGHT_PURPLE}NightLord${BRIGHT_PURPLE}    │ ${NEON_BLUE}🌐 Loader:${RESET}  ${GREEN}$(echo $LOADER | tr '[:lower:]' '[:upper:]')${BRIGHT_PURPLE}"
+    echo -e "║ ${NEON_BLUE}⚡ Mana(RAM):${RESET} ${GREEN}${RAM}${BRIGHT_PURPLE}        │ ${NEON_BLUE}📂 Dir:${RESET}     ${WHITE}${MC_DIR}${BRIGHT_PURPLE}"
+    echo -e "║ ${NEON_BLUE}⚙️ CPU Load:${RESET}  ${YELLOW}${cpu_use}${BRIGHT_PURPLE}        │ ${NEON_BLUE}💾 Mem Use:${RESET} ${YELLOW}${mem_use}${BRIGHT_PURPLE}"
     echo "╚══════════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}"
 }
@@ -114,7 +116,7 @@ header() {
 # ==========================
 pause() {
     echo -e "\n${GRAY}──────────────────────────────────────────────────────────────────${RESET}"
-    echo -e " ${BRIGHT_PURPLE}❖ Press ENTER to continue commanding...${RESET}"
+    echo -e " ${BRIGHT_PURPLE}❖ Press ENTER to return to the Sovereign Domain...${RESET}"
     read -r
 }
 
@@ -131,29 +133,29 @@ detect_ram() {
 }
 
 # ==========================
-# 🌐 ULTIMATE GATE SELECTOR (All Loaders & Versions)
+# 🌐 ULTIMATE GATE SELECTOR
 # ==========================
 version_selector() {
     while true; do
         header
-        echo -e "${PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
-        echo -e "${PURPLE} ║${RESET}           ${WHITE}[ SELECT SERVER CORE (THE GATE) ]${RESET}                ${PURPLE}║${RESET}"
-        echo -e "${PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
+        echo -e "${BRIGHT_PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
+        echo -e "${BRIGHT_PURPLE} ║${RESET}           ${WHITE}[ SELECT SERVER CORE (THE GATE) ]${RESET}                ${BRIGHT_PURPLE}║${RESET}"
+        echo -e "${BRIGHT_PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
         echo -e "  ${GRAY}Supported explicit versions: 1.21.11, 1.21.1, 1.20.4, etc.${RESET}\n"
         
-        echo -e "  ${BRIGHT_PURPLE}[ 1 ]${RESET} 🔥 PaperMC    ${GRAY}(Optimization & Plugins)${RESET}"
-        echo -e "  ${BRIGHT_PURPLE}[ 2 ]${RESET} ⚡ PurpurMC   ${GRAY}(High Config & Plugins)${RESET}"
-        echo -e "  ${BRIGHT_PURPLE}[ 3 ]${RESET} ⚙️ FabricMC   ${GRAY}(Modern Mods & Performance)${RESET}"
-        echo -e "  ${BRIGHT_PURPLE}[ 4 ]${RESET} 🛠️ ForgeMC    ${GRAY}(Classic Heavy Mods)${RESET}"
-        echo -e "  ${BRIGHT_PURPLE}[ 5 ]${RESET} 🔗 Custom URL ${GRAY}(Direct Jar Link)${RESET}"
+        echo -e "  ${NEON_BLUE}[ 1 ]${RESET} 🔥 PaperMC    ${GRAY}(Optimization & Plugins)${RESET}"
+        echo -e "  ${NEON_BLUE}[ 2 ]${RESET} ⚡ PurpurMC   ${GRAY}(High Config & Plugins)${RESET}"
+        echo -e "  ${NEON_BLUE}[ 3 ]${RESET} ⚙️ FabricMC   ${GRAY}(Modern Mods & Performance)${RESET}"
+        echo -e "  ${NEON_BLUE}[ 4 ]${RESET} 🛠️ ForgeMC    ${GRAY}(Classic Heavy Mods)${RESET}"
+        echo -e "  ${NEON_BLUE}[ 5 ]${RESET} 🔗 Custom URL ${GRAY}(Direct Jar Link)${RESET}"
         echo -e "  ${RED}[ 0 ] ⬅ Return${RESET}"
         echo
-        echo -ne "${PURPLE}  nightlord@gate-matrix:~# ${RESET}"
+        echo -ne "${BRIGHT_PURPLE}  nightlord@gate-matrix:~# ${RESET}"
         read v_choice
 
         case $v_choice in
         1) 
-            echo -ne "${CYAN}  Enter Paper Version (e.g., 1.21.11, 1.21.1): ${RESET}"
+            echo -ne "${NEON_BLUE}  Enter Paper Version (e.g., 1.21.11, 1.21.1): ${RESET}"
             read MC_VER
             system_load "Fetching PaperMC API for $MC_VER..."
             LATEST_BUILD=$(curl -s "https://api.papermc.io/v2/projects/paper/versions/${MC_VER}" | grep -o '"builds":\[[^]]*\]' | grep -o '[0-9]*' | tail -n 1)
@@ -161,26 +163,26 @@ version_selector() {
             DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/${MC_VER}/builds/${LATEST_BUILD}/downloads/paper-${MC_VER}-${LATEST_BUILD}.jar"
             LOADER="paper"; break ;;
         2) 
-            echo -ne "${CYAN}  Enter Purpur Version (e.g., 1.21.11, 1.21.1): ${RESET}"
+            echo -ne "${NEON_BLUE}  Enter Purpur Version (e.g., 1.21.11, 1.21.1): ${RESET}"
             read MC_VER
             system_load "Fetching PurpurMC API for $MC_VER..."
             DOWNLOAD_URL="https://api.purpurmc.org/v2/purpur/${MC_VER}/latest/download"
             LOADER="paper"; break ;;
         3)
-            echo -ne "${CYAN}  Enter Fabric Version (e.g., 1.21.11, 1.21.1): ${RESET}"
+            echo -ne "${NEON_BLUE}  Enter Fabric Version (e.g., 1.21.11, 1.21.1): ${RESET}"
             read MC_VER
             system_load "Generating Fabric Installer for $MC_VER..."
             DOWNLOAD_URL="https://meta.fabricmc.net/v2/versions/loader/${MC_VER}/0.16.5/1.0.1/server/jar"
             LOADER="fabric"; break ;;
         4)
             echo -e "${YELLOW}  ⚠️ Forge requires manual direct link installation via CLI usually.${RESET}"
-            echo -ne "${CYAN}  Paste Forge Installer URL: ${RESET}"
+            echo -ne "${NEON_BLUE}  Paste Forge Installer URL: ${RESET}"
             read DOWNLOAD_URL
             LOADER="forge"; break ;;
         5)
-            echo -ne "${CYAN}  Paste Custom Direct Jar URL: ${RESET}"
+            echo -ne "${NEON_BLUE}  Paste Custom Direct Jar URL: ${RESET}"
             read DOWNLOAD_URL
-            echo -ne "${CYAN}  Select Loader Type (paper/fabric/forge): ${RESET}"
+            echo -ne "${NEON_BLUE}  Select Loader Type (paper/fabric/forge): ${RESET}"
             read LOADER
             [ -z "$LOADER" ] && LOADER="paper"; break ;;
         0) return 1 ;;
@@ -205,7 +207,7 @@ setup_server() {
     mkdir -p "$MC_DIR"
     cd "$MC_DIR" || return
 
-    echo -e "${CYAN} ❖ Downloading Engine from the Matrix...${RESET}"
+    echo -e "${NEON_BLUE} ❖ Downloading Engine from the Matrix...${RESET}"
     curl -L -o server.jar "$DOWNLOAD_URL"
 
     if [ $? -ne 0 ] || [ ! -s server.jar ]; then
@@ -233,7 +235,7 @@ run_server() {
         pause; return
     fi
 
-    echo -e "${PURPLE} 💬 [System]: 'Arise.' Initializing server runtime...${RESET}"
+    echo -e "${BRIGHT_PURPLE} 💬 [System]: 'Arise.' Initializing server runtime...${RESET}"
     echo -e "${GRAY} Current Power Flags: $JAVA_FLAGS${RESET}"
     echo -e "${GRAY}──────────────────────────────────────────────────────────────────${RESET}\n"
     java $JAVA_FLAGS -jar server.jar nogui
@@ -241,32 +243,32 @@ run_server() {
 }
 
 # ==========================
-# 🔌 SHADOW SOLDIER PLUGINS (Modrinth API integration)
+# 🔌 SHADOW SOLDIER PLUGINS
 # ==========================
 plugin_manager() {
     while true; do
         header
-        echo -e "${PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
-        echo -e "${PURPLE} ║${RESET}         ${WHITE}[ SHADOW SOLDIERS (PLUGINS/MODS HUB) ]${RESET}           ${PURPLE}║${RESET}"
-        echo -e "${PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
+        echo -e "${BRIGHT_PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
+        echo -e "${BRIGHT_PURPLE} ║${RESET}         ${WHITE}[ SHADOW SOLDIERS (PLUGINS/MODS HUB) ]${RESET}           ${BRIGHT_PURPLE}║${RESET}"
+        echo -e "${BRIGHT_PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
         echo
-        echo -e "  ${BRIGHT_PURPLE}[ 1 ]${RESET} 🔎 Search & Download Mod/Plugin ${GRAY}(via Modrinth)${RESET}"
-        echo -e "  ${BRIGHT_PURPLE}[ 2 ]${RESET} 📦 View Installed Files in $(basename "$MOD_DIR")"
+        echo -e "  ${NEON_BLUE}[ 1 ]${RESET} 🔎 Search & Download Mod/Plugin ${GRAY}(via Modrinth)${RESET}"
+        echo -e "  ${NEON_BLUE}[ 2 ]${RESET} 📦 View Installed Files in $(basename "$MOD_DIR")"
         echo -e "  ${RED}[ 0 ] ⬅ Return${RESET}"
         echo
-        echo -ne "${PURPLE}  nightlord@plugins:~# ${RESET}"
+        echo -ne "${BRIGHT_PURPLE}  nightlord@plugins:~# ${RESET}"
         read p_choice
 
         case $p_choice in
         1) 
-            echo -ne "${CYAN} Enter Mod/Plugin name: ${RESET}"
+            echo -ne "${NEON_BLUE} Enter Mod/Plugin name: ${RESET}"
             read query
             [[ -z "$query" ]] && continue
             
             system_load "Searching Modrinth Database..."
             echo -e "${YELLOW} To maintain script speed, open this link to find your direct JAR:${RESET}"
             echo -e "${WHITE} https://modrinth.com/plugins?q=${query}&g=1.21.1${RESET}"
-            echo -e "\n${CYAN} Paste the direct .jar download link here (or press Enter to cancel):${RESET}"
+            echo -e "\n${NEON_BLUE} Paste the direct .jar download link here (or press Enter to cancel):${RESET}"
             read plug_url
             if [[ -n "$plug_url" ]]; then
                 cd "$MOD_DIR" || continue
@@ -276,7 +278,7 @@ plugin_manager() {
             pause
             ;;
         2)
-            echo -e "${CYAN} Installed Components:${RESET}"
+            echo -e "${NEON_BLUE} Installed Components:${RESET}"
             ls -lh "$MOD_DIR" | awk '{print $5, $9}' | grep "\.jar"
             pause
             ;;
@@ -292,17 +294,17 @@ tools_menu_sub() {
     system_load "Accessing God-Tier Utilities..."
     while true; do
         header
-        echo -e "${PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
-        echo -e "${PURPLE} ║${RESET}                ${WHITE}[ MONARCH UTILITIES HUB ]${RESET}                   ${PURPLE}║${RESET}"
-        echo -e "${PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
+        echo -e "${BRIGHT_PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
+        echo -e "${BRIGHT_PURPLE} ║${RESET}                ${WHITE}[ MONARCH UTILITIES HUB ]${RESET}                   ${BRIGHT_PURPLE}║${RESET}"
+        echo -e "${BRIGHT_PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
         echo
-        echo -e "  ${BRIGHT_PURPLE}[ 1 ]${RESET} 🧹 Purge Server Logs/Cache"
-        echo -e "  ${BRIGHT_PURPLE}[ 2 ]${RESET} ⚠️ Wipe World Data ${GRAY}(Hard Reset)${RESET}"
-        echo -e "  ${BRIGHT_PURPLE}[ 3 ]${RESET} 🔄 Deploy 24/7 Infinite Daemon"
-        echo -e "  ${BRIGHT_PURPLE}[ 4 ]${RESET} 🌐 Configure PlayIt.gg Tunnel"
+        echo -e "  ${NEON_BLUE}[ 1 ]${RESET} 🧹 Purge Server Logs/Cache"
+        echo -e "  ${NEON_BLUE}[ 2 ]${RESET} ⚠️ Wipe World Data ${GRAY}(Hard Reset)${RESET}"
+        echo -e "  ${NEON_BLUE}[ 3 ]${RESET} 🔄 Deploy 24/7 Infinite Daemon"
+        echo -e "  ${NEON_BLUE}[ 4 ]${RESET} 🌐 Configure PlayIt.gg Tunnel"
         echo -e "  ${RED}[ 0 ] ⬅ Return${RESET}"
         echo
-        echo -ne "${PURPLE}  nightlord@tools-hub:~# ${RESET}"
+        echo -ne "${BRIGHT_PURPLE}  nightlord@tools-hub:~# ${RESET}"
         read t_choice
 
         case $t_choice in
@@ -328,25 +330,25 @@ tools_menu_sub() {
 mc_cb_menu() {
     while true; do
         header
-        echo -e "${CYAN}                🔥 WHAT IS YOUR COMMAND? 🔥               ${RESET}"
+        echo -e "${NEON_BLUE}                🔥 WHAT IS YOUR COMMAND? 🔥               ${RESET}"
         echo -e "${GRAY}──────────────────────────────────────────────────────────────────${RESET}"
         
-        echo -e "  ${BRIGHT_PURPLE}[ 1 ]${RESET} 🚀 Establish Gate ${GRAY}(Setup Paper/Fabric/Forge 1.21.x)${RESET}"
-        echo -e "  ${BRIGHT_PURPLE}[ 2 ]${RESET} 🎮 Awaken Server ${GRAY}(Start Engine)${RESET}"
-        echo -e "  ${BRIGHT_PURPLE}[ 3 ]${RESET} ⚡ Adjust Mana Core ${GRAY}(Change RAM Limit)${RESET}"
-        echo -e "  ${BRIGHT_PURPLE}[ 4 ]${RESET} 🔌 Manage Shadow Soldiers ${GRAY}(Mods/Plugins)${RESET}"
-        echo -e "  ${BRIGHT_PURPLE}[ 5 ]${RESET} 🛠️ Monarch Tools & Utilities"
+        echo -e "  ${NEON_BLUE}[ 1 ]${RESET} 🚀 Establish Gate ${GRAY}(Setup Paper/Fabric/Forge 1.21.x)${RESET}"
+        echo -e "  ${NEON_BLUE}[ 2 ]${RESET} 🎮 Awaken Server ${GRAY}(Start Engine)${RESET}"
+        echo -e "  ${NEON_BLUE}[ 3 ]${RESET} ⚡ Adjust Mana Core ${GRAY}(Change RAM Limit)${RESET}"
+        echo -e "  ${NEON_BLUE}[ 4 ]${RESET} 🔌 Manage Shadow Soldiers ${GRAY}(Mods/Plugins)${RESET}"
+        echo -e "  ${NEON_BLUE}[ 5 ]${RESET} 🛠️ Monarch Tools & Utilities"
         echo ""
         echo -e "  ${RED}[ 0 ] ⬅ Back to Main System${RESET}"
         echo -e "${GRAY}──────────────────────────────────────────────────────────────────${RESET}"
-        echo -ne "${PURPLE}  nightlord@shadow-monarch:~# ${RESET}"
+        echo -ne "${BRIGHT_PURPLE}  nightlord@shadow-monarch:~# ${RESET}"
         read main_choice
 
         case $main_choice in
         1) setup_server ;;
         2) run_server ;;
         3) 
-           echo -ne "${CYAN}  Enter new Mana limit (e.g., 4096M, 8192M): ${RESET}"
+           echo -ne "${NEON_BLUE}  Enter new Mana limit (e.g., 4096M, 8192M): ${RESET}"
            read RAM
            echo "RAM=\"$RAM\"" > "$CONFIG_FILE"
            JAVA_FLAGS="-Xms${RAM} -Xmx${RAM}"
@@ -369,16 +371,16 @@ mc_cb_menu() {
 settings() {
     while true; do
         header
-        echo -e "${PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
-        echo -e "${PURPLE} ║${RESET}                ${WHITE}[ STATUS & RAM MANAGER ]${RESET}                  ${PURPLE}║${RESET}"
-        echo -e "${PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
+        echo -e "${BRIGHT_PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
+        echo -e "${BRIGHT_PURPLE} ║${RESET}                ${WHITE}[ STATUS & RAM MANAGER ]${RESET}                  ${BRIGHT_PURPLE}║${RESET}"
+        echo -e "${BRIGHT_PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
         echo
-        echo -e "  ${BRIGHT_PURPLE}[1]${RESET} Auto-Detect Stat Cap ${GRAY}(Smart RAM Optimize)${RESET}"
-        echo -e "  ${BRIGHT_PURPLE}[2]${RESET} Allocate Custom Stat Power ${GRAY}(Custom RAM)${RESET}"
-        echo -e "  ${BRIGHT_PURPLE}[3]${RESET} View Current Monarch Profile"
+        echo -e "  ${NEON_BLUE}[1]${RESET} Auto-Detect Stat Cap ${GRAY}(Smart RAM Optimize)${RESET}"
+        echo -e "  ${NEON_BLUE}[2]${RESET} Allocate Custom Stat Power ${GRAY}(Custom RAM)${RESET}"
+        echo -e "  ${NEON_BLUE}[3]${RESET} View Current Monarch Profile"
         echo -e "  ${RED}[0] Back to Main System${RESET}"
         echo
-        echo -ne "${PURPLE}  nightlord@status-mgr:~# ${RESET}"
+        echo -ne "${BRIGHT_PURPLE}  nightlord@status-mgr:~# ${RESET}"
         read s
 
         case $s in
@@ -388,7 +390,7 @@ settings() {
             pause
             ;;
         2)
-            echo -ne "${CYAN} Enter custom power capacity for NightLord (e.g., 4096M, 8192M): ${RESET}"
+            echo -ne "${NEON_BLUE} Enter custom power capacity for NightLord (e.g., 4096M, 8192M): ${RESET}"
             read RAM
             echo "RAM=\"$RAM\"" > "$CONFIG_FILE"
             JAVA_FLAGS="-Xms${RAM} -Xmx${RAM}"
@@ -396,9 +398,9 @@ settings() {
             pause
             ;;
         3)
-            echo -e "${CYAN} Monarch Profile Details:${RESET}"
+            echo -e "${NEON_BLUE} Monarch Profile Details:${RESET}"
             echo -e "${GRAY} ──────────────────────────────────────────────────────────────${RESET}"
-            echo -e "  Monarch Name        : ${PURPLE}NightLord${RESET}"
+            echo -e "  Monarch Name        : ${BRIGHT_PURPLE}NightLord${RESET}"
             echo -e "  Assigned RAM Power  : ${GREEN}$RAM${RESET}"
             echo -e "  Java Execution Flag : ${GREEN}$JAVA_FLAGS${RESET}"
             echo -e "  System Config Path  : ${GREEN}$CONFIG_FILE${RESET}"
@@ -443,7 +445,7 @@ playit_setup() {
 # ==========================
 install_cloudflared() {
     clear
-    echo -e "${BLUE}┌────────────────────────────────────┐"
+    echo -e "${NEON_BLUE}┌────────────────────────────────────┐"
     echo -e "│      Installing Cloudflared       │"
     echo -e "└────────────────────────────────────${NC}"
 
@@ -468,13 +470,13 @@ install_cloudflared() {
 
     if systemctl list-units --type=service | grep -q cloudflared; then
         echo -e "${YELLOW}⚠ Existing Cloudflared service detected${NC}"
-        echo -e "${CYAN}→ Removing old service...${NC}"
+        echo -e "${NEON_BLUE}→ Removing old service...${NC}"
         sudo cloudflared service uninstall
         echo -e "${GREEN}✔ Old service removed${NC}"
         echo ""
     fi
 
-    echo -e "${BLUE}🔑 Paste Cloudflare Tunnel token"
+    echo -e "${NEON_BLUE}🔑 Paste Cloudflare Tunnel token"
     echo -e "${DIM}(sirf token ya poora command — dono chalega)${NC}"
     read -rp "> " USER_INPUT
 
@@ -489,7 +491,7 @@ install_cloudflared() {
         return
     fi
 
-    echo -e "${CYAN}🚀 Installing Cloudflared service...${NC}"
+    echo -e "${NEON_BLUE}🚀 Installing Cloudflared service...${NC}"
     sudo cloudflared service install "$CF_TOKEN"
 
     sleep 1
@@ -506,7 +508,7 @@ install_cloudflared() {
 
 uninstall_cloudflared() {
     clear
-    echo -e "${BLUE}┌────────────────────────────────────┐"
+    echo -e "${NEON_BLUE}┌────────────────────────────────────┐"
     echo -e "│      Uninstalling Cloudflared     │"
     echo -e "└────────────────────────────────────${NC}"
 
@@ -535,22 +537,22 @@ cloudflared_menu() {
             s_uptime="Gate Closed"
         fi
 
-        echo -e "${PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
-        echo -e "${PURPLE} ║${NC}             ${WHITE}[ SYSTEM: SHADOW MONARCH TUNNEL ]${NC}              ${PURPLE}║${RESET}"
-        echo -e "${PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
+        echo -e "${BRIGHT_PURPLE} ╔════════════════════════════════════════════════════════════╗${NC}"
+        echo -e "${BRIGHT_PURPLE} ║${NC}             ${WHITE}[ SYSTEM: SHADOW MONARCH TUNNEL ]${NC}              ${BRIGHT_PURPLE}║${NC}"
+        echo -e "${BRIGHT_PURPLE} ╚════════════════════════════════════════════════════════════╝${NC}"
         echo ""
-        echo -e "${BRIGHT_PURPLE}  GATE STATUS ${GRAY}───────────────────────────────────────────${NC}"
-        echo -e "  ${PURPLE}◆${NC} Architecture : ${WHITE}$arch${NC}"
-        echo -e "  ${PURPLE}◆${NC} Monarch Stat : $s_status"
-        echo -e "  ${PURPLE}◆${NC} Shadow ID    : $s_pid"
-        echo -e "  ${PURPLE}◆${NC} Gate Open    : ${NEON_BLUE}$s_uptime${NC}"
+        echo -e "${NEON_BLUE}  GATE STATUS ${GRAY}───────────────────────────────────────────${NC}"
+        echo -e "  ${BRIGHT_PURPLE}◆${NC} Architecture : ${WHITE}$arch${NC}"
+        echo -e "  ${BRIGHT_PURPLE}◆${NC} Monarch Stat : $s_status"
+        echo -e "  ${BRIGHT_PURPLE}◆${NC} Shadow ID    : $s_pid"
+        echo -e "  ${BRIGHT_PURPLE}◆${NC} Gate Open    : ${NEON_BLUE}$s_uptime${NC}"
         echo -e "${GRAY} ────────────────────────────────────────────────────────────${NC}"
         echo ""
-        echo -e "  ${BRIGHT_PURPLE}[1]${RESET} 🚀 Install / Setup Tunnel"
-        echo -e "  ${RED}[2]${RESET} 🗑️ Uninstall Completely"
-        echo -e "  ${RED}[0]${RESET} ⬅ Return to Tools Menu"
+        echo -e "  ${NEON_BLUE}[1]${NC} 🚀 Install / Setup Tunnel"
+        echo -e "  ${RED}[2]${NC} 🗑️ Uninstall Completely"
+        echo -e "  ${RED}[0]${NC} ⬅ Return to Tools Menu"
         echo ""
-        echo -ne "${PURPLE}  nightlord@tunnel-hub:~# ${RESET}"
+        echo -ne "${BRIGHT_PURPLE}  nightlord@tunnel-hub:~# ${NC}"
         read choice
 
         case $choice in
@@ -568,7 +570,7 @@ cloudflared_menu() {
 tools_menu() {
     while true; do
         header
-        echo -e "${PURPLE}${BOLD}"
+        echo -e "${BRIGHT_PURPLE}${BOLD}"
         echo "   ████████╗ ██████╗  ██████╗ ██╗     ███████╗"
         echo "   ╚══██╔══╝██╔═══██╗██╔═══██╗██║     ██╔════╝"
         echo "      ██║   ██║   ██║██║   ██║██║     ███████╗"
@@ -576,15 +578,15 @@ tools_menu() {
         echo "      ██║   ╚██████╔╝╚██████╔╝███████╗███████║"
         echo "      ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝╚══════╝"
         echo -e "${RESET}"
-        echo -e "${CYAN}               MADE BY NIGHTLORD               ${RESET}"
+        echo -e "${NEON_BLUE}               MADE BY NIGHTLORD               ${RESET}"
         echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
         echo
-        echo -e "  ${BRIGHT_PURPLE}[1]${RESET} 🔄 Infinite Dungeon Host ${GRAY}(24/7 Host)${RESET}"
-        echo -e "  ${BRIGHT_PURPLE}[2]${RESET} 🌐 Playit Tunnel Setup"
-        echo -e "  ${BRIGHT_PURPLE}[3]${RESET} ☁️ Cloudflared Manager"
+        echo -e "  ${NEON_BLUE}[1]${RESET} 🔄 Infinite Dungeon Host ${GRAY}(24/7 Host)${RESET}"
+        echo -e "  ${NEON_BLUE}[2]${RESET} 🌐 Playit Tunnel Setup"
+        echo -e "  ${NEON_BLUE}[3]${RESET} ☁️ Cloudflared Manager"
         echo -e "  ${RED}[0]${RESET} ⬅ Back to Main System"
         echo
-        echo -ne "${PURPLE}  nightlord@tools-hub:~# ${RESET}"
+        echo -ne "${BRIGHT_PURPLE}  nightlord@tools-hub:~# ${RESET}"
         read tool_choice
 
         case $tool_choice in
@@ -622,7 +624,7 @@ blueprint_setup() {
             installed=false
         fi
 
-        echo -e "${PURPLE}${BOLD}"
+        echo -e "${BRIGHT_PURPLE}${BOLD}"
         echo "   ██████╗ ██╗     ██╗   ██╗███████╗██████╗"
         echo "   ██╔══██╗██║     ██║   ██║██╔════╝██╔══██╗"
         echo "   ██████╔╝██║     ██║   ██║█████╗  ██████╔╝"
@@ -630,33 +632,33 @@ blueprint_setup() {
         echo "   ██████╔╝███████╗╚██████╔╝███████╗██║"
         echo "   ╚═════╝ ╚══════╝ ╚═════╝ ╚══════╝╚═╝"
         echo -e "${RESET}"
-        echo -e "${CYAN}               MADE BY NIGHTLORD               ${RESET}"
+        echo -e "${NEON_BLUE}               MADE BY NIGHTLORD               ${RESET}"
         echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
         echo
-        echo -e "   ${CYAN}BLUEPRINT FRAMEWORK${RESET}"
+        echo -e "   ${NEON_BLUE}BLUEPRINT FRAMEWORK${RESET}"
         echo -e "   Status : $status"
         echo ""
 
         if [ "$installed" = false ]; then
-            echo -e "   ${BRIGHT_PURPLE}[1]${RESET} ${GREEN}Install Framework${RESET}"
+            echo -e "   ${NEON_BLUE}[1]${RESET} ${GREEN}Install Framework${RESET}"
             echo -e "   ${RED}[0] Back${RESET}"
         else
-            echo -e "   ${BRIGHT_PURPLE}[1]${RESET} ${GREEN}Reinstall Framework${RESET}"
-            echo -e "   ${BRIGHT_PURPLE}[2]${RESET} ${GREEN}Update Framework${RESET}"
-            echo -e "   ${BRIGHT_PURPLE}[3]${RESET} ${GREEN}Info${RESET}"
-            echo -e "   ${BRIGHT_PURPLE}[4]${RESET} ${GREEN}Version${RESET}"
-            echo -e "   ${BRIGHT_PURPLE}[5]${RESET} ${RED}Uninstall Framework${RESET}"
+            echo -e "   ${NEON_BLUE}[1]${RESET} ${GREEN}Reinstall Framework${RESET}"
+            echo -e "   ${NEON_BLUE}[2]${RESET} ${GREEN}Update Framework${RESET}"
+            echo -e "   ${NEON_BLUE}[3]${RESET} ${GREEN}Info${RESET}"
+            echo -e "   ${NEON_BLUE}[4]${RESET} ${GREEN}Version${RESET}"
+            echo -e "   ${NEON_BLUE}[5]${RESET} ${RED}Uninstall Framework${RESET}"
             echo -e "   ${RED}[0] Back${RESET}"
         fi
 
         echo ""
-        echo -ne "${PURPLE}  nightlord@blueprint:~# ${RESET}"
+        echo -ne "${BRIGHT_PURPLE}  nightlord@blueprint:~# ${RESET}"
         read bp
 
         case $bp in
             1)
                 if [ "$installed" = false ]; then
-                    echo -e "${CYAN}Installing...${RESET}"
+                    echo -e "${NEON_BLUE}Installing...${RESET}"
                     rm -f /etc/apt/keyrings/nodesource.gpg 2>/dev/null
                     yes | bash <(curl -s https://raw.githubusercontent.com/nobita329/Nobita-Cloud/refs/heads/main/thame/install.sh)
                 else
@@ -692,7 +694,7 @@ blueprint_setup() {
 petro_tools_menu() {
     while true; do
         header
-        echo -e "${PURPLE}${BOLD}"
+        echo -e "${BRIGHT_PURPLE}${BOLD}"
         echo "   ██████╗ ███████╗████████╗██████╗  ██████╗      ████████╗"
         echo "   ██╔══██╗██╔════╝╚══██╔══╝██╔══██╗██╔═══██╗     ╚══██╔══╝"
         echo "   ██████╔╝█████╗     ██║   ██████╔╝██║   ██║        ██║   "
@@ -700,15 +702,15 @@ petro_tools_menu() {
         echo "   ██║     ███████╗   ██║   ██║  ██║╚██████╔╝        ██║   "
         echo "   ╚═════╝ ╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝         ╚═╝   "
         echo -e "${RESET}"
-        echo -e "${CYAN}               MADE BY NIGHTLORD               ${RESET}"
+        echo -e "${NEON_BLUE}               MADE BY NIGHTLORD               ${RESET}"
         echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
         echo
-        echo -e "  ${BRIGHT_PURPLE}[1]${RESET} 📋 BLUEPRINT"
-        echo -e "  ${BRIGHT_PURPLE}[2]${RESET} 🧩 EXTENSIONS"
-        echo -e "  ${BRIGHT_PURPLE}[3]${RESET} 🎨 THEMES"
+        echo -e "  ${NEON_BLUE}[1]${RESET} 📋 BLUEPRINT"
+        echo -e "  ${NEON_BLUE}[2]${RESET} 🧩 EXTENSIONS"
+        echo -e "  ${NEON_BLUE}[3]${RESET} 🎨 THEMES"
         echo -e "  ${RED}[0]${RESET} ⬅ Back to Main System"
         echo
-        echo -ne "${PURPLE}  nightlord@petrotools:~# ${RESET}"
+        echo -ne "${BRIGHT_PURPLE}  nightlord@petrotools:~# ${RESET}"
         read pt_choice
 
         case $pt_choice in
@@ -727,16 +729,16 @@ petro_tools_menu() {
 panels_menu() {
     while true; do
         header
-        echo -e "${PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
-        echo -e "${PURPLE} ║${RESET}            ${WHITE}[ SHADOW MONARCH PANELS HUB ]${RESET}              ${PURPLE}║${RESET}"
-        echo -e "${PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
+        echo -e "${BRIGHT_PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
+        echo -e "${BRIGHT_PURPLE} ║${RESET}            ${WHITE}[ SHADOW MONARCH PANELS HUB ]${RESET}              ${BRIGHT_PURPLE}║${RESET}"
+        echo -e "${BRIGHT_PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
         echo
-        echo -e "  ${BRIGHT_PURPLE}[1]${RESET} 🚀 NTH ${GRAY}(NTH MY OWN PANEL - Installed via Official Script)${RESET}"
-        echo -e "  ${BRIGHT_PURPLE}[2]${RESET} ⚡ jtg ${GRAY}(JishnuTheGamer Panel Suite)${RESET}"
-        echo -e "  ${BRIGHT_PURPLE}[3]${RESET} 🛡️ Pterodactyl Panel Suite"
+        echo -e "  ${NEON_BLUE}[1]${RESET} 🚀 NTH ${GRAY}(NTH MY OWN PANEL - Installed via Official Script)${RESET}"
+        echo -e "  ${NEON_BLUE}[2]${RESET} ⚡ jtg ${GRAY}(JishnuTheGamer Panel Suite)${RESET}"
+        echo -e "  ${NEON_BLUE}[3]${RESET} 🛡️ Pterodactyl Panel Suite"
         echo -e "  ${RED}[0] ⬅ Back to Main System${RESET}"
         echo
-        echo -ne "${PURPLE}  nightlord@panels-hub:~# ${RESET}"
+        echo -ne "${BRIGHT_PURPLE}  nightlord@panels-hub:~# ${RESET}"
         read panel_choice
 
         case $panel_choice in
@@ -772,7 +774,7 @@ system_awakening
 while true; do
     header
 
-    echo -e "${PURPLE}${BOLD}"
+    echo -e "${BRIGHT_PURPLE}${BOLD}"
     echo "  ███╗   ██╗██╗ ██████╗ ██╗  ██╗████████╗"
     echo "  ████╗  ██║██║██╔════╝ ██║  ██║╚══██╔══╝"
     echo "  ██╔██╗ ██║██║██║  ███╗███████║   ██║   "
@@ -780,10 +782,10 @@ while true; do
     echo "  ██║ ╚████║██║╚██████╔╝██║  ██║   ██║   "
     echo "  ╚═╝  ╚═══╝╚═╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝   "
     echo -e "${RESET}"
-    echo -e "${CYAN}                👑 NIGHTLORD SUPREME DOMAIN 👑               ${RESET}"
+    echo -e "${NEON_BLUE}                👑 NIGHTLORD SUPREME DOMAIN 👑               ${RESET}"
     echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
 
-    echo -e "${PURPLE} ══ 🌟 NIGHTLORD'S SHADOW MONARCH DASHBOARD v12.0 ══${RESET}"
+    echo -e "${BRIGHT_PURPLE} ══ 🌟 NIGHTLORD'S SHADOW MONARCH DASHBOARD v12.5 ══${RESET}"
     
     echo ""
     printf "  \033[1;36m[1]\033[0m ⚔️ Command & Build Center       \033[1;36m[4]\033[0m ⚡ Panels Installer Hub\n"
@@ -792,14 +794,14 @@ while true; do
     echo ""
     printf "  \033[1;36m[3]\033[0m 🛠️ TOOLS                       \033[1;36m[6]\033[0m 🛠️ PETRO_T\n"
     echo ""
-    echo -e "${CYAN}                MADE BY NIGHTLORD               ${RESET}"
+    echo -e "${NEON_BLUE}                MADE BY NIGHTLORD               ${RESET}"
     echo ""
     printf "  \033[1;31m[0]\033[0m ❌ Close System / Log Out\n"
     echo ""
     
     echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
     echo
-    echo -ne "${PURPLE}  nightlord@shadow-monarch:~# ${RESET}"
+    echo -ne "${BRIGHT_PURPLE}  nightlord@shadow-monarch:~# ${RESET}"
     read main_choice
 
     case $main_choice in
@@ -811,7 +813,7 @@ while true; do
     6) petro_tools_menu ;;
     0)
        clear
-       echo -e "${PURPLE} 💬 [System]: Logging out, Sovereign Monarch NightLord. Rise again when you are ready. 🌙${RESET}"
+       echo -e "${BRIGHT_PURPLE} 💬 [System]: Logging out, Sovereign Monarch NightLord. Rise again when you are ready. 🌙${RESET}"
        exit 0
        ;;
     *)
