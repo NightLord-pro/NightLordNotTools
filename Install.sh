@@ -43,6 +43,50 @@ MODRINTH_API="https://api.modrinth.com/v2"
 USER_AGENT="Shadow-Monarch-Paper-Plugin-Panel/11.0"
 
 # ==========================
+# ⚡ ADVANCED SYSTEM LOADING WITH "SYSTEM" BANNER
+# ==========================
+system_load() {
+    local msg="$1"
+    clear
+    echo -e "${BRIGHT_PURPLE}${BOLD}"
+    echo "    ███████╗██╗   ██╗███████╗████████╗███████╗███╗   ███╗"
+    echo "    ██╔════╝╚██╗ ██╔╝██╔════╝╚══██╔══╝██╔════╝████╗ ████║"
+    echo "    ███████╗ ╚████╔╝ ███████╗   ██║   █████╗  ██╔████╔██║"
+    echo "    ╚════██║  ╚██╔╝  ╚════██║   ██║   ██╔══╝  ██║╚██╔╝██║"
+    echo "    ███████║   ██║   ███████║   ██║   ███████╗██║ ╚═╝ ██║"
+    echo "    ╚══════╝   ╚═╝   ╚══════╝   ╚═╝   ╚══════╝╚═╝     ╚═╝"
+    echo -e "${RESET}"
+    echo -e "    ${NEON_BLUE}⚡ SUB-ROUTINE: ${WHITE}${msg}${RESET}"
+    echo -e "${BRIGHT_PURPLE}    ──────────────────────────────────────────────────────────${RESET}"
+    
+    local spin=('⠋' '⠙' '⠹' '⠸' '⠼' '⠴' '⠦' '⠧' '⠇' '⠏')
+    local bar_size=34
+    
+    # Dynamic Smooth Progress Bar
+    for ((i=1; i<=bar_size; i++)); do
+        local pct=$(( i * 100 / bar_size ))
+        
+        echo -ne "\r    ${GRAY}Channeling Mana: [${RESET}"
+        
+        # Draw Filled Matrix
+        for ((j=1; j<=i; j++)); do echo -ne "${BRIGHT_PURPLE}█${RESET}"; done
+        # Draw Empty Matrix
+        for ((j=i+1; j<=bar_size; j++)); do echo -ne "${GRAY}▒${RESET}"; done
+        
+        # Draw Spinner & Percentage
+        echo -ne "${GRAY}] ${CYAN}${spin[$((i%10))]} ${pct}%${RESET}"
+        
+        sleep 0.03
+    done
+    
+    # 100% Success Overwrite
+    echo -ne "\r    ${GRAY}Channeling Mana: [${RESET}"
+    for ((j=1; j<=bar_size; j++)); do echo -ne "${NEON_BLUE}█${RESET}"; done
+    echo -e "${GRAY}] ${GREEN}100% AWAKENED   ${RESET}"
+    sleep 0.4
+}
+
+# ==========================
 # 💠 SOLO LEVELING EPIC SYSTEM AWAKENING
 # ==========================
 system_awakening() {
@@ -54,12 +98,15 @@ system_awakening() {
     echo "    ╚══════════════════════════════════════════════════════════╝"
     echo -e "${RESET}"
     echo -e " ${GRAY}Creator Profile:${RESET} ${PURPLE}NightLord${RESET}"
+    
+    local bar_size=35
     echo -ne "${CYAN} [System] Synchronizing Absolute Gate Matrix [${RESET}"
-    for i in {1..35}; do
-        echo -e -n "${BRIGHT_PURPLE}◆${RESET}"
-        sleep 0.01
+    for ((i=1; i<=bar_size; i++)); do
+        echo -ne "${BRIGHT_PURPLE}█${RESET}"
+        sleep 0.02
     done
     echo -e "${CYAN}] ${GREEN}100% AWAKENED${RESET}"
+    
     echo -e "${YELLOW}💬 [System]: 'Arise, NightLord.' Your absolute domain is fully active.${RESET}"
     sleep 0.8
 }
@@ -1483,12 +1530,30 @@ while true; do
     read main_choice
 
     case $main_choice in
-    1) mc_cb_menu ;;
-    2) settings ;;
-    3) tools_menu ;;
-    4) panels_menu ;;
-    5) wings_setup ;;
-    6) petro_tools_menu ;;
+    1) 
+       system_load "Initializing Command & Build Center..."
+       mc_cb_menu 
+       ;;
+    2) 
+       system_load "Accessing Status & RAM Manager..."
+       settings 
+       ;;
+    3) 
+       system_load "Accessing God-Tier Tools Hub..."
+       tools_menu 
+       ;;
+    4) 
+       system_load "Accessing Panels Installer Hub..."
+       panels_menu 
+       ;;
+    5) 
+       system_load "Initializing Wings Setup Protocol..."
+       wings_setup 
+       ;;
+    6) 
+       system_load "Accessing PetroTools Interface..."
+       petro_tools_menu 
+       ;;
     0)
        clear
        echo -e "${PURPLE} 💬 [System]: Logging out, Sovereign Monarch NightLord. Rise again when you are ready. 🌙${RESET}"
