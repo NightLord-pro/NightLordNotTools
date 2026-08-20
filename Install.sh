@@ -43,7 +43,7 @@ MODRINTH_API="https://api.modrinth.com/v2"
 USER_AGENT="Shadow-Monarch-Paper-Plugin-Panel/11.0"
 
 # ==========================
-# ⚡ ADVANCED SYSTEM LOADING WITH "SYSTEM" BANNER
+# ⚡ ADVANCED SYSTEM LOADING WITH ANIMATION
 # ==========================
 system_load() {
     local msg="$1"
@@ -57,32 +57,19 @@ system_load() {
     echo "    ╚══════╝   ╚═╝   ╚══════╝   ╚═╝   ╚══════╝╚═╝     ╚═╝"
     echo -e "${RESET}"
     echo -e "    ${NEON_BLUE}⚡ SUB-ROUTINE: ${WHITE}${msg}${RESET}"
-    echo -e "${BRIGHT_PURPLE}    ──────────────────────────────────────────────────────────${RESET}"
+    echo -e "${DEEP_PURPLE}    ──────────────────────────────────────────────────────────${RESET}"
     
     local spin=('⠋' '⠙' '⠹' '⠸' '⠼' '⠴' '⠦' '⠧' '⠇' '⠏')
-    local bar_size=34
+    echo -ne "    ${GRAY}Channeling Mana Matrix: [${RESET}"
     
-    # Dynamic Smooth Progress Bar
-    for ((i=1; i<=bar_size; i++)); do
-        local pct=$(( i * 100 / bar_size ))
-        
-        echo -ne "\r    ${GRAY}Channeling Mana: [${RESET}"
-        
-        # Draw Filled Matrix
-        for ((j=1; j<=i; j++)); do echo -ne "${BRIGHT_PURPLE}█${RESET}"; done
-        # Draw Empty Matrix
-        for ((j=i+1; j<=bar_size; j++)); do echo -ne "${GRAY}▒${RESET}"; done
-        
-        # Draw Spinner & Percentage
-        echo -ne "${GRAY}] ${CYAN}${spin[$((i%10))]} ${pct}%${RESET}"
-        
-        sleep 0.03
+    for i in {1..30}; do
+        echo -ne "${NEON_BLUE}▓${RESET}"
+        echo -ne "\b${spin[$((i%10))]}"
+        sleep 0.02
+        echo -ne "\b${BRIGHT_PURPLE}█${RESET}"
     done
     
-    # 100% Success Overwrite
-    echo -ne "\r    ${GRAY}Channeling Mana: [${RESET}"
-    for ((j=1; j<=bar_size; j++)); do echo -ne "${NEON_BLUE}█${RESET}"; done
-    echo -e "${GRAY}] ${GREEN}100% AWAKENED   ${RESET}"
+    echo -e "${GRAY}] ${GREEN}100% AWAKENED${RESET}"
     sleep 0.4
 }
 
@@ -98,15 +85,12 @@ system_awakening() {
     echo "    ╚══════════════════════════════════════════════════════════╝"
     echo -e "${RESET}"
     echo -e " ${GRAY}Creator Profile:${RESET} ${PURPLE}NightLord${RESET}"
-    
-    local bar_size=35
     echo -ne "${CYAN} [System] Synchronizing Absolute Gate Matrix [${RESET}"
-    for ((i=1; i<=bar_size; i++)); do
-        echo -ne "${BRIGHT_PURPLE}█${RESET}"
-        sleep 0.02
+    for i in {1..35}; do
+        echo -e -n "${BRIGHT_PURPLE}◆${RESET}"
+        sleep 0.01
     done
     echo -e "${CYAN}] ${GREEN}100% AWAKENED${RESET}"
-    
     echo -e "${YELLOW}💬 [System]: 'Arise, NightLord.' Your absolute domain is fully active.${RESET}"
     sleep 0.8
 }
@@ -116,24 +100,24 @@ system_awakening() {
 # ==========================
 header() {
     clear
-    echo -e "${PURPLE}"
-    echo "╔══════════════════════════════════════════════════════════════╗"
-    echo "║         ⚔️ SHADOW MONARCH SUPREME INTERFACE v11.0 ⚔️         ║"
-    echo "╚══════════════════════════════════════════════════════════════╝"
-    echo -e "${RESET}"
-    echo -e " ${BRIGHT_PURPLE}◆${RESET} ${CYAN}Mana/RAM:${RESET}  ${GREEN}$RAM${RESET}    │  ${BRIGHT_PURPLE}◆${RESET} ${CYAN}Monarch:${RESET} ${PURPLE}NightLord${RESET}"
-    echo -e " ${BRIGHT_PURPLE}◆${RESET} ${CYAN}Directory:${RESET} ${GREEN}$MC_DIR${RESET} │  ${BRIGHT_PURPLE}◆${RESET} ${CYAN}Status:${RESET}  ${GREEN}God-Tier [ONLINE]${RESET}"
-    echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
-    echo
+    local cpu_use=$(top -bn1 | grep load | awk '{printf "%.2f%%", $(NF-2)}' 2>/dev/null || echo "0.00%")
+    local mem_use=$(free -m | awk 'NR==2{printf "%.2f%%", $3*100/$2 }' 2>/dev/null || echo "0.00%")
+    
+    echo -e "${DEEP_PURPLE}╔══════════════════════════════════════════════════════════════════╗${RESET}"
+    echo -e "${DEEP_PURPLE}║${RESET}         ${BOLD}${BRIGHT_PURPLE}⚔️ SHADOW MONARCH SUPREME INTERFACE v11.0 ⚔️          ${DEEP_PURPLE}║${RESET}"
+    echo -e "${DEEP_PURPLE}╠══════════════════════════════════════════════════════════════════╣${RESET}"
+    echo -e "${DEEP_PURPLE}║${RESET} ${NEON_BLUE}👑 Monarch:${RESET} ${WHITE}NightLord${RESET}        ${DEEP_PURPLE}│${RESET} ${NEON_BLUE}🌐 Loader:${RESET}  ${GREEN}$(echo $LOADER | tr '[:lower:]' '[:upper:]')${RESET}       "
+    echo -e "${DEEP_PURPLE}║${RESET} ${NEON_BLUE}⚡ Mana(RAM):${RESET} ${YELLOW}${RAM}${RESET}            ${DEEP_PURPLE}│${RESET} ${NEON_BLUE}📂 Dir:${RESET}     ${WHITE}${MC_DIR}${RESET}"
+    echo -e "${DEEP_PURPLE}║${RESET} ${NEON_BLUE}⚙️ CPU Load:${RESET}  ${CYAN}${cpu_use}${RESET}          ${DEEP_PURPLE}│${RESET} ${NEON_BLUE}💾 Mem Use:${RESET} ${CYAN}${mem_use}${RESET}      "
+    echo -e "${DEEP_PURPLE}╚══════════════════════════════════════════════════════════════════╝${RESET}"
 }
 
 # ==========================
 # 🛑 PAUSE SCREEN
 # ==========================
 pause() {
-    echo
-    echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
-    echo -e " ${YELLOW}❖ Press Enter to continue...${RESET}"
+    echo -e "\n${GRAY}──────────────────────────────────────────────────────────────────${RESET}"
+    echo -e " ${BRIGHT_PURPLE}❖ Press ENTER to return to the Sovereign Domain...${RESET}"
     read -r
 }
 
@@ -155,9 +139,9 @@ detect_ram() {
 version_selector() {
     while true; do
         header
-        echo -e "${PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
-        echo -e "${PURPLE} ║${RESET}                ${WHITE}[ SELECT GATE DIFFICULTY ]${RESET}                 ${PURPLE}║${RESET}"
-        echo -e "${PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
+        echo -e "${DEEP_PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
+        echo -e "${DEEP_PURPLE} ║${RESET}           ${WHITE}${BOLD}[ SELECT SERVER CORE (THE GATE) ]${RESET}              ${DEEP_PURPLE}║${RESET}"
+        echo -e "${DEEP_PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
         echo
         echo -e "  ${BRIGHT_PURPLE}[1]${RESET} Paper 1.21.11 ${GRAY}(Latest S-Rank Monarch Core)${RESET} 🔥"
         echo -e "  ${BRIGHT_PURPLE}[2]${RESET} Paper 1.21.10"
@@ -168,22 +152,35 @@ version_selector() {
         echo -e "  ${BRIGHT_PURPLE}[7]${RESET} Custom Direct URL"
         echo -e "  ${RED}[0] Return to Previous Menu${RESET}"
         echo
-        echo -ne "${PURPLE}  nightlord@gate-select:~# ${RESET}"
+        echo -ne "${NEON_BLUE}  nightlord@gate-select:~# ${RESET}"
         read v_choice
 
         case $v_choice in
-        1) DOWNLOAD_URL="https://fill-data.papermc.io/v1/objects/e708e8c132dc143ffd73528cccb9532e2eb17628b1a0eee74469bf466c7003f8/paper-1.21.11-116.jar"; break ;;
-        2) DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.21.10/builds/1/downloads/paper-1.21.10-1.jar"; break ;;
-        3) DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.21.9/builds/1/downloads/paper-1.21.9-1.jar"; break ;;
-        4) DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.21.8/builds/1/downloads/paper-1.21.8-1.jar"; break ;;
-        5) DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.21.4/builds/95/downloads/paper-1.21.4-95.jar"; break ;;
-        6) DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/126/downloads/paper-1.21.1-126.jar"; break ;;
+        1) 
+            system_load "Accessing PaperMC 1.21.11 Database..."
+            DOWNLOAD_URL="https://fill-data.papermc.io/v1/objects/e708e8c132dc143ffd73528cccb9532e2eb17628b1a0eee74469bf466c7003f8/paper-1.21.11-116.jar"; break ;;
+        2) 
+            system_load "Accessing PaperMC 1.21.10 Database..."
+            DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.21.10/builds/1/downloads/paper-1.21.10-1.jar"; break ;;
+        3) 
+            system_load "Accessing PaperMC 1.21.9 Database..."
+            DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.21.9/builds/1/downloads/paper-1.21.9-1.jar"; break ;;
+        4) 
+            system_load "Accessing PaperMC 1.21.8 Database..."
+            DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.21.8/builds/1/downloads/paper-1.21.8-1.jar"; break ;;
+        5) 
+            system_load "Accessing PaperMC 1.21.4 Database..."
+            DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.21.4/builds/95/downloads/paper-1.21.4-95.jar"; break ;;
+        6) 
+            system_load "Accessing PaperMC 1.21.1 Database..."
+            DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/126/downloads/paper-1.21.1-126.jar"; break ;;
         7)
-            echo -ne "${CYAN}  Paste Custom Direct Jar URL: ${RESET}"
+            system_load "Accessing Custom Core Link..."
+            echo -ne "${BRIGHT_PURPLE}  Paste Custom Direct Jar URL: ${RESET}"
             read DOWNLOAD_URL
             [ -z "$DOWNLOAD_URL" ] && echo -e "${RED}  Invalid URL!${RESET}" && sleep 1 || break
             ;;
-        0) return 1 ;;
+        0) system_load "Returning to Command Center..."; return 1 ;;
         *) echo -e "${RED}  Invalid Gate Choice!${RESET}"; sleep 1 ;;
         esac
     done
@@ -199,11 +196,12 @@ setup_server() {
         return
     fi
 
+    system_load "Materializing Server Core in Real World..."
     header
     mkdir -p "$MC_DIR"
     cd "$MC_DIR" || return
 
-    echo -e "${CYAN} ❖ Opening Gate... Extracting Core Server Data for NightLord...${RESET}"
+    echo -e "${NEON_BLUE} ❖ Opening Gate... Extracting Core Server Data for NightLord...${RESET}"
     curl -L -o server.jar "$DOWNLOAD_URL"
 
     if [ $? -ne 0 ] || [ ! -s server.jar ]; then
@@ -224,6 +222,7 @@ setup_server() {
 # 🎮 AWAKEN SERVER (RUN)
 # ==========================
 run_server() {
+    system_load "Igniting Server Runtime Engine..."
     header
     cd "$MC_DIR" || return
 
@@ -245,9 +244,9 @@ run_server() {
         return
     fi
 
-    echo -e "${PURPLE} 💬 [System]: Invoking server runtime initialization for Monarch NightLord...${RESET}"
+    echo -e "${BRIGHT_PURPLE} 💬 [System]: Invoking server runtime initialization for Monarch NightLord...${RESET}"
     echo -e "${GRAY} Assigned Power Flags: $JAVA_FLAGS${RESET}"
-    echo
+    echo -e "${GRAY}──────────────────────────────────────────────────────────────────${RESET}\n"
     java $JAVA_FLAGS -jar "$(basename "$jar")" nogui
     pause
 }
@@ -258,15 +257,15 @@ run_server() {
 shadow_backup() {
     while true; do
         header
-        echo -e "${PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
-        echo -e "${PURPLE} ║${RESET}                ${WHITE}[ SHADOW BACKUP VAULT ]${RESET}                    ${PURPLE}║${RESET}"
-        echo -e "${PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
+        echo -e "${DEEP_PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
+        echo -e "${DEEP_PURPLE} ║${RESET}                ${WHITE}[ SHADOW BACKUP VAULT ]${RESET}                    ${DEEP_PURPLE}║${RESET}"
+        echo -e "${DEEP_PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
         echo
         echo -e "  ${BRIGHT_PURPLE}[1]${RESET} Create Backup ${GRAY}(Store Domain in Shadows)${RESET}"
         echo -e "  ${BRIGHT_PURPLE}[2]${RESET} Restore Backup ${GRAY}(Resurrect from Shadows)${RESET}"
         echo -e "  ${RED}[0] Return to Command Hub${RESET}"
         echo
-        echo -ne "${PURPLE}  nightlord@backup-vault:~# ${RESET}"
+        echo -ne "${NEON_BLUE}  nightlord@backup-vault:~# ${RESET}"
         read b_choice
 
         case $b_choice in
@@ -279,7 +278,7 @@ shadow_backup() {
             mkdir -p "$BACKUP_DIR"
             TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
             BACKUP_FILE="$BACKUP_DIR/nightlord_backup_$TIMESTAMP.tar.gz"
-            echo -e "${CYAN} 📦 Compressing domain data into NightLord's Shadow Realm...${RESET}"
+            system_load "Compressing domain data into NightLord's Shadow Realm..."
             tar -czf "$BACKUP_FILE" -C "$WORK_DIR" server
             echo -e "${GREEN} ✔ Backup Secured successfully at: $BACKUP_FILE${RESET}"
             pause
@@ -290,11 +289,12 @@ shadow_backup() {
                 pause
                 continue
             fi
-            echo -e "${CYAN} Available Shadows (Backups):${RESET}"
+            system_load "Accessing Shadow Archive..."
+            echo -e "${NEON_BLUE} Available Shadows (Backups):${RESET}"
             echo -e "${GRAY} ──────────────────────────────────────────────────────────────${RESET}"
             select b_file in "$BACKUP_DIR"/*.tar.gz; do
                 if [ -n "$b_file" ]; then
-                    echo -e "${YELLOW} ❖ Extracting shadows back to NightLord's domain...${RESET}"
+                    system_load "Extracting shadows back to NightLord's domain..."
                     rm -rf "$MC_DIR"
                     tar -xzf "$b_file" -C "$WORK_DIR"
                     echo -e "${GREEN} ✔ Resurrected Successfully, My Monarch!${RESET}"
@@ -457,7 +457,7 @@ download_plugin_advanced() {
     local tmp="$PLUGIN_DIR/.${filename}.part"
     local target="$PLUGIN_DIR/$filename"
 
-    echo -e "\n${BRIGHT_PURPLE}◈ Awakening plugin...${RESET}"
+    system_load "Awakening and downloading plugin component..."
 
     if curl -fL --retry 3 --connect-timeout 10 --max-time 300 -A "$USER_AGENT" --progress-bar "$url" -o "$tmp"; then
         if [[ -n "$expected_sha1" ]] && command -v sha1sum >/dev/null 2>&1; then
@@ -492,7 +492,7 @@ plugin_search_menu() {
         return
     }
 
-    echo -e "\n${BRIGHT_PURPLE}◈ Searching the Shadow Archive...${RESET}"
+    system_load "Searching the Shadow Archive..."
     local data
     data="$(search_plugins "$query")" || {
         echo -e "${RED}✖ Modrinth API request failed.${RESET}"
@@ -596,6 +596,7 @@ plugin_search_menu() {
 }
 
 installed_plugins() {
+    system_load "Reading Installed Components..."
     header
     echo -e "${BRIGHT_PURPLE}${BOLD}◆ INSTALLED PLUGINS${RESET}"
     echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
@@ -654,6 +655,7 @@ remove_plugin() {
 }
 
 backup_plugins() {
+    system_load "Backing up plugins..."
     header
     echo -e "${BRIGHT_PURPLE}${BOLD}◆ PLUGIN BACKUP${RESET}"
     echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
@@ -674,9 +676,9 @@ backup_plugins() {
 shadow_plugin_menu() {
     while true; do
         header
-        echo -e "${PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
-        echo -e "${PURPLE} ║${RESET}           ${WHITE}[ SHADOW MONARCH — PLUGIN PANEL ]${RESET}              ${PURPLE}║${RESET}"
-        echo -e "${PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
+        echo -e "${DEEP_PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
+        echo -e "${DEEP_PURPLE} ║${RESET}           ${WHITE}[ SHADOW MONARCH — PLUGIN PANEL ]${RESET}              ${DEEP_PURPLE}║${RESET}"
+        echo -e "${DEEP_PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
         echo
         echo -e "  ${BRIGHT_PURPLE}[1]${RESET} 🔎 Search & Download Plugin"
         echo -e "  ${BRIGHT_PURPLE}[2]${RESET} 📦 Installed Plugins"
@@ -684,7 +686,7 @@ shadow_plugin_menu() {
         echo -e "  ${BRIGHT_PURPLE}[4]${RESET} 💾 Backup Plugins"
         echo -e "  ${RED}[0] ⬅ Back to Command Center${RESET}"
         echo
-        echo -ne "${PURPLE}  nightlord@plugin-panel:~# ${RESET}"
+        echo -ne "${NEON_BLUE}  nightlord@plugin-panel:~# ${RESET}"
         read sp_choice
 
         case $sp_choice in
@@ -702,11 +704,12 @@ shadow_plugin_menu() {
 # 🔮 UTILITIES
 # ==========================
 monarch_utilities() {
+    system_load "Accessing God-Tier Utilities..."
     while true; do
         header
-        echo -e "${PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
-        echo -e "${PURPLE} ║${RESET}               ${WHITE}[ GOD-TIER MONARCH UTILITIES ]${RESET}              ${PURPLE}║${RESET}"
-        echo -e "${PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
+        echo -e "${DEEP_PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
+        echo -e "${DEEP_PURPLE} ║${RESET}               ${WHITE}[ GOD-TIER MONARCH UTILITIES ]${RESET}              ${DEEP_PURPLE}║${RESET}"
+        echo -e "${DEEP_PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
         echo
         echo -e "  ${BRIGHT_PURPLE}[1]${RESET} 🧹 Purge Server Cache & Junk Files"
         echo -e "  ${BRIGHT_PURPLE}[2]${RESET} ⚠️ Wipe World Data ${GRAY}(Fresh Dungeon Reset)${RESET}"
@@ -714,21 +717,23 @@ monarch_utilities() {
         echo -e "  ${BRIGHT_PURPLE}[4]${RESET} 🛠️ Auto-Fix Paper/Server Permissions"
         echo -e "  ${RED}[0] ⬅ Back to Previous Menu${RESET}"
         echo
-        echo -ne "${PURPLE}  nightlord@utilities:~# ${RESET}"
+        echo -ne "${NEON_BLUE}  nightlord@utilities:~# ${RESET}"
         read util_choice
 
         case $util_choice in
         1)
-            echo -e "${YELLOW} 🧹 Purging useless logs, crash reports, and temp files...${RESET}"
+            system_load "Cleansing Server Logs & Cache..."
             rm -rf "$MC_DIR/logs/"*.gz "$MC_DIR/crash-reports/"* "$MC_DIR/cache/"*
             echo -e "${GREEN} ✔ Domain Cleaned Successfully! Maximum performance restored.${RESET}"
             pause
             ;;
         2)
+            system_load "Preparing World Wipe Protocol..."
             echo -e "${RED} ⚠️ WARNING: This will completely destroy all blocks, builds, and players in the world folder!${RESET}"
             echo -ne "${YELLOW} Are you sure you want to reset NightLord's world? (y/N): ${RESET}"
             read confirm_wipe
             if [[ "$confirm_wipe" =~ ^[Yy]$ ]]; then
+                system_load "Erasing World Dimensions..."
                 rm -rf "$WORLD_DIR" "$MC_DIR/world_nether" "$MC_DIR/world_the_end"
                 echo -e "${GREEN} ✔ World wiped successfully. A fresh dungeon awaits your command!${RESET}"
             else
@@ -737,11 +742,13 @@ monarch_utilities() {
             pause
             ;;
         3)
+            system_load "Spawning Sub-Shell..."
             echo -e "${CYAN} 🚀 Entering interactive sub-shell inside $MC_DIR. Type 'exit' to return.${RESET}"
             cd "$MC_DIR" || return
             bash
             ;;
         4)
+            system_load "Normalizing Permissions..."
             echo -e "${CYAN} 🛠️ Fixing ownership and execution permissions for server files...${RESET}"
             chmod +x "$MC_DIR/server.jar" 2>/dev/null
             find "$MC_DIR" -type f -name "*.sh" -exec chmod +x {} \; 2>/dev/null
@@ -758,20 +765,21 @@ monarch_utilities() {
 # 🎮 COMMAND & BUILD CENTER
 # ==========================
 mc_cb_menu() {
+    system_load "Initializing Command & Build Center..."
     while true; do
         header
-        echo -e "${PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
-        echo -e "${PURPLE} ║${RESET}               ${WHITE}[ COMMAND & BUILD CENTER ]${RESET}                 ${PURPLE}║${RESET}"
-        echo -e "${PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
+        echo -e "${DEEP_PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
+        echo -e "${DEEP_PURPLE} ║${RESET}               ${WHITE}[ COMMAND & BUILD CENTER ]${RESET}                 ${DEEP_PURPLE}║${RESET}"
+        echo -e "${DEEP_PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
         echo
-        echo -e "  ${BRIGHT_PURPLE}[1]${RESET} 🚀 Setup Server Gate"
-        echo -e "  ${BRIGHT_PURPLE}[2]${RESET} 🎮 Awaken/Run Server Engine"
-        echo -e "  ${BRIGHT_PURPLE}[3]${RESET} 🔌 Shadow Soldier Plugins ${GRAY}(Advanced Modrinth System)${RESET}"
-        echo -e "  ${BRIGHT_PURPLE}[4]${RESET} 📦 Shadow Backup Vault"
-        echo -e "  ${BRIGHT_PURPLE}[5]${RESET} 🔮 God-Tier Monarch Utilities"
+        echo -e "  ${NEON_BLUE}[1]${RESET} 🚀 Setup Server Gate"
+        echo -e "  ${NEON_BLUE}[2]${RESET} 🎮 Awaken/Run Server Engine"
+        echo -e "  ${NEON_BLUE}[3]${RESET} 🔌 Shadow Soldier Plugins ${GRAY}(Advanced Modrinth System)${RESET}"
+        echo -e "  ${NEON_BLUE}[4]${RESET} 📦 Shadow Backup Vault"
+        echo -e "  ${NEON_BLUE}[5]${RESET} 🔮 God-Tier Monarch Utilities"
         echo -e "  ${RED}[0] ⬅ Back to Main System${RESET}"
         echo
-        echo -ne "${PURPLE}  nightlord@command-center:~# ${RESET}"
+        echo -ne "${NEON_BLUE}  nightlord@command-center:~# ${RESET}"
         read mccb_choice
 
         case $mccb_choice in
@@ -780,7 +788,7 @@ mc_cb_menu() {
         3) shadow_plugin_menu ;;
         4) shadow_backup ;;
         5) monarch_utilities ;;
-        0) break ;;
+        0) system_load "Returning to Main System..."; break ;;
         *) echo -e "${RED} Invalid Selection!${RESET}"; sleep 1 ;;
         esac
     done
@@ -792,16 +800,16 @@ mc_cb_menu() {
 settings() {
     while true; do
         header
-        echo -e "${PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
-        echo -e "${PURPLE} ║${RESET}                ${WHITE}[ STATUS & RAM MANAGER ]${RESET}                  ${PURPLE}║${RESET}"
-        echo -e "${PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
+        echo -e "${DEEP_PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
+        echo -e "${DEEP_PURPLE} ║${RESET}                ${WHITE}[ STATUS & RAM MANAGER ]${RESET}                  ${DEEP_PURPLE}║${RESET}"
+        echo -e "${DEEP_PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
         echo
         echo -e "  ${BRIGHT_PURPLE}[1]${RESET} Auto-Detect Stat Cap ${GRAY}(Smart RAM Optimize)${RESET}"
         echo -e "  ${BRIGHT_PURPLE}[2]${RESET} Allocate Custom Stat Power ${GRAY}(Custom RAM)${RESET}"
         echo -e "  ${BRIGHT_PURPLE}[3]${RESET} View Current Monarch Profile"
         echo -e "  ${RED}[0] Back to Main System${RESET}"
         echo
-        echo -ne "${PURPLE}  nightlord@status-mgr:~# ${RESET}"
+        echo -ne "${NEON_BLUE}  nightlord@status-mgr:~# ${RESET}"
         read s
 
         case $s in
@@ -959,9 +967,9 @@ cloudflared_menu() {
             s_uptime="Gate Closed"
         fi
 
-        echo -e "${PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
-        echo -e "${PURPLE} ║${NC}             ${WHITE}[ SYSTEM: SHADOW MONARCH TUNNEL ]${NC}              ${PURPLE}║${RESET}"
-        echo -e "${PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
+        echo -e "${DEEP_PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
+        echo -e "${DEEP_PURPLE} ║${NC}             ${WHITE}[ SYSTEM: SHADOW MONARCH TUNNEL ]${NC}              ${DEEP_PURPLE}║${RESET}"
+        echo -e "${DEEP_PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
         echo ""
         echo -e "${BRIGHT_PURPLE}  GATE STATUS ${GRAY}───────────────────────────────────────────${NC}"
         echo -e "  ${PURPLE}◆${NC} Architecture : ${WHITE}$arch${NC}"
@@ -974,7 +982,7 @@ cloudflared_menu() {
         echo -e "  ${RED}[2]${RESET} 🗑️ Uninstall Completely"
         echo -e "  ${RED}[0]${RESET} ⬅ Return to Tools Menu"
         echo ""
-        echo -ne "${PURPLE}  nightlord@tunnel-hub:~# ${RESET}"
+        echo -ne "${NEON_BLUE}  nightlord@tunnel-hub:~# ${RESET}"
         read choice
 
         case $choice in
@@ -1008,7 +1016,7 @@ tools_menu() {
         echo -e "  ${BRIGHT_PURPLE}[3]${RESET} ☁️ Cloudflared Manager"
         echo -e "  ${RED}[0]${RESET} ⬅ Back to Main System"
         echo
-        echo -ne "${PURPLE}  nightlord@tools-hub:~# ${RESET}"
+        echo -ne "${NEON_BLUE}  nightlord@tools-hub:~# ${RESET}"
         read tool_choice
 
         case $tool_choice in
@@ -1075,7 +1083,7 @@ blueprint_setup() {
         fi
 
         echo ""
-        echo -ne "${PURPLE}  nightlord@blueprint:~# ${RESET}"
+        echo -ne "${NEON_BLUE}  nightlord@blueprint:~# ${RESET}"
         read bp
 
         case $bp in
@@ -1229,7 +1237,7 @@ petrotools_extensions_menu() {
         echo -e " ${WHITE}SELECTED:${NC} ${YELLOW}${#selected_indices[@]}${NC} items"
         echo -e " ${GREEN}I${NC} => Install All    ${RED}R${NC} => Remove All    ${RED}0${NC} => Back"
         echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
-        echo -ne "${PURPLE}  nightlord@extensions:~# ${RESET}"
+        echo -ne "${NEON_BLUE}  nightlord@extensions:~# ${RESET}"
         read choice
 
         case $choice in
@@ -1352,7 +1360,7 @@ petrotools_theme_menu() {
 
         echo -e "\n  ${RED} 0 ${RESET} Back to PetroTools"
         echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
-        echo -ne "${PURPLE}  nightlord@theme:~# ${RESET}"
+        echo -ne "${NEON_BLUE}  nightlord@theme:~# ${RESET}"
         read opt
 
         [[ "$opt" == "0" ]] && break
@@ -1433,7 +1441,7 @@ petro_tools_menu() {
         echo -e "  ${BRIGHT_PURPLE}[3]${RESET} 🎨 THEME"
         echo -e "  ${RED}[0]${RESET} ⬅ Back to Main System"
         echo
-        echo -ne "${PURPLE}  nightlord@petrotools:~# ${RESET}"
+        echo -ne "${NEON_BLUE}  nightlord@petrotools:~# ${RESET}"
         read pt_choice
 
         case $pt_choice in
@@ -1452,16 +1460,16 @@ petro_tools_menu() {
 panels_menu() {
     while true; do
         header
-        echo -e "${PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
-        echo -e "${PURPLE} ║${RESET}            ${WHITE}[ SHADOW MONARCH PANELS HUB ]${RESET}              ${PURPLE}║${RESET}"
-        echo -e "${PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
+        echo -e "${DEEP_PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
+        echo -e "${DEEP_PURPLE} ║${RESET}            ${WHITE}[ SHADOW MONARCH PANELS HUB ]${RESET}              ${DEEP_PURPLE}║${RESET}"
+        echo -e "${DEEP_PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
         echo
         echo -e "  ${BRIGHT_PURPLE}[1]${RESET} 🚀 NTH ${GRAY}(NTH MY OWN PANEL - Installed via Official Script)${RESET}"
         echo -e "  ${BRIGHT_PURPLE}[2]${RESET} ⚡ jtg ${GRAY}(JishnuTheGamer Panel Suite)${RESET}"
         echo -e "  ${BRIGHT_PURPLE}[3]${RESET} 🛡️ Pterodactyl Panel Suite"
         echo -e "  ${RED}[0] ⬅ Back to Main System${RESET}"
         echo
-        echo -ne "${PURPLE}  nightlord@panels-hub:~# ${RESET}"
+        echo -ne "${NEON_BLUE}  nightlord@panels-hub:~# ${RESET}"
         read panel_choice
 
         case $panel_choice in
@@ -1526,34 +1534,16 @@ while true; do
     
     echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
     echo
-    echo -ne "${PURPLE}  nightlord@shadow-monarch:~# ${RESET}"
+    echo -ne "${NEON_BLUE}  nightlord@shadow-monarch:~# ${RESET}"
     read main_choice
 
     case $main_choice in
-    1) 
-       system_load "Initializing Command & Build Center..."
-       mc_cb_menu 
-       ;;
-    2) 
-       system_load "Accessing Status & RAM Manager..."
-       settings 
-       ;;
-    3) 
-       system_load "Accessing God-Tier Tools Hub..."
-       tools_menu 
-       ;;
-    4) 
-       system_load "Accessing Panels Installer Hub..."
-       panels_menu 
-       ;;
-    5) 
-       system_load "Initializing Wings Setup Protocol..."
-       wings_setup 
-       ;;
-    6) 
-       system_load "Accessing PetroTools Interface..."
-       petro_tools_menu 
-       ;;
+    1) mc_cb_menu ;;
+    2) settings ;;
+    3) tools_menu ;;
+    4) panels_menu ;;
+    5) wings_setup ;;
+    6) petro_tools_menu ;;
     0)
        clear
        echo -e "${PURPLE} 💬 [System]: Logging out, Sovereign Monarch NightLord. Rise again when you are ready. 🌙${RESET}"
