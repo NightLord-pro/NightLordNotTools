@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ==========================================================
-#   ⚔️ SOLO LEVELING: SHADOW MONARCH SYSTEM v11.0 ELITE ⚔️
+#   ⚔️ SOLO LEVELING: SHADOW MONARCH SYSTEM v12.9 ELITE ⚔️
 #   [Created by: NightLord | Universal Exit Protocol 0]
 # ==========================================================
 
@@ -25,22 +25,28 @@ NC="\033[0m"
 # Paths & Settings
 WORK_DIR="$(pwd)"
 MC_DIR="$WORK_DIR/server"
-PLUGIN_DIR="$MC_DIR/plugins"
 WORLD_DIR="$MC_DIR/world"
 BACKUP_DIR="$WORK_DIR/shadow_backups"
 CONFIG_FILE="$HOME/.shadow_monarch.conf"
-VERSION="11.0 SHADOW MONARCH GOD-TIER (NightLord Edition)"
+VERSION="v12.9 SUPREME (NightLord Edition)"
 
 # Load Config
 [ -f "$CONFIG_FILE" ] && source "$CONFIG_FILE"
 RAM=${RAM:-"8192M"}
 JAVA_FLAGS=${JAVA_FLAGS:-"-Xms${RAM} -Xmx${RAM}"}
-SERVER_JAR="${SERVER_JAR:-}"
-SERVER_JAR_GLOB="${SERVER_JAR_GLOB:-paper-*.jar}"
-MC_VERSION="1.21.11"
-LOADER="paper"
-MODRINTH_API="https://api.modrinth.com/v2"
-USER_AGENT="Shadow-Monarch-Paper-Plugin-Panel/11.0"
+LOADER=${LOADER:-"paper"}
+SERVER_JAR=${SERVER_JAR:-"server.jar"}
+USER_AGENT="Shadow-Monarch-Panel/12.9"
+
+update_loader_dirs() {
+    local lower_loader=$(echo "$LOADER" | tr '[:upper:]' '[:lower:]')
+    if [[ "$lower_loader" == *"fabric"* || "$lower_loader" == *"forge"* || "$lower_loader" == *"neoforge"* ]]; then
+        MOD_DIR="$MC_DIR/mods"
+    else
+        MOD_DIR="$MC_DIR/plugins"
+    fi
+}
+update_loader_dirs
 
 # ==========================
 # ⚡ ADVANCED SYSTEM LOADING WITH ANIMATION
@@ -81,7 +87,7 @@ system_awakening() {
     echo -e "${PURPLE}"
     echo "    ╔══════════════════════════════════════════════════════════╗"
     echo "    ║     [SYSTEM: Welcome Back, Sovereign NightLord]          ║"
-    echo "    ║     ⚔️ INITIALIZING SHADOW MONARCH SYSTEM v11.0 ⚔️          ║"
+    echo "    ║     ⚔️ INITIALIZING SHADOW MONARCH SYSTEM v12.9 ⚔️          ║"
     echo "    ╚══════════════════════════════════════════════════════════╝"
     echo -e "${RESET}"
     echo -e " ${GRAY}Creator Profile:${RESET} ${PURPLE}NightLord${RESET}"
@@ -104,10 +110,9 @@ header() {
     local mem_use=$(free -m | awk 'NR==2{printf "%.2f%%", $3*100/$2 }' 2>/dev/null || echo "0.00%")
     
     echo -e "${DEEP_PURPLE}╔══════════════════════════════════════════════════════════════════╗${RESET}"
-    echo -e "${DEEP_PURPLE}║${RESET}         ${BOLD}${BRIGHT_PURPLE}⚔️ SHADOW MONARCH SUPREME INTERFACE v11.0 ⚔️          ${DEEP_PURPLE}║${RESET}"
+    echo -e "${DEEP_PURPLE}║${RESET}         ${BOLD}${BRIGHT_PURPLE}⚔️ SHADOW MONARCH SUPREME INTERFACE v12.9 ⚔️          ${DEEP_PURPLE}║${RESET}"
     echo -e "${DEEP_PURPLE}╠══════════════════════════════════════════════════════════════════╣${RESET}"
-    echo -e "${DEEP_PURPLE}║${RESET} ${NEON_BLUE}👑 Monarch:${RESET} ${WHITE}NightLord${RESET}        ${DEEP_PURPLE}│${RESET} ${NEON_BLUE}🌐 Loader:${RESET}  ${GREEN}$(echo $LOADER | tr '[:lower:]' '[:upper:]')${RESET}       "
-    echo -e "${DEEP_PURPLE}║${RESET} ${NEON_BLUE}⚡ Mana(RAM):${RESET} ${YELLOW}${RAM}${RESET}            ${DEEP_PURPLE}│${RESET} ${NEON_BLUE}📂 Dir:${RESET}     ${WHITE}${MC_DIR}${RESET}"
+    echo -e "${DEEP_PURPLE}║${RESET} ${NEON_BLUE}👑 Monarch:${RESET} ${WHITE}NightLord${RESET}        ${DEEP_PURPLE}│${RESET} ${NEON_BLUE}⚡ Mana(RAM):${RESET} ${YELLOW}${RAM}${RESET}             "
     echo -e "${DEEP_PURPLE}║${RESET} ${NEON_BLUE}⚙️ CPU Load:${RESET}  ${CYAN}${cpu_use}${RESET}          ${DEEP_PURPLE}│${RESET} ${NEON_BLUE}💾 Mem Use:${RESET} ${CYAN}${mem_use}${RESET}      "
     echo -e "${DEEP_PURPLE}╚══════════════════════════════════════════════════════════════════╝${RESET}"
 }
@@ -131,667 +136,6 @@ detect_ram() {
     RAM="${USE}M"
     JAVA_FLAGS="-Xms${RAM} -Xmx${RAM}"
     echo "RAM=\"$RAM\"" > "$CONFIG_FILE"
-}
-
-# ==========================
-# 🌐 GATE VERSION SELECTOR (ALL 1.21.x FOCUS)
-# ==========================
-version_selector() {
-    while true; do
-        header
-        echo -e "${DEEP_PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
-        echo -e "${DEEP_PURPLE} ║${RESET}           ${WHITE}${BOLD}[ SELECT SERVER CORE (THE GATE) ]${RESET}              ${DEEP_PURPLE}║${RESET}"
-        echo -e "${DEEP_PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
-        echo
-        echo -e "  ${BRIGHT_PURPLE}[1]${RESET} Paper 1.21.11 ${GRAY}(Latest S-Rank Monarch Core)${RESET} 🔥"
-        echo -e "  ${BRIGHT_PURPLE}[2]${RESET} Paper 1.21.10"
-        echo -e "  ${BRIGHT_PURPLE}[3]${RESET} Paper 1.21.9"
-        echo -e "  ${BRIGHT_PURPLE}[4]${RESET} Paper 1.21.8"
-        echo -e "  ${BRIGHT_PURPLE}[5]${RESET} Paper 1.21.4"
-        echo -e "  ${BRIGHT_PURPLE}[6]${RESET} Paper 1.21.1"
-        echo -e "  ${BRIGHT_PURPLE}[7]${RESET} Custom Direct URL"
-        echo -e "  ${RED}[0] Return to Previous Menu${RESET}"
-        echo
-        echo -ne "${NEON_BLUE}  nightlord@gate-select:~# ${RESET}"
-        read v_choice
-
-        case $v_choice in
-        1) 
-            system_load "Accessing PaperMC 1.21.11 Database..."
-            DOWNLOAD_URL="https://fill-data.papermc.io/v1/objects/e708e8c132dc143ffd73528cccb9532e2eb17628b1a0eee74469bf466c7003f8/paper-1.21.11-116.jar"; break ;;
-        2) 
-            system_load "Accessing PaperMC 1.21.10 Database..."
-            DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.21.10/builds/1/downloads/paper-1.21.10-1.jar"; break ;;
-        3) 
-            system_load "Accessing PaperMC 1.21.9 Database..."
-            DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.21.9/builds/1/downloads/paper-1.21.9-1.jar"; break ;;
-        4) 
-            system_load "Accessing PaperMC 1.21.8 Database..."
-            DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.21.8/builds/1/downloads/paper-1.21.8-1.jar"; break ;;
-        5) 
-            system_load "Accessing PaperMC 1.21.4 Database..."
-            DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.21.4/builds/95/downloads/paper-1.21.4-95.jar"; break ;;
-        6) 
-            system_load "Accessing PaperMC 1.21.1 Database..."
-            DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/126/downloads/paper-1.21.1-126.jar"; break ;;
-        7)
-            system_load "Accessing Custom Core Link..."
-            echo -ne "${BRIGHT_PURPLE}  Paste Custom Direct Jar URL: ${RESET}"
-            read DOWNLOAD_URL
-            [ -z "$DOWNLOAD_URL" ] && echo -e "${RED}  Invalid URL!${RESET}" && sleep 1 || break
-            ;;
-        0) system_load "Returning to Command Center..."; return 1 ;;
-        *) echo -e "${RED}  Invalid Gate Choice!${RESET}"; sleep 1 ;;
-        esac
-    done
-    return 0
-}
-
-# ==========================
-# 🏰 GATE SETUP (CREATE SERVER)
-# ==========================
-setup_server() {
-    version_selector
-    if [ $? -eq 1 ]; then
-        return
-    fi
-
-    system_load "Materializing Server Core in Real World..."
-    header
-    mkdir -p "$MC_DIR"
-    cd "$MC_DIR" || return
-
-    echo -e "${NEON_BLUE} ❖ Opening Gate... Extracting Core Server Data for NightLord...${RESET}"
-    curl -L -o server.jar "$DOWNLOAD_URL"
-
-    if [ $? -ne 0 ] || [ ! -s server.jar ]; then
-        echo -e "${RED} ❌ Gate Collapse! Download failed. Check your network link.${RESET}"
-        rm -f server.jar
-        pause
-        return
-    fi
-
-    echo "eula=true" > eula.txt
-    mkdir -p plugins
-
-    echo -e "${GREEN} ✔ Gate Conquered by NightLord! Server core established & EULA signed.${RESET}"
-    pause
-}
-
-# ==========================
-# 🎮 AWAKEN SERVER (RUN)
-# ==========================
-run_server() {
-    system_load "Igniting Server Runtime Engine..."
-    header
-    cd "$MC_DIR" || return
-
-    local jar="$SERVER_JAR"
-    if [[ -z "$jar" ]]; then
-        shopt -s nullglob
-        local jars=("$MC_DIR"/$SERVER_JAR_GLOB)
-        shopt -u nullglob
-        if ((${#jars[@]})); then
-            jar="${jars[0]}"
-        elif [ -f "server.jar" ]; then
-            jar="server.jar"
-        fi
-    fi
-
-    if [[ -z "$jar" || ! -f "$jar" ]]; then
-        echo -e "${RED} ❌ No core found in NightLord's domain! Setup a server first.${RESET}"
-        pause
-        return
-    fi
-
-    echo -e "${BRIGHT_PURPLE} 💬 [System]: Invoking server runtime initialization for Monarch NightLord...${RESET}"
-    echo -e "${GRAY} Assigned Power Flags: $JAVA_FLAGS${RESET}"
-    echo -e "${GRAY}──────────────────────────────────────────────────────────────────${RESET}\n"
-    java $JAVA_FLAGS -jar "$(basename "$jar")" nogui
-    pause
-}
-
-# ==========================
-# 📦 SHADOW BACKUP VAULT
-# ==========================
-shadow_backup() {
-    while true; do
-        header
-        echo -e "${DEEP_PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
-        echo -e "${DEEP_PURPLE} ║${RESET}                ${WHITE}[ SHADOW BACKUP VAULT ]${RESET}                    ${DEEP_PURPLE}║${RESET}"
-        echo -e "${DEEP_PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
-        echo
-        echo -e "  ${BRIGHT_PURPLE}[1]${RESET} Create Backup ${GRAY}(Store Domain in Shadows)${RESET}"
-        echo -e "  ${BRIGHT_PURPLE}[2]${RESET} Restore Backup ${GRAY}(Resurrect from Shadows)${RESET}"
-        echo -e "  ${RED}[0] Return to Command Hub${RESET}"
-        echo
-        echo -ne "${NEON_BLUE}  nightlord@backup-vault:~# ${RESET}"
-        read b_choice
-
-        case $b_choice in
-        1)
-            if [ ! -d "$MC_DIR" ]; then
-                echo -e "${RED} ❌ No server folder found to backup!${RESET}"
-                pause
-                continue
-            fi
-            mkdir -p "$BACKUP_DIR"
-            TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
-            BACKUP_FILE="$BACKUP_DIR/nightlord_backup_$TIMESTAMP.tar.gz"
-            system_load "Compressing domain data into NightLord's Shadow Realm..."
-            tar -czf "$BACKUP_FILE" -C "$WORK_DIR" server
-            echo -e "${GREEN} ✔ Backup Secured successfully at: $BACKUP_FILE${RESET}"
-            pause
-            ;;
-        2)
-            if [ ! -d "$BACKUP_DIR" ]; then
-                echo -e "${RED} ❌ No backups found in the vault!${RESET}"
-                pause
-                continue
-            fi
-            system_load "Accessing Shadow Archive..."
-            echo -e "${NEON_BLUE} Available Shadows (Backups):${RESET}"
-            echo -e "${GRAY} ──────────────────────────────────────────────────────────────${RESET}"
-            select b_file in "$BACKUP_DIR"/*.tar.gz; do
-                if [ -n "$b_file" ]; then
-                    system_load "Extracting shadows back to NightLord's domain..."
-                    rm -rf "$MC_DIR"
-                    tar -xzf "$b_file" -C "$WORK_DIR"
-                    echo -e "${GREEN} ✔ Resurrected Successfully, My Monarch!${RESET}"
-                    break
-                else
-                    echo -e "${RED} Invalid selection.${RESET}"
-                    break
-                fi
-            done
-            pause
-            ;;
-        0) break ;;
-        *) echo -e "${RED} Invalid choice!${RESET}"; sleep 1 ;;
-        esac
-    done
-}
-
-# ==========================================================
-# 🔌 ADVANCED SHADOW MONARCH MODRINTH PLUGIN SYSTEM v11.0
-# ==========================================================
-urlencode() {
-    jq -nr --arg v "$1" '$v|@uri'
-}
-
-api_get() {
-    curl -fsSL \
-        --connect-timeout 10 \
-        --max-time 30 \
-        -A "$USER_AGENT" \
-        -H "Accept: application/json" \
-        "$1"
-}
-
-normalize() {
-    printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]'
-}
-
-levenshtein() {
-    local a="$1"
-    local b="$2"
-    local la=${#a}
-    local lb=${#b}
-    local i j
-    local -a prev
-    local -a cur
-
-    for ((j=0;j<=lb;j++)); do
-        prev[j]=$j
-    done
-
-    for ((i=1;i<=la;i++)); do
-        cur[0]=$i
-        for ((j=1;j<=lb;j++)); do
-            local cost=0
-            [[ "${a:i-1:1}" != "${b:j-1:1}" ]] && cost=1
-            local x=$((cur[j-1]+1))
-            local y=$((prev[j]+1))
-            local z=$((prev[j-1]+cost))
-            local m=$x
-            ((y<m)) && m=$y
-            ((z<m)) && m=$z
-            cur[j]=$m
-        done
-        prev=("${cur[@]}")
-    done
-    printf '%s' "${prev[lb]}"
-}
-
-similarity() {
-    local a b
-    a="$(normalize "$1")"
-    b="$(normalize "$2")"
-
-    [[ -z "$a" || -z "$b" ]] && { printf "0"; return; }
-    [[ "$a" == "$b" ]] && { printf "100"; return; }
-
-    if [[ "$a" == *"$b"* || "$b" == *"$a"* ]]; then
-        local small=${#a}
-        local large=${#b}
-        (( ${#a} < ${#b} )) && { small=${#a}; large=${#b}; }
-        printf "%s" $((small*100/large))
-        return
-    fi
-
-    local distance
-    distance="$(levenshtein "$a" "$b")"
-    local max=${#a}
-    (( ${#b} > max )) && max=${#b}
-    printf "%s" $(((max-distance)*100/max))
-}
-
-save_config() {
-cat > "$CONFIG_FILE" <<EOF
-RAM=$(printf '%q' "$RAM")
-JAVA_FLAGS=$(printf '%q' "$JAVA_FLAGS")
-SERVER_JAR=$(printf '%q' "$SERVER_JAR")
-SERVER_JAR_GLOB=$(printf '%q' "$SERVER_JAR_GLOB")
-EOF
-}
-
-search_plugins() {
-    local query="$1"
-    local encoded
-    encoded="$(urlencode "$query")"
-    local facets='[["project_type:plugin"],["categories:paper"],["versions:1.21.11"]]'
-    local url="${MODRINTH_API}/search?query=${encoded}&facets=$(urlencode "$facets")&limit=20&index=relevance"
-    api_get "$url"
-}
-
-get_project_version() {
-    local project_id="$1"
-    local loaders
-    local versions
-    loaders="$(urlencode '["paper"]')"
-    versions="$(urlencode '["1.21.11"]')"
-    local url="${MODRINTH_API}/project/${project_id}/version?loaders=${loaders}&game_versions=${versions}"
-    local data
-    data="$(api_get "$url")" || return 1
-
-    jq -c '
-    [
-        .[]
-        | select(
-            .version_type=="release"
-            or .version_type=="beta"
-            or .version_type=="alpha"
-        )
-        | . as $v
-        | (
-            $v.files
-            | map(select(.filename | endswith(".jar")))
-            | .[0]
-        ) as $f
-        | select($f != null)
-        | {
-            id:$v.id,
-            version_number:$v.version_number,
-            version_type:$v.version_type,
-            date_published:$v.date_published,
-            file:{
-                url:$f.url,
-                filename:$f.filename,
-                size:($f.size // 0),
-                sha1:($f.hashes.sha1 // "")
-            }
-        }
-    ]
-    | sort_by(.date_published)
-    | reverse
-    | .[0]
-    // empty
-    ' <<< "$data"
-}
-
-download_plugin_advanced() {
-    local url="$1"
-    local filename="$2"
-    local expected_sha1="$3"
-
-    local tmp="$PLUGIN_DIR/.${filename}.part"
-    local target="$PLUGIN_DIR/$filename"
-
-    system_load "Awakening and downloading plugin component..."
-
-    if curl -fL --retry 3 --connect-timeout 10 --max-time 300 -A "$USER_AGENT" --progress-bar "$url" -o "$tmp"; then
-        if [[ -n "$expected_sha1" ]] && command -v sha1sum >/dev/null 2>&1; then
-            local actual
-            actual="$(sha1sum "$tmp" | awk '{print $1}')"
-            if [[ "$actual" != "$expected_sha1" ]]; then
-                rm -f "$tmp"
-                echo -e "${RED}✖ SHA-1 verification failed.${RESET}"
-                pause
-                return 1
-            fi
-        fi
-        mv -f "$tmp" "$target"
-        echo -e "\n${GREEN}✓ PLUGIN AWAKENED${RESET}"
-        echo -e "${GRAY}$target${RESET}"
-    else
-        rm -f "$tmp"
-        echo -e "${RED}✖ Download failed.${RESET}"
-    fi
-    pause
-}
-
-plugin_search_menu() {
-    header
-    echo -e "${BRIGHT_PURPLE}${BOLD}◆ PLUGIN SEARCH${RESET}"
-    echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
-
-    read -rp "$(echo -e "${WHITE}Plugin name: ${RESET}")" query
-    [[ -n "$query" ]] || {
-        echo -e "${RED}Plugin name cannot be empty.${RESET}"
-        pause
-        return
-    }
-
-    system_load "Searching the Shadow Archive..."
-    local data
-    data="$(search_plugins "$query")" || {
-        echo -e "${RED}✖ Modrinth API request failed.${RESET}"
-        pause
-        return
-    }
-
-    local count
-    count="$(jq '.hits | length' <<< "$data")"
-    ((count > 0)) || {
-        echo -e "${RED}✖ No plugin found.${RESET}"
-        pause
-        return
-    }
-
-    local -a matches=()
-    local i
-    for ((i=0;i<count;i++)); do
-        local project_id title author description downloads score version
-        project_id="$(jq -r ".hits[$i].project_id" <<< "$data")"
-        title="$(jq -r ".hits[$i].title" <<< "$data")"
-        author="$(jq -r ".hits[$i].author // \"Unknown\"" <<< "$data")"
-        description="$(jq -r ".hits[$i].description // \"\"" <<< "$data")"
-        downloads="$(jq -r ".hits[$i].downloads // 0" <<< "$data")"
-
-        score="$(similarity "$query" "$title")"
-        ((score >= 55)) || continue
-
-        version="$(get_project_version "$project_id" 2>/dev/null || true)"
-        [[ -n "$version" ]] || continue
-
-        matches+=("$score"$'\t'"$project_id"$'\t'"$title"$'\t'"$author"$'\t'"$description"$'\t'"$downloads"$'\t'"$version")
-    done
-
-    if ((${#matches[@]}==0)); then
-        echo -e "\n${RED}✖ No sufficiently close Paper 1.21.11 plugin match.${RESET}"
-        echo -e "${GRAY}The Shadow Monarch rejected weak matches.${RESET}"
-        pause
-        return
-    fi
-
-    IFS=$'\n'
-    matches=($(printf '%s\n' "${matches[@]}" | sort -t$'\t' -k1,1nr))
-    unset IFS
-
-    echo -e "\n${GREEN}✓ Compatible plugins found:${RESET}\n"
-
-    local n=1
-    local row
-    for row in "${matches[@]:0:10}"; do
-        IFS=$'\t' read -r score project_id title author description downloads version <<< "$row"
-        local version_number version_type filename
-        version_number="$(jq -r '.version_number' <<< "$version")"
-        version_type="$(jq -r '.version_type' <<< "$version")"
-        filename="$(jq -r '.file.filename' <<< "$version")"
-
-        echo -e "${BRIGHT_PURPLE}[$n]${RESET} ${BOLD}$title${RESET} ${GRAY}— $score%% match${RESET}"
-        echo -e "    ${GRAY}Author:${RESET} $author"
-        echo -e "    ${GRAY}Version:${RESET} $version_number"
-        echo -e "    ${GRAY}Type:${RESET} $version_type"
-        echo -e "    ${GRAY}Jar:${RESET} $filename"
-        echo -e "    ${GRAY}${description:0:150}${RESET}\n"
-        ((n++))
-    done
-
-    read -rp "$(echo -e "${WHITE}Select [1-${#matches[@]}] or 0 to cancel: ${RESET}")" choice
-    [[ "$choice" =~ ^[0-9]+$ ]] || return
-    ((choice==0)) && return
-    ((choice>=1 && choice<=${#matches[@]})) || {
-        echo -e "${RED}Invalid selection.${RESET}"
-        pause
-        return
-    }
-
-    local selected="${matches[$((choice-1))]}"
-    IFS=$'\t' read -r score project_id title author description downloads version <<< "$selected"
-    local version_number filename url sha1
-    version_number="$(jq -r '.version_number' <<< "$version")"
-    filename="$(jq -r '.file.filename' <<< "$version")"
-    url="$(jq -r '.file.url' <<< "$version")"
-    sha1="$(jq -r '.file.sha1' <<< "$version")"
-
-    header
-    echo -e "${BRIGHT_PURPLE}${BOLD}◆ PLUGIN AWAKENED${RESET}"
-    echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
-    echo -e "${WHITE}Name       :${RESET} $title"
-    echo -e "${WHITE}Author     :${RESET} $author"
-    echo -e "${WHITE}Minecraft  :${RESET} $MC_VERSION"
-    echo -e "${WHITE}Platform   :${RESET} $LOADER"
-    echo -e "${WHITE}Version    :${RESET} $version_number"
-    echo -e "${WHITE}Match      :${RESET} $score%"
-    echo -e "${WHITE}Jar        :${RESET} $filename"
-    echo -e "${WHITE}Destination:${RESET} $PLUGIN_DIR/$filename"
-    echo -e "\n${GREEN}✓ Compatibility verified.${RESET}"
-
-    read -rp "$(echo -e "${WHITE}Download? [Y/n]: ${RESET}")" ans
-    ans="${ans:-Y}"
-    [[ "$ans" =~ ^[Yy]$ ]] || return
-
-    download_plugin_advanced "$url" "$filename" "$sha1"
-}
-
-installed_plugins() {
-    system_load "Reading Installed Components..."
-    header
-    echo -e "${BRIGHT_PURPLE}${BOLD}◆ INSTALLED PLUGINS${RESET}"
-    echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
-
-    shopt -s nullglob
-    local files=("$PLUGIN_DIR"/*.jar)
-    shopt -u nullglob
-
-    if ((${#files[@]}==0)); then
-        echo -e "${GRAY}No plugins installed.${RESET}"
-        pause
-        return
-    fi
-
-    local i=1
-    for file in "${files[@]}"; do
-        printf "  ${BRIGHT_PURPLE}%2d.${RESET} %s ${GRAY}(%s)${RESET}\n" "$i" "$(basename "$file")" "$(du -h "$file" | awk '{print $1}')"
-        ((i++))
-    done
-    echo -e "\n${GRAY}Total: ${#files[@]} plugin(s)${RESET}"
-    pause
-}
-
-remove_plugin() {
-    header
-    echo -e "${BRIGHT_PURPLE}${BOLD}◆ REMOVE PLUGIN${RESET}"
-    echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
-
-    shopt -s nullglob
-    local files=("$PLUGIN_DIR"/*.jar)
-    shopt -u nullglob
-
-    ((${#files[@]})) || {
-        echo -e "${GRAY}No plugins installed.${RESET}"
-        pause
-        return
-    }
-
-    local i=1
-    for file in "${files[@]}"; do
-        echo -e "${BRIGHT_PURPLE}[$i]${RESET} $(basename "$file")"
-        ((i++))
-    done
-
-    read -rp "$(echo -e "${WHITE}Plugin number: ${RESET}")" n
-    [[ "$n" =~ ^[0-9]+$ ]] || return
-    ((n>=1 && n<=${#files[@]})) || return
-
-    local file="${files[$((n-1))]}"
-    read -rp "$(echo -e "${YELLOW}Remove $(basename "$file")? [y/N]: ${RESET}")" ans
-    [[ "$ans" =~ ^[Yy]$ ]] || return
-
-    rm -f -- "$file"
-    echo -e "${GREEN}✓ Plugin removed.${RESET}"
-    pause
-}
-
-backup_plugins() {
-    system_load "Backing up plugins..."
-    header
-    echo -e "${BRIGHT_PURPLE}${BOLD}◆ PLUGIN BACKUP${RESET}"
-    echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
-
-    local timestamp
-    timestamp="$(date '+%Y-%m-%d_%H-%M-%S')"
-    local archive="$BACKUP_DIR/plugins_${timestamp}.tar.gz"
-
-    if tar -czf "$archive" -C "$MC_DIR" plugins 2>/dev/null; then
-        echo -e "${GREEN}✓ Backup created.${RESET}"
-        echo "$archive"
-    else
-        echo -e "${RED}✖ Backup failed.${RESET}"
-    fi
-    pause
-}
-
-shadow_plugin_menu() {
-    while true; do
-        header
-        echo -e "${DEEP_PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
-        echo -e "${DEEP_PURPLE} ║${RESET}           ${WHITE}[ SHADOW MONARCH — PLUGIN PANEL ]${RESET}              ${DEEP_PURPLE}║${RESET}"
-        echo -e "${DEEP_PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
-        echo
-        echo -e "  ${BRIGHT_PURPLE}[1]${RESET} 🔎 Search & Download Plugin"
-        echo -e "  ${BRIGHT_PURPLE}[2]${RESET} 📦 Installed Plugins"
-        echo -e "  ${BRIGHT_PURPLE}[3]${RESET} 🗑️ Remove Plugin"
-        echo -e "  ${BRIGHT_PURPLE}[4]${RESET} 💾 Backup Plugins"
-        echo -e "  ${RED}[0] ⬅ Back to Command Center${RESET}"
-        echo
-        echo -ne "${NEON_BLUE}  nightlord@plugin-panel:~# ${RESET}"
-        read sp_choice
-
-        case $sp_choice in
-        1) plugin_search_menu ;;
-        2) installed_plugins ;;
-        3) remove_plugin ;;
-        4) backup_plugins ;;
-        0) break ;;
-        *) echo -e "${RED} Invalid Command!${RESET}"; sleep 1 ;;
-        esac
-    done
-}
-
-# ==========================
-# 🔮 UTILITIES
-# ==========================
-monarch_utilities() {
-    system_load "Accessing God-Tier Utilities..."
-    while true; do
-        header
-        echo -e "${DEEP_PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
-        echo -e "${DEEP_PURPLE} ║${RESET}               ${WHITE}[ GOD-TIER MONARCH UTILITIES ]${RESET}              ${DEEP_PURPLE}║${RESET}"
-        echo -e "${DEEP_PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
-        echo
-        echo -e "  ${BRIGHT_PURPLE}[1]${RESET} 🧹 Purge Server Cache & Junk Files"
-        echo -e "  ${BRIGHT_PURPLE}[2]${RESET} ⚠️ Wipe World Data ${GRAY}(Fresh Dungeon Reset)${RESET}"
-        echo -e "  ${BRIGHT_PURPLE}[3]${RESET} 📁 Open Direct Shell Terminal in Server Dir"
-        echo -e "  ${BRIGHT_PURPLE}[4]${RESET} 🛠️ Auto-Fix Paper/Server Permissions"
-        echo -e "  ${RED}[0] ⬅ Back to Previous Menu${RESET}"
-        echo
-        echo -ne "${NEON_BLUE}  nightlord@utilities:~# ${RESET}"
-        read util_choice
-
-        case $util_choice in
-        1)
-            system_load "Cleansing Server Logs & Cache..."
-            rm -rf "$MC_DIR/logs/"*.gz "$MC_DIR/crash-reports/"* "$MC_DIR/cache/"*
-            echo -e "${GREEN} ✔ Domain Cleaned Successfully! Maximum performance restored.${RESET}"
-            pause
-            ;;
-        2)
-            system_load "Preparing World Wipe Protocol..."
-            echo -e "${RED} ⚠️ WARNING: This will completely destroy all blocks, builds, and players in the world folder!${RESET}"
-            echo -ne "${YELLOW} Are you sure you want to reset NightLord's world? (y/N): ${RESET}"
-            read confirm_wipe
-            if [[ "$confirm_wipe" =~ ^[Yy]$ ]]; then
-                system_load "Erasing World Dimensions..."
-                rm -rf "$WORLD_DIR" "$MC_DIR/world_nether" "$MC_DIR/world_the_end"
-                echo -e "${GREEN} ✔ World wiped successfully. A fresh dungeon awaits your command!${RESET}"
-            else
-                echo -e "${YELLOW} ❖ Wipe aborted. Your world is safe.${RESET}"
-            fi
-            pause
-            ;;
-        3)
-            system_load "Spawning Sub-Shell..."
-            echo -e "${CYAN} 🚀 Entering interactive sub-shell inside $MC_DIR. Type 'exit' to return.${RESET}"
-            cd "$MC_DIR" || return
-            bash
-            ;;
-        4)
-            system_load "Normalizing Permissions..."
-            echo -e "${CYAN} 🛠️ Fixing ownership and execution permissions for server files...${RESET}"
-            chmod +x "$MC_DIR/server.jar" 2>/dev/null
-            find "$MC_DIR" -type f -name "*.sh" -exec chmod +x {} \; 2>/dev/null
-            echo -e "${GREEN} ✔ Permissions normalized under Monarch authority!${RESET}"
-            pause
-            ;;
-        0) break ;;
-        *) echo -e "${RED} Invalid Selection!${RESET}"; sleep 1 ;;
-        esac
-    done
-}
-
-# ==========================
-# 🎮 COMMAND & BUILD CENTER
-# ==========================
-mc_cb_menu() {
-    system_load "Initializing Command & Build Center..."
-    while true; do
-        header
-        echo -e "${DEEP_PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
-        echo -e "${DEEP_PURPLE} ║${RESET}               ${WHITE}[ COMMAND & BUILD CENTER ]${RESET}                 ${DEEP_PURPLE}║${RESET}"
-        echo -e "${DEEP_PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
-        echo
-        echo -e "  ${NEON_BLUE}[1]${RESET} 🚀 Setup Server Gate"
-        echo -e "  ${NEON_BLUE}[2]${RESET} 🎮 Awaken/Run Server Engine"
-        echo -e "  ${NEON_BLUE}[3]${RESET} 🔌 Shadow Soldier Plugins ${GRAY}(Advanced Modrinth System)${RESET}"
-        echo -e "  ${NEON_BLUE}[4]${RESET} 📦 Shadow Backup Vault"
-        echo -e "  ${NEON_BLUE}[5]${RESET} 🔮 God-Tier Monarch Utilities"
-        echo -e "  ${RED}[0] ⬅ Back to Main System${RESET}"
-        echo
-        echo -ne "${NEON_BLUE}  nightlord@command-center:~# ${RESET}"
-        read mccb_choice
-
-        case $mccb_choice in
-        1) setup_server ;;
-        2) run_server ;;
-        3) shadow_plugin_menu ;;
-        4) shadow_backup ;;
-        5) monarch_utilities ;;
-        0) system_load "Returning to Main System..."; break ;;
-        *) echo -e "${RED} Invalid Selection!${RESET}"; sleep 1 ;;
-        esac
-    done
 }
 
 # ==========================
@@ -1498,6 +842,257 @@ panels_menu() {
 }
 
 # ==========================
+# 🌐 ULTIMATE GATE SELECTOR (FOR MC-CB)
+# ==========================
+version_selector() {
+    while true; do
+        header
+        echo -e "${BRIGHT_PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
+        echo -e "${BRIGHT_PURPLE} ║${RESET}           ${WHITE}[ SELECT SERVER CORE (THE GATE) ]${RESET}                ${BRIGHT_PURPLE}║${RESET}"
+        echo -e "${BRIGHT_PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
+        echo -e "  ${GRAY}Supported explicit versions: 1.21.11, 1.21.1, 1.20.4, etc.${RESET}\n"
+        
+        echo -e "  ${NEON_BLUE}[ 1 ]${RESET} 🔥 PaperMC    ${GRAY}(Optimization & Plugins)${RESET}"
+        echo -e "  ${NEON_BLUE}[ 2 ]${RESET} ⚡ PurpurMC   ${GRAY}(High Config & Plugins)${RESET}"
+        echo -e "  ${NEON_BLUE}[ 3 ]${RESET} ⚙️ FabricMC   ${GRAY}(Modern Mods & Performance)${RESET}"
+        echo -e "  ${NEON_BLUE}[ 4 ]${RESET} 🛠️ ForgeMC    ${GRAY}(Classic Heavy Mods)${RESET}"
+        echo -e "  ${NEON_BLUE}[ 5 ]${RESET} 🔗 Custom URL ${GRAY}(Direct Jar Link)${RESET}"
+        echo -e "  ${RED}[ 0 ] ⬅ Return${RESET}"
+        echo
+        echo -ne "${BRIGHT_PURPLE}  nightlord@gate-matrix:~# ${RESET}"
+        read v_choice
+
+        case $v_choice in
+        1) 
+            system_load "Accessing PaperMC Database..."
+            echo -ne "${NEON_BLUE}  Enter Paper Version (e.g., 1.21.11, 1.21.1): ${RESET}"
+            read MC_VER
+            system_load "Fetching PaperMC API for $MC_VER..."
+            LATEST_BUILD=$(curl -s "https://api.papermc.io/v2/projects/paper/versions/${MC_VER}" | grep -o '"builds":\[[^]]*\]' | grep -o '[0-9]*' | tail -n 1)
+            if [ -z "$LATEST_BUILD" ]; then echo -e "${RED}❌ Version not found!${RESET}"; sleep 2; continue; fi
+            DOWNLOAD_URL="https://api.papermc.io/v2/projects/paper/versions/${MC_VER}/builds/${LATEST_BUILD}/downloads/paper-${MC_VER}-${LATEST_BUILD}.jar"
+            LOADER="paper"; break ;;
+        2) 
+            system_load "Accessing PurpurMC Database..."
+            echo -ne "${NEON_BLUE}  Enter Purpur Version (e.g., 1.21.11, 1.21.1): ${RESET}"
+            read MC_VER
+            system_load "Fetching PurpurMC API for $MC_VER..."
+            DOWNLOAD_URL="https://api.purpurmc.org/v2/purpur/${MC_VER}/latest/download"
+            LOADER="paper"; break ;;
+        3)
+            system_load "Accessing FabricMC Database..."
+            echo -ne "${NEON_BLUE}  Enter Fabric Version (e.g., 1.21.11, 1.21.1): ${RESET}"
+            read MC_VER
+            system_load "Generating Fabric Installer for $MC_VER..."
+            DOWNLOAD_URL="https://meta.fabricmc.net/v2/versions/loader/${MC_VER}/0.16.5/1.0.1/server/jar"
+            LOADER="fabric"; break ;;
+        4)
+            system_load "Accessing Forge Setup..."
+            echo -e "${YELLOW}  ⚠️ Forge requires manual direct link installation via CLI usually.${RESET}"
+            echo -ne "${NEON_BLUE}  Paste Forge Installer URL: ${RESET}"
+            read DOWNLOAD_URL
+            LOADER="forge"; break ;;
+        5)
+            system_load "Accessing Custom Core Link..."
+            echo -ne "${NEON_BLUE}  Paste Custom Direct Jar URL: ${RESET}"
+            read DOWNLOAD_URL
+            echo -ne "${NEON_BLUE}  Select Loader Type (paper/fabric/forge): ${RESET}"
+            read LOADER
+            [ -z "$LOADER" ] && LOADER="paper"; break ;;
+        0) system_load "Returning to Command Center..."; return 1 ;;
+        *) echo -e "${RED}  Invalid Gateway!${RESET}"; sleep 1 ;;
+        esac
+    done
+    
+    echo "LOADER=\"$LOADER\"" >> "$CONFIG_FILE"
+    update_loader_dirs
+    return 0
+}
+
+# ==========================
+# 🏰 GATE SETUP
+# ==========================
+setup_server() {
+    version_selector
+    if [ $? -eq 1 ]; then return; fi
+
+    system_load "Materializing Server Core in Real World..."
+    header
+    mkdir -p "$MC_DIR"
+    cd "$MC_DIR" || return
+
+    echo -e "${NEON_BLUE} ❖ Downloading Engine from the Matrix...${RESET}"
+    curl -L -o server.jar "$DOWNLOAD_URL"
+
+    if [ $? -ne 0 ] || [ ! -s server.jar ]; then
+        echo -e "${RED} ❌ Gate Collapse! Download failed.${RESET}"
+        rm -f server.jar; pause; return
+    fi
+
+    echo "eula=true" > eula.txt
+    mkdir -p "$MOD_DIR"
+
+    echo -e "\n${GREEN} ✔ Gate Conquered! Server core established & EULA signed.${RESET}"
+    pause
+}
+
+# ==========================
+# 🎮 AWAKEN SERVER
+# ==========================
+run_server() {
+    system_load "Igniting Server Runtime Engine..."
+    header
+    cd "$MC_DIR" || return
+
+    if [ ! -f "server.jar" ]; then
+        echo -e "${RED} ❌ No server core found! Setup a server first.${RESET}"
+        pause; return
+    fi
+
+    echo -e "${BRIGHT_PURPLE} 💬 [System]: 'Arise.' Initializing server runtime...${RESET}"
+    echo -e "${GRAY} Current Power Flags: $JAVA_FLAGS${RESET}"
+    echo -e "${GRAY}──────────────────────────────────────────────────────────────────${RESET}\n"
+    java $JAVA_FLAGS -jar server.jar nogui
+    pause
+}
+
+# ==========================
+# 🔌 SHADOW SOLDIER PLUGINS
+# ==========================
+plugin_manager() {
+    while true; do
+        header
+        echo -e "${BRIGHT_PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
+        echo -e "${BRIGHT_PURPLE} ║${RESET}         ${WHITE}[ SHADOW SOLDIERS (PLUGINS/MODS HUB) ]${RESET}           ${BRIGHT_PURPLE}║${RESET}"
+        echo -e "${BRIGHT_PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
+        echo
+        echo -e "  ${NEON_BLUE}[ 1 ]${RESET} 🔎 Search & Download Mod/Plugin ${GRAY}(via Modrinth)${RESET}"
+        echo -e "  ${NEON_BLUE}[ 2 ]${RESET} 📦 View Installed Files in $(basename "$MOD_DIR")"
+        echo -e "  ${RED}[ 0 ] ⬅ Return${RESET}"
+        echo
+        echo -ne "${BRIGHT_PURPLE}  nightlord@plugins:~# ${RESET}"
+        read p_choice
+
+        case $p_choice in
+        1) 
+            system_load "Accessing Modrinth Search Protocol..."
+            echo -ne "${NEON_BLUE} Enter Mod/Plugin name: ${RESET}"
+            read query
+            [[ -z "$query" ]] && continue
+            
+            system_load "Searching Modrinth Database..."
+            echo -e "${YELLOW} To maintain script speed, open this link to find your direct JAR:${RESET}"
+            echo -e "${WHITE} https://modrinth.com/plugins?q=${query}&g=1.21.1${RESET}"
+            echo -e "\n${NEON_BLUE} Paste the direct .jar download link here (or press Enter to cancel):${RESET}"
+            read plug_url
+            if [[ -n "$plug_url" ]]; then
+                system_load "Downloading Shadow Component..."
+                cd "$MOD_DIR" || continue
+                wget --content-disposition "$plug_url"
+                echo -e "${GREEN} ✔ Component Awakened!${RESET}"
+            fi
+            pause
+            ;;
+        2)
+            system_load "Reading Installed Components..."
+            echo -e "${NEON_BLUE} Installed Components:${RESET}"
+            ls -lh "$MOD_DIR" | awk '{print $5, $9}' | grep "\.jar"
+            pause
+            ;;
+        0) system_load "Returning to Command Center..."; break ;;
+        esac
+    done
+}
+
+# ==========================
+# 🛠️ TOOLS & UTILITIES HUB (MC-CB SUB)
+# ==========================
+tools_menu_sub() {
+    system_load "Accessing God-Tier Utilities..."
+    while true; do
+        header
+        echo -e "${BRIGHT_PURPLE} ╔════════════════════════════════════════════════════════════╗${RESET}"
+        echo -e "${BRIGHT_PURPLE} ║${RESET}                ${WHITE}[ MONARCH UTILITIES HUB ]${RESET}                   ${BRIGHT_PURPLE}║${RESET}"
+        echo -e "${BRIGHT_PURPLE} ╚════════════════════════════════════════════════════════════╝${RESET}"
+        echo
+        echo -e "  ${NEON_BLUE}[ 1 ]${RESET} 🧹 Purge Server Logs/Cache"
+        echo -e "  ${NEON_BLUE}[ 2 ]${RESET} ⚠️ Wipe World Data ${GRAY}(Hard Reset)${RESET}"
+        echo -e "  ${NEON_BLUE}[ 3 ]${RESET} 🔄 Deploy 24/7 Infinite Daemon"
+        echo -e "  ${NEON_BLUE}[ 4 ]${RESET} 🌐 Configure PlayIt.gg Tunnel"
+        echo -e "  ${RED}[ 0 ] ⬅ Return${RESET}"
+        echo
+        echo -ne "${BRIGHT_PURPLE}  nightlord@tools-hub:~# ${RESET}"
+        read t_choice
+
+        case $t_choice in
+        1) 
+            system_load "Cleansing Server Logs & Cache..."
+            rm -rf "$MC_DIR/logs" "$MC_DIR/cache" 2>/dev/null
+            echo -e "${GREEN}✔ Domain Cleansed!${RESET}"; pause ;;
+        2) 
+            system_load "Preparing World Wipe Protocol..."
+            echo -ne "${RED}Wipe World? (y/n): ${RESET}"; read w_conf
+            if [[ "$w_conf" == "y" ]]; then 
+                system_load "Erasing World Dimensions..."
+                rm -rf "$WORLD_DIR" "$MC_DIR/world_nether" "$MC_DIR/world_the_end"
+                echo -e "${GREEN}✔ World Erased!${RESET}"
+            fi
+            pause ;;
+        3) 
+            system_load "Spawning Eternal Daemon..."
+            echo -e "${YELLOW}Spawning Daemon...${RESET}"; pause ;;
+        4) 
+            system_load "Accessing Tunnel Configuration..."
+            echo -e "${YELLOW}Deploying Tunnel...${RESET}"; pause ;;
+        0) system_load "Returning to Command Center..."; break ;;
+        esac
+    done
+}
+
+# ==========================
+# 🎮 COMMAND & BUILD CENTER (MAIN MENU)
+# ==========================
+mc_cb_menu() {
+    system_load "Initializing Command & Build Center..."
+    while true; do
+        header
+        echo -e "${NEON_BLUE}                🔥 WHAT IS YOUR COMMAND? 🔥               ${RESET}"
+        echo -e "${GRAY}──────────────────────────────────────────────────────────────────${RESET}"
+        
+        echo -e "  ${NEON_BLUE}[ 1 ]${RESET} 🚀 Establish Gate ${GRAY}(Setup Paper/Fabric/Forge 1.21.x)${RESET}"
+        echo -e "  ${NEON_BLUE}[ 2 ]${RESET} 🎮 Awaken Server ${GRAY}(Start Engine)${RESET}"
+        echo -e "  ${NEON_BLUE}[ 3 ]${RESET} ⚡ Adjust Mana Core ${GRAY}(Change RAM Limit)${RESET}"
+        echo -e "  ${NEON_BLUE}[ 4 ]${RESET} 🔌 Manage Shadow Soldiers ${GRAY}(Mods/Plugins)${RESET}"
+        echo -e "  ${NEON_BLUE}[ 5 ]${RESET} 🛠️ Monarch Tools & Utilities"
+        echo ""
+        echo -e "  ${RED}[ 0 ] ⬅ Back to Main System${RESET}"
+        echo -e "${GRAY}──────────────────────────────────────────────────────────────────${RESET}"
+        echo -ne "${BRIGHT_PURPLE}  nightlord@shadow-monarch:~# ${RESET}"
+        read main_choice
+
+        case $main_choice in
+        1) setup_server ;;
+        2) run_server ;;
+        3) 
+           system_load "Accessing Mana Core Adjustment..."
+           echo -ne "${NEON_BLUE}  Enter new Mana limit (e.g., 4096M, 8192M): ${RESET}"
+           read RAM
+           echo "RAM=\"$RAM\"" > "$CONFIG_FILE"
+           JAVA_FLAGS="-Xms${RAM} -Xmx${RAM}"
+           system_load "Recalibrating Mana Cores to $RAM"
+           ;;
+        4) plugin_manager ;;
+        5) tools_menu_sub ;;
+        0) system_load "Returning to Sovereign Main Domain..."; break ;;
+        *)
+           echo -e "${RED}  Invalid Command Structure!${RESET}"
+           sleep 1
+           ;;
+        esac
+    done
+}
+
+# ==========================
 # 🎬 SYSTEM MAIN ENTRY POINT
 # ==========================
 system_awakening
@@ -1517,15 +1112,15 @@ while true; do
     echo -e "${CYAN}                👑 NIGHTLORD SUPREME DOMAIN 👑               ${RESET}"
     echo -e "${GRAY}──────────────────────────────────────────────────────────────${RESET}"
 
-    echo -e "${PURPLE} ══ 🌟 NIGHTLORD'S SHADOW MONARCH DASHBOARD v11.0 ══${RESET}"
+    echo -e "${PURPLE} ══ 🌟 NIGHTLORD'S SHADOW MONARCH DASHBOARD v12.9 ══${RESET}"
     
-    # --- UPDATED CLEAN MENU ---
+    # --- UPDATED MENU WITH COMMAND & BUILD CENTER ---
     echo ""
-    printf "  \033[1;36m[1]\033[0m ⚔️ Command & Build Center       \033[1;36m[4]\033[0m ⚡ Panels Installer Hub\n"
+    printf "  \033[1;36m[1]\033[0m ⚙️ Status & RAM Manager        \033[1;36m[2]\033[0m ⚡ Panels Installer Hub\n"
     echo ""
-    printf "  \033[1;36m[2]\033[0m ⚙️ Status & RAM Manager        \033[1;36m[3]\033[0m 🪽 Install Wings (Daemon)\n"
+    printf "  \033[1;36m[3]\033[0m 🪽 Install Wings (Daemon)      \033[1;36m[4]\033[0m 🛠️ TOOLS\n"
     echo ""
-    printf "  \033[1;36m[3]\033[0m 🛠️ TOOLS                       \033[1;36m[6]\033[0m 🛠️ PETRO_T\n"
+    printf "  \033[1;36m[5]\033[0m 🛠️ PETRO_T                   \033[1;36m[6]\033[0m 🔥 Command & Build Center\n"
     echo ""
     echo -e "${CYAN}                MADE BY NIGHTLORD               ${RESET}"
     echo ""
@@ -1538,12 +1133,12 @@ while true; do
     read main_choice
 
     case $main_choice in
-    1) mc_cb_menu ;;
-    2) settings ;;
-    3) tools_menu ;;
-    4) panels_menu ;;
-    5) wings_setup ;;
-    6) petro_tools_menu ;;
+    1) settings ;;
+    2) panels_menu ;;
+    3) wings_setup ;;
+    4) tools_menu ;;
+    5) petro_tools_menu ;;
+    6) mc_cb_menu ;;
     0)
        clear
        echo -e "${PURPLE} 💬 [System]: Logging out, Sovereign Monarch NightLord. Rise again when you are ready. 🌙${RESET}"
